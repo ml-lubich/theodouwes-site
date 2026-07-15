@@ -489,11 +489,11 @@ a:hover {
   z-index: 0;
   left: 32%;
   top: 50%;
-  width: clamp(30rem, 52vw, 52rem);
-  height: clamp(30rem, 52vw, 52rem);
+  width: clamp(22rem, 38vw, 38rem);
+  height: clamp(22rem, 38vw, 38rem);
   transform: translate(-50%, -42%);
   pointer-events: auto;
-  filter: drop-shadow(0 0 44px rgba(255, 255, 255, 0.16));
+  filter: drop-shadow(0 0 32px rgba(255, 255, 255, 0.12));
   /* Fade the outer edges so the wireframe never shows a hard canvas cut. */
   -webkit-mask-image: radial-gradient(
     circle at center,

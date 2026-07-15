@@ -18,22 +18,22 @@ function WhiteBrainMesh({
       core: new THREE.LineBasicMaterial({
         color: "#ffffff",
         transparent: true,
-        opacity: backdrop ? 0.7 : 0.72,
+        opacity: backdrop ? 0.55 : 0.72,
         depthWrite: false,
       }),
       glow: new THREE.LineBasicMaterial({
         color: "#ffffff",
         transparent: true,
-        opacity: backdrop ? 0.28 : 0.18,
+        opacity: backdrop ? 0.2 : 0.18,
         depthWrite: false,
       }),
     }),
     [backdrop],
   );
 
-  /* Keep the backdrop compact enough to support the hero without overwhelming it. */
+  /* ~25% quieter than prior backdrop so it stays atmospheric. */
   return (
-    <group scale={backdrop ? 0.72 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
+    <group scale={backdrop ? 0.58 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
       <group rotation={[-Math.PI * 0.42, 0, 0]}>
         <lineSegments geometry={geometry} material={materials.glow} scale={1.03} />
         <lineSegments geometry={geometry} material={materials.core} />
