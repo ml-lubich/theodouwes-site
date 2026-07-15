@@ -53,13 +53,15 @@ export function ExperienceSection({
               <p className="timeline-location">{item.location}</p>
             </div>
             <div className="timeline-copy">
-              <div className="role-line">
-                <h3 className="role"><span>{item.role}</span></h3>
-                <span className="card-arrow" aria-hidden="true">↗</span>
+              <div className="timeline-role">
+                <div className="role-line">
+                  <h3 className="role"><span>{item.role}</span></h3>
+                  <span className="card-arrow" aria-hidden="true">↗</span>
+                </div>
+                <p className="org">
+                  {item.org}
+                </p>
               </div>
-              <p className="org">
-                {item.org}
-              </p>
               <ul className="bullet-list experience-highlights">
                 {item.highlights.map((point, pointIndex) => (
                   <li key={point} style={{ "--point-index": pointIndex } as CSSProperties}>

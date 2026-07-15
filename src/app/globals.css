@@ -1100,6 +1100,7 @@ a:hover {
 
 .timeline-meta {
   min-width: 0;
+  grid-column: 1;
 }
 
 .timeline-location {
@@ -1112,6 +1113,11 @@ a:hover {
 }
 
 .timeline-copy {
+  min-width: 0;
+  grid-column: 1;
+}
+
+.timeline-role {
   min-width: 0;
 }
 
@@ -1183,7 +1189,31 @@ a:hover {
 
 @media (min-width: 720px) {
   .timeline-item {
-    grid-template-columns: 11rem 1fr;
+    grid-template-columns: 12.5rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .timeline-meta {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .timeline-copy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+@media (min-width: 980px) {
+  .timeline-copy {
+    display: grid;
+    grid-template-columns: minmax(13rem, 0.72fr) minmax(22rem, 1.28fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .timeline-copy .experience-highlights {
+    margin-top: 0;
   }
 }
 
