@@ -484,14 +484,23 @@ a:hover {
 .hero-brain {
   position: absolute;
   z-index: 0;
-  left: 16%;
-  top: 40%;
+  left: 42%;
+  top: 54%;
   width: clamp(22rem, 40vw, 38rem);
   height: clamp(22rem, 40vw, 38rem);
   transform: translate(-50%, -50%);
   pointer-events: auto;
   filter: drop-shadow(0 0 44px rgba(255, 255, 255, 0.16));
-  animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+  animation: brain-fade 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+@keyframes brain-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .hero-brain .brain-stage {
