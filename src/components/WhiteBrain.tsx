@@ -6,36 +6,42 @@ import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { loadBrainGeometry } from "@/lib/brain-geometry";
 
-function WhiteBrainMesh({ geometry }: { readonly geometry: THREE.BufferGeometry }) {
+function WhiteBrainMesh({
+  geometry,
+  backdrop,
+}: {
+  readonly geometry: THREE.BufferGeometry;
+  readonly backdrop: boolean;
+}) {
   const materials = useMemo(
     () => ({
       core: new THREE.LineBasicMaterial({
         color: "#ffffff",
         transparent: true,
-        opacity: 0.72,
+        opacity: backdrop ? 0.95 : 0.72,
         depthWrite: false,
       }),
       glow: new THREE.LineBasicMaterial({
-        color: "#f5f5f5",
+        color: "#ffffff",
         transparent: true,
-        opacity: 0.18,
+        opacity: backdrop ? 0.45 : 0.18,
         depthWrite: false,
       }),
     }),
-    [],
+    [backdrop],
   );
 
   return (
-    <group scale={1.15} rotation={[0, Math.PI * 0.5, 0]}>
+    <group scale={backdrop ? 1.45 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
       <group rotation={[-Math.PI * 0.42, 0, 0]}>
-        <lineSegments geometry={geometry} material={materials.glow} scale={1.02} />
+        <lineSegments geometry={geometry} material={materials.glow} scale={1.03} />
         <lineSegments geometry={geometry} material={materials.core} />
       </group>
     </group>
   );
 }
 
-function BrainScene() {
+function BrainScene({ backdrop }: { readonly backdrop: boolean }) {
   const [geometry, setGeometry] = useState<THREE.BufferGeometry | null>(null);
 
   useEffect(() => {
@@ -60,12 +66,12 @@ function BrainScene() {
   }, []);
 
   if (!geometry) return null;
-  return <WhiteBrainMesh geometry={geometry} />;
+  return <WhiteBrainMesh geometry={geometry} backdrop={backdrop} />;
 }
 
 interface WhiteBrainProps {
   readonly className?: string;
-  /** Softer wireframe for text-backdrop usage */
+  /** Bright wireframe for text-backdrop usage */
   readonly backdrop?: boolean;
 }
 
@@ -82,27 +88,27 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
       className={`brain-stage${ready ? " is-ready" : ""}${backdrop ? " is-backdrop" : ""} ${className}`.trim()}
       aria-hidden="true"
     >
-      <div className="brain-skeleton shimmer" />
+      {!backdrop ? <div className="brain-skeleton shimmer" /> : null}
       <Canvas
-        camera={{ position: [0, 0, backdrop ? 2.35 : 2.05], fov: backdrop ? 48 : 42 }}
-        dpr={[1, 1.75]}
+        camera={{ position: [0, 0, backdrop ? 1.85 : 2.05], fov: backdrop ? 52 : 42 }}
+        dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         style={{ background: "transparent", touchAction: "none" }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
         }}
       >
-        <BrainScene />
+        <BrainScene backdrop={backdrop} />
         <OrbitControls
           makeDefault
           autoRotate
-          autoRotateSpeed={backdrop ? 0.35 : 0.55}
+          autoRotateSpeed={backdrop ? 0.55 : 0.55}
           enableZoom={false}
           enablePan={false}
           enableRotate
           enableDamping
           dampingFactor={0.12}
-          rotateSpeed={0.7}
+          rotateSpeed={0.85}
         />
       </Canvas>
     </div>
