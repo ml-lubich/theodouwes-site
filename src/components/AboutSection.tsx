@@ -40,11 +40,12 @@ export function AboutSection({
         ))}
       </div>
       <div className="skills" aria-label="Skills">
-        {skills.map((skill) => (
-          <span className="skill" key={skill}>
-            {skill}
-          </span>
-        ))}
+        <p className="section-label">Skills</p>
+        <ul className="bullet-list skills-bullets">
+          {skills.map((skill) => (
+            <li key={skill}>{skill}</li>
+          ))}
+        </ul>
       </div>
     </Reveal>
   );

@@ -81,7 +81,7 @@ describe("ExperienceSection", () => {
             location: "SF",
             start: "Apr 2026",
             end: "Present",
-            summary: "Quant metrics.",
+            highlights: ["Quant metrics.", "Ship signal."],
           },
         ]}
         education={{
@@ -94,10 +94,16 @@ describe("ExperienceSection", () => {
     );
     expect(screen.getByText("Open-source Researcher")).toBeTruthy();
     expect(screen.getAllByText(/Navigara/).length).toBeGreaterThan(0);
+    expect(screen.getByText("Quant metrics.")).toBeTruthy();
     expect(screen.getByText("UC Berkeley")).toBeTruthy();
     expect(screen.getByText("STAT 198")).toBeTruthy();
+    expect(containerOrDocHasBullets()).toBe(true);
   });
 });
+
+function containerOrDocHasBullets(): boolean {
+  return document.querySelectorAll(".bullet-list li").length > 0;
+}
 
 describe("FeaturedSection", () => {
   test("renders press links", () => {

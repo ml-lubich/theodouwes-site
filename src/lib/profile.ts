@@ -5,7 +5,7 @@ export interface ExperienceItem {
   readonly location: string;
   readonly start: string;
   readonly end: string;
-  readonly summary: string;
+  readonly highlights: readonly string[];
 }
 
 export interface FeaturedItem {
@@ -94,8 +94,12 @@ export const profile: SiteProfile = {
       location: "San Francisco Bay Area",
       start: "Apr 2026",
       end: "Present",
-      summary:
-        "Bridge engineering leaders from developer productivity metrics to C-suite communication. Quantify token-spend from individual developers to org-wide repositories. Connect GitHub, GitLab, Bitbucket, and Azure DevOps with read-only access; align changes to initiatives via issue trackers, CRM, and observability.",
+      highlights: [
+        "Bridge engineering leaders from developer productivity metrics to C-suite communication",
+        "Quantify token-spend from individual developers to org-wide repositories",
+        "Connect GitHub, GitLab, Bitbucket, and Azure DevOps with read-only access",
+        "Align codebase changes to initiatives via issue trackers, CRM, and observability",
+      ],
     },
     {
       id: "zerocopy",
@@ -104,8 +108,10 @@ export const profile: SiteProfile = {
       location: "Remote",
       start: "Nov 2025",
       end: "Feb 2026",
-      summary:
-        "Built quantitative systems at the intersection of data, inference, and decision-making — applying statistical rigor outside traditional finance.",
+      highlights: [
+        "Built quantitative systems at the intersection of data, inference, and decision-making",
+        "Applied statistical rigor outside traditional finance",
+      ],
     },
     {
       id: "break",
@@ -114,8 +120,10 @@ export const profile: SiteProfile = {
       location: "Himalayas & Vipassana centers",
       start: "Oct 2024",
       end: "Sep 2025",
-      summary:
-        "Hiking in the Himalayas and 40 days of silence at Vipassana Meditation centers — a deliberate reset before re-entering the AI productivity wave.",
+      highlights: [
+        "Hiking in the Himalayas as a deliberate reset",
+        "40 days of silence at Vipassana Meditation centers before re-entering the AI productivity wave",
+      ],
     },
     {
       id: "re",
@@ -124,8 +132,10 @@ export const profile: SiteProfile = {
       location: "United States",
       start: "Jan 2024",
       end: "Oct 2024",
-      summary:
-        "Full-time analysis and operations management for private real estate — capital allocation under uncertainty.",
+      highlights: [
+        "Full-time analysis and operations management for private real estate",
+        "Capital allocation under uncertainty",
+      ],
     },
     {
       id: "berkeley-instructor",
@@ -134,8 +144,11 @@ export const profile: SiteProfile = {
       location: "Berkeley, CA",
       start: "Jan 2022",
       end: "Dec 2023",
-      summary:
-        "STAT 198: Statistics & Game Theory in NLHE. Taught three semesters to 300+ undergraduate and graduate students — blending Bayesian thinking with competitive strategy.",
+      highlights: [
+        "STAT 198: Statistics & Game Theory in NLHE across three semesters",
+        "Taught 300+ undergraduate and graduate students",
+        "Blended Bayesian thinking with competitive strategy",
+      ],
     },
   ],
   education: {

@@ -33,7 +33,11 @@ export function ExperienceSection({
               <p className="org">
                 {item.org} · {item.location}
               </p>
-              <p className="item-summary">{item.summary}</p>
+              <ul className="bullet-list">
+                {item.highlights.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
             </div>
           </li>
         ))}
@@ -46,7 +50,7 @@ export function ExperienceSection({
         <p className="org">
           {education.degree} · {education.period}
         </p>
-        <ul className="edu-notes">
+        <ul className="bullet-list">
           {education.notes.map((note) => (
             <li key={note}>{note}</li>
           ))}

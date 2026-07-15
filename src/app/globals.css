@@ -964,6 +964,51 @@ a:hover {
   font-size: 0.98rem;
 }
 
+.bullet-list {
+  list-style: none;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  max-width: 58ch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.bullet-list li {
+  position: relative;
+  padding-left: 1.15rem;
+  color: var(--ink-muted);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.bullet-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.skills-bullets {
+  margin-top: 0.55rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.45rem 1.25rem;
+  max-width: none;
+}
+
+.skills-bullets li {
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .edu-block {
   margin-top: 2rem;
   padding: 1.35rem 1.4rem;
@@ -1025,10 +1070,7 @@ a:hover {
 }
 
 .skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
+  margin-top: 1.75rem;
 }
 
 .site-footer {
