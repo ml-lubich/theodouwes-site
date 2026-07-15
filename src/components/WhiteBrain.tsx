@@ -31,9 +31,9 @@ function WhiteBrainMesh({
     [backdrop],
   );
 
-  /* Backdrop: large in-frame mesh — stay inside camera frustum so edges aren't cropped */
+  /* Keep the backdrop compact enough to support the hero without overwhelming it. */
   return (
-    <group scale={backdrop ? 1.55 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
+    <group scale={backdrop ? 0.62 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
       <group rotation={[-Math.PI * 0.42, 0, 0]}>
         <lineSegments geometry={geometry} material={materials.glow} scale={1.03} />
         <lineSegments geometry={geometry} material={materials.core} />
