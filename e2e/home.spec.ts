@@ -5,7 +5,7 @@ test.describe("Theo Douwes site", () => {
     await page.goto("/");
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      /Theo Douwes/i,
+      /Theo\s+Douwes/i,
     );
     await expect(
       page.getByText(/Quantifying developer productivity/i),

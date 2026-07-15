@@ -65,6 +65,7 @@ export function Hero({
             <span className="hero-brand-last">{last || brand}</span>
           </span>
         </h1>
+        <p className="brain-hint">Drag to rotate</p>
         <p className="hero-title">{headline}</p>
         <p className="hero-sub">{subhead}</p>
         <div className="cta-row">

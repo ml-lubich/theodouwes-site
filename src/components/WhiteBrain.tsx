@@ -105,9 +105,6 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
           rotateSpeed={0.7}
         />
       </Canvas>
-      {backdrop ? (
-        <p className="brain-hint">Drag to rotate</p>
-      ) : null}
     </div>
   );
 }
