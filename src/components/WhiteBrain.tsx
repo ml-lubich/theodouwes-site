@@ -33,7 +33,7 @@ function WhiteBrainMesh({
 
   /* Keep the backdrop compact enough to support the hero without overwhelming it. */
   return (
-    <group scale={backdrop ? 0.95 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
+    <group scale={backdrop ? 0.72 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
       <group rotation={[-Math.PI * 0.42, 0, 0]}>
         <lineSegments geometry={geometry} material={materials.glow} scale={1.03} />
         <lineSegments geometry={geometry} material={materials.core} />
@@ -93,7 +93,7 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
     >
       {!backdrop ? <div className="brain-skeleton shimmer" /> : null}
       <Canvas
-        camera={{ position: [0, 0, backdrop ? 2.5 : 2.05], fov: 42 }}
+        camera={{ position: [0, 0, backdrop ? 3.15 : 2.05], fov: 42 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         style={{ background: "transparent", touchAction: "none" }}
