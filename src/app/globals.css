@@ -420,20 +420,6 @@ a:hover {
   }
 }
 
-/* Full-hero atmospheric brain — unclipped, rotatable backdrop */
-.hero-brain-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: auto;
-  overflow: visible;
-  filter: drop-shadow(0 0 36px rgba(255, 255, 255, 0.18));
-}
-
-.hero-brain-bg .brain-stage {
-  inset: -8% -12% -10% -18%;
-}
-
 .hero-copy {
   position: relative;
   z-index: 1;
@@ -445,7 +431,8 @@ a:hover {
 
 .hero-copy .btn,
 .hero-copy a,
-.hero-copy .signal-chip {
+.hero-copy .signal-chip,
+.hero-copy .hero-brain {
   pointer-events: auto;
 }
 
@@ -481,6 +468,29 @@ a:hover {
   text-shadow: 0 0 24px rgba(5, 5, 5, 0.65);
 }
 
+/* Interactive brain profile mark, aligned beneath Theo's name. */
+.hero-brain {
+  position: relative;
+  width: min(100%, 31rem);
+  height: clamp(12rem, 27vw, 18rem);
+  margin: -0.25rem 0 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.015) 62%,
+    transparent 78%
+  );
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.14));
+  animation: rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+.hero-brain .brain-stage {
+  inset: -12% -8% -8%;
+}
+
 .brain-stage.is-backdrop {
   cursor: grab;
 }
@@ -495,8 +505,8 @@ a:hover {
 
 .brain-hint {
   position: absolute;
-  left: max(1rem, var(--space));
-  bottom: 1.25rem;
+  left: 1rem;
+  bottom: 0.85rem;
   z-index: 2;
   margin: 0;
   font-family: var(--font-code);
