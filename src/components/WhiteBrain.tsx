@@ -18,21 +18,22 @@ function WhiteBrainMesh({
       core: new THREE.LineBasicMaterial({
         color: "#ffffff",
         transparent: true,
-        opacity: backdrop ? 0.95 : 0.72,
+        opacity: backdrop ? 0.7 : 0.72,
         depthWrite: false,
       }),
       glow: new THREE.LineBasicMaterial({
         color: "#ffffff",
         transparent: true,
-        opacity: backdrop ? 0.45 : 0.18,
+        opacity: backdrop ? 0.28 : 0.18,
         depthWrite: false,
       }),
     }),
     [backdrop],
   );
 
+  /* Backdrop: large in-frame mesh — stay inside camera frustum so edges aren't cropped */
   return (
-    <group scale={backdrop ? 1.45 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
+    <group scale={backdrop ? 1.55 : 1.15} rotation={[0, Math.PI * 0.5, 0]}>
       <group rotation={[-Math.PI * 0.42, 0, 0]}>
         <lineSegments geometry={geometry} material={materials.glow} scale={1.03} />
         <lineSegments geometry={geometry} material={materials.core} />
@@ -90,7 +91,7 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
     >
       {!backdrop ? <div className="brain-skeleton shimmer" /> : null}
       <Canvas
-        camera={{ position: [0, 0, backdrop ? 1.85 : 2.05], fov: backdrop ? 52 : 42 }}
+        camera={{ position: [0, 0, backdrop ? 2.8 : 2.05], fov: 42 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         style={{ background: "transparent", touchAction: "none" }}
@@ -102,13 +103,16 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
         <OrbitControls
           makeDefault
           autoRotate
-          autoRotateSpeed={backdrop ? 0.55 : 0.55}
+          autoRotateSpeed={0.45}
           enableZoom={false}
           enablePan={false}
           enableRotate
           enableDamping
           dampingFactor={0.12}
-          rotateSpeed={0.85}
+          rotateSpeed={0.9}
+          // Keep whole brain in view while dragging
+          minPolarAngle={0.55}
+          maxPolarAngle={Math.PI - 0.55}
         />
       </Canvas>
     </div>

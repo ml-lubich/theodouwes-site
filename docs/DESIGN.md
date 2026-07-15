@@ -23,7 +23,7 @@ Avoid soft decorative faces; precision over shout.
 
 ## Motion
 
-- White rotating wireframe brain behind **Douwes** (portfolio `brain.bin`, monochrome, drag-to-rotate)
+- Large white rotating wireframe brain as **hero atmospheric backdrop** (portfolio `brain.bin`, monochrome, drag-to-rotate) — not clipped to the name
 - Portrait uses high-quality `/theo.webp`
 - Scroll reveal with subtle 3D tilt (`Reveal`)
 - Continuous skeleton shimmer on glass cards

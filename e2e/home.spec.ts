@@ -43,9 +43,9 @@ test.describe("Theo Douwes site", () => {
     await expect(page.locator("#work")).toBeInViewport();
   });
 
-  test("renders rotatable brain behind Douwes", async ({ page }) => {
+  test("renders rotatable brain as hero backdrop", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator(".brain-behind")).toBeVisible();
+    await expect(page.locator(".hero-brain-bg")).toBeVisible();
     await expect(page.locator(".hero-brand-last")).toHaveText(/Douwes/i);
     await expect(page.getByText(/Drag to rotate/i)).toBeVisible();
   });
