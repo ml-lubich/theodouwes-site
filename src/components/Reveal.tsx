@@ -11,7 +11,7 @@ import {
 interface RevealProps {
   readonly children: ReactNode;
   readonly className?: string;
-  readonly as?: "section" | "div";
+  readonly as?: "section" | "div" | "li";
   readonly id?: string;
   readonly delayMs?: number;
   readonly enable3D?: boolean;
@@ -69,6 +69,9 @@ export function Reveal({
 
   if (as === "section") {
     return <section {...props}>{children}</section>;
+  }
+  if (as === "li") {
+    return <li {...props}>{children}</li>;
   }
   return <div {...props}>{children}</div>;
 }

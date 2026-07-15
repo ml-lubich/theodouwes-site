@@ -23,9 +23,10 @@ Avoid soft decorative faces; precision over shout.
 
 ## Motion
 
-- Large white rotating wireframe brain as **hero atmospheric backdrop** (portfolio `brain.bin`, monochrome, drag-to-rotate) — not clipped to the name
+- White rotating wireframe brain beneath the hero name (`brain.bin`, monochrome, drag-to-rotate)
 - Portrait uses high-quality `/theo.webp`
-- Scroll reveal with subtle 3D tilt (`Reveal`)
+- Per-item scroll reveals with staggered kinetic typography and timeline motion (`Reveal`)
+- Experience-specific line icons, luminous rail, animated highlights, and responsive hover tilt
 - Continuous skeleton shimmer on glass cards
 - Interactive hover lifts on CTAs, chips, and portrait
 

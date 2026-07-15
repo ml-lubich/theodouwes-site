@@ -102,6 +102,8 @@ describe("ExperienceSection", () => {
     expect(screen.getByText("UC Berkeley")).toBeTruthy();
     expect(screen.getByText("STAT 198")).toBeTruthy();
     expect(containerOrDocHasBullets()).toBe(true);
+    expect(document.querySelector(".experience-icon")).toBeTruthy();
+    expect(document.querySelector(".timeline-number")?.textContent).toBe("01");
   });
 });
 
@@ -180,6 +182,17 @@ describe("Reveal", () => {
       </Reveal>,
     );
     expect(container.querySelector(".reveal")).toBeTruthy();
+  });
+
+  test("supports semantic list-item reveals", () => {
+    const { container } = render(
+      <ol>
+        <Reveal as="li">Timeline chapter</Reveal>
+      </ol>,
+    );
+    expect(container.querySelector("ol > li.reveal")?.textContent).toBe(
+      "Timeline chapter",
+    );
   });
 
   test("skips animation when reduced motion is preferred", async () => {

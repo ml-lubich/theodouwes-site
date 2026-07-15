@@ -2,6 +2,8 @@ import type { ExperienceItem } from "@/lib/profile";
 import { formatTenure } from "@/lib/profile";
 import { Reveal } from "@/components/Reveal";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
+import { ExperienceIcon, HighlightIcon } from "@/components/ExperienceIcon";
+import type { CSSProperties } from "react";
 
 interface ExperienceSectionProps {
   readonly experience: readonly ExperienceItem[];
@@ -18,44 +20,83 @@ export function ExperienceSection({
   education,
 }: ExperienceSectionProps) {
   return (
-    <Reveal as="section" className="section" id="work" delayMs={80}>
-      <p className="section-label">Work</p>
-      <h2 className="section-title" id="work-title">
-        Experience
-      </h2>
+    <section className="section work-section" id="work" aria-labelledby="work-title">
+      <Reveal className="work-heading" delayMs={40} enable3D={false}>
+        <p className="section-label">Work · Selected chapters</p>
+        <h2 className="section-title kinetic-title" id="work-title">
+          <span>Experience</span>
+          <span className="kinetic-arrow" aria-hidden="true">↘</span>
+        </h2>
+        <p className="work-intro">
+          Research, quantitative systems, teaching, and deliberate resets—each
+          chapter compounds into the next.
+        </p>
+      </Reveal>
       <ol className="timeline">
-        {experience.map((item) => (
-          <li className="timeline-item glass-card" key={item.id}>
+        {experience.map((item, index) => (
+          <Reveal
+            as="li"
+            className="timeline-item glass-card"
+            delayMs={70 + index * 85}
+            enable3D={false}
+            key={item.id}
+          >
             <ShimmerOverlay />
-            <p className="tenure">{formatTenure(item.start, item.end)}</p>
-            <div>
-              <h3 className="role">{item.role}</h3>
+            <div className="timeline-marker" aria-hidden="true">
+              <span className="timeline-number">{String(index + 1).padStart(2, "0")}</span>
+              <span className="experience-icon-shell">
+                <ExperienceIcon kind={item.id} className="experience-icon" />
+              </span>
+            </div>
+            <div className="timeline-meta">
+              <p className="tenure">{formatTenure(item.start, item.end)}</p>
+              <p className="timeline-location">{item.location}</p>
+            </div>
+            <div className="timeline-copy">
+              <div className="role-line">
+                <h3 className="role"><span>{item.role}</span></h3>
+                <span className="card-arrow" aria-hidden="true">↗</span>
+              </div>
               <p className="org">
-                {item.org} · {item.location}
+                {item.org}
               </p>
-              <ul className="bullet-list">
-                {item.highlights.map((point) => (
-                  <li key={point}>{point}</li>
+              <ul className="bullet-list experience-highlights">
+                {item.highlights.map((point, pointIndex) => (
+                  <li key={point} style={{ "--point-index": pointIndex } as CSSProperties}>
+                    <HighlightIcon />
+                    <span>{point}</span>
+                  </li>
                 ))}
               </ul>
             </div>
-          </li>
+          </Reveal>
         ))}
       </ol>
 
-      <div className="edu-block glass-card">
+      <Reveal className="edu-block glass-card" delayMs={120} enable3D={false}>
         <ShimmerOverlay />
-        <p className="section-label">Education</p>
-        <h3 className="role">{education.school}</h3>
-        <p className="org">
-          {education.degree} · {education.period}
-        </p>
-        <ul className="bullet-list">
-          {education.notes.map((note) => (
-            <li key={note}>{note}</li>
-          ))}
-        </ul>
-      </div>
-    </Reveal>
+        <div className="edu-icon-shell" aria-hidden="true">
+          <ExperienceIcon kind="education" className="experience-icon" />
+        </div>
+        <div className="edu-copy">
+          <p className="section-label">Education · Foundation</p>
+          <div className="role-line">
+            <h3 className="role"><span>{education.school}</span></h3>
+            <span className="card-arrow" aria-hidden="true">↗</span>
+          </div>
+          <p className="org">
+            {education.degree} · {education.period}
+          </p>
+          <ul className="bullet-list experience-highlights">
+            {education.notes.map((note, pointIndex) => (
+              <li key={note} style={{ "--point-index": pointIndex } as CSSProperties}>
+                <HighlightIcon />
+                <span>{note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Reveal>
+    </section>
   );
 }
