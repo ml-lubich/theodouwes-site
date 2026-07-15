@@ -446,7 +446,16 @@ a:hover {
   animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Name sits above the rotating brain backdrop. */
+.hero-namewrap {
+  position: relative;
+  isolation: isolate;
+  margin: 0.25rem 0;
+}
+
 .hero-brand {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-size: clamp(3rem, 8.2vw, 5.6rem);
   font-weight: 400;
@@ -456,6 +465,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 0.05em;
+  pointer-events: none;
 }
 
 .hero-brand-line {
@@ -465,30 +475,27 @@ a:hover {
 .hero-brand-last {
   display: block;
   color: var(--ink);
-  text-shadow: 0 0 24px rgba(5, 5, 5, 0.65);
+  text-shadow:
+    0 0 26px rgba(5, 5, 5, 0.85),
+    0 0 60px rgba(5, 5, 5, 0.7);
 }
 
-/* Interactive brain profile mark, aligned beneath Theo's name. */
+/* Large 3D rotating brain sitting behind the name. */
 .hero-brain {
-  position: relative;
-  width: min(100%, 31rem);
-  height: clamp(12rem, 27vw, 18rem);
-  margin: -0.25rem 0 0;
-  overflow: hidden;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.07),
-    rgba(255, 255, 255, 0.015) 62%,
-    transparent 78%
-  );
-  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.14));
-  animation: rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+  position: absolute;
+  z-index: 0;
+  left: 16%;
+  top: 40%;
+  width: clamp(22rem, 40vw, 38rem);
+  height: clamp(22rem, 40vw, 38rem);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  filter: drop-shadow(0 0 44px rgba(255, 255, 255, 0.16));
+  animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .hero-brain .brain-stage {
-  inset: -12% -8% -8%;
+  inset: 0;
 }
 
 .brain-stage.is-backdrop {
@@ -501,20 +508,6 @@ a:hover {
 
 .brain-stage.is-backdrop.is-ready {
   opacity: 1;
-}
-
-.brain-hint {
-  position: absolute;
-  left: 1rem;
-  bottom: 0.85rem;
-  z-index: 2;
-  margin: 0;
-  font-family: var(--font-code);
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
-  pointer-events: none;
 }
 
 .interactive {

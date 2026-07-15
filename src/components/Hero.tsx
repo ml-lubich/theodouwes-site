@@ -56,13 +56,14 @@ export function Hero({
     <section className="hero" id="top" aria-labelledby="hero-brand">
       <div className="hero-copy">
         <p className="eyebrow">{title}</p>
-        <h1 className="hero-brand" id="hero-brand">
-          <span className="hero-brand-line">{first}{" "}</span>
-          <span className="hero-brand-last">{last || brand}</span>
-        </h1>
-        <div className="hero-brain" aria-hidden="true">
-          <WhiteBrain backdrop />
-          <p className="brain-hint">Drag to rotate</p>
+        <div className="hero-namewrap">
+          <div className="hero-brain" aria-hidden="true">
+            <WhiteBrain backdrop />
+          </div>
+          <h1 className="hero-brand" id="hero-brand">
+            <span className="hero-brand-line">{first}{" "}</span>
+            <span className="hero-brand-last">{last || brand}</span>
+          </h1>
         </div>
         <p className="hero-title">{headline}</p>
         <p className="hero-sub">{subhead}</p>
