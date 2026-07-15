@@ -48,6 +48,7 @@ export interface SiteProfile {
   readonly writing: readonly WritingItem[];
   readonly links: {
     readonly linkedin: string;
+    readonly github: string;
     readonly medium: string;
     readonly navigara: string;
   };
@@ -200,6 +201,7 @@ export const profile: SiteProfile = {
   ],
   links: {
     linkedin: "https://www.linkedin.com/in/theo-douwes",
+    github: "https://github.com/TheoDouwes",
     medium: "https://medium.com/",
     navigara: "https://navigara.com",
   },

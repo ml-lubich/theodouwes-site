@@ -49,6 +49,7 @@ describe("home page composition", () => {
           name={model.brand}
           monogram={model.monogram}
           linkedin={profile.links.linkedin}
+          github={profile.links.github}
           medium={profile.links.medium}
           navigara={profile.links.navigara}
         />

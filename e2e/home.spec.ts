@@ -25,6 +25,15 @@ test.describe("Theo Douwes site", () => {
     await expect(page.locator("#writing")).toBeVisible();
   });
 
+  test("links to Theo's GitHub profile", async ({ page }) => {
+    await page.goto("/");
+
+    await expect(page.getByRole("link", { name: "GitHub" })).toHaveAttribute(
+      "href",
+      "https://github.com/TheoDouwes",
+    );
+  });
+
   test("lists Navigara experience", async ({ page }) => {
     await page.goto("/");
 

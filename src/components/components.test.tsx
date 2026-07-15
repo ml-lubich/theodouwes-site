@@ -36,6 +36,7 @@ describe("SiteFooter", () => {
         name="Theo Douwes"
         monogram="TD"
         linkedin="https://linkedin.com/in/theo-douwes"
+        github="https://github.com/TheoDouwes"
         medium="https://medium.com/"
         navigara="https://navigara.com"
       />,
@@ -49,6 +50,9 @@ describe("SiteFooter", () => {
     expect(
       screen.getByRole("link", { name: "Navigara" }).getAttribute("href"),
     ).toContain("navigara");
+    expect(
+      screen.getByRole("link", { name: "GitHub" }).getAttribute("href"),
+    ).toBe("https://github.com/TheoDouwes");
   });
 });
 
