@@ -127,6 +127,31 @@ test.describe("Theo Douwes site", () => {
     expect(brainBox!.height).toBeGreaterThan(80);
   });
 
+  test("centers the hero name and brain on narrow mobile viewports", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/");
+
+    // Measure actual glyph extent (not the stretched block box) via a Range.
+    const glyphRect = await page.evaluate(() => {
+      const el = document.querySelector(".hero-brand-last");
+      if (!el) return null;
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const r = range.getBoundingClientRect();
+      return { x: r.x, width: r.width };
+    });
+    const brainBox = await page.locator(".hero-brain").boundingBox();
+    expect(glyphRect).not.toBeNull();
+    expect(brainBox).not.toBeNull();
+
+    const viewportCenter = 375 / 2;
+    const nameCenter = glyphRect!.x + glyphRect!.width / 2;
+    const brainCenter = brainBox!.x + brainBox!.width / 2;
+
+    expect(Math.abs(nameCenter - viewportCenter)).toBeLessThan(20);
+    expect(Math.abs(brainCenter - viewportCenter)).toBeLessThan(20);
+  });
+
   test("theme toggle switches to light mode with black brain", async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem("theo-theme", "dark");

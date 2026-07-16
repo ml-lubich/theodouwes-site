@@ -106,7 +106,7 @@ a:hover {
   background:
     radial-gradient(ellipse 70% 50% at 15% -10%, rgba(255, 255, 255, 0.08), transparent 55%),
     radial-gradient(ellipse 50% 40% at 90% 10%, rgba(255, 255, 255, 0.05), transparent 50%),
-    linear-gradient(180deg, #050505 0%, #080808 45%, #050505 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 45%, var(--bg) 100%);
 }
 
 .atmosphere::before,
@@ -2064,6 +2064,32 @@ a:hover {
   .hero {
     min-height: auto;
     padding-top: 1.5rem;
+  }
+
+  /* Below the ~720px nav breakpoint the copy column is as narrow as the
+     viewport, so the desktop's side-by-side name/brain layout has no room
+     to breathe — center everything in the column instead. */
+  .hero-copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cta-row,
+  .signal-row {
+    justify-content: center;
+  }
+
+  /* The dense wireframe core reads fine offset beside the name at desktop
+     sizes, but directly behind the (also centered) name it swallows the
+     letters. Stack it above the name as a mark instead of overlapping it. */
+  .hero-brain {
+    position: static;
+    left: auto;
+    top: auto;
+    width: clamp(6rem, 32vw, 9rem);
+    height: clamp(6rem, 32vw, 9rem);
+    margin: 0 auto 0.25rem;
+    transform: none;
   }
 }
 
