@@ -50,12 +50,18 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "About" }).getAttribute("href")).toBe(
       "#about",
     );
+    expect(screen.getByRole("link", { name: "Skills" }).getAttribute("href")).toBe(
+      "#skills",
+    );
     expect(screen.getByRole("link", { name: "Work" }).getAttribute("href")).toBe(
       "#work",
     );
     expect(
       screen.getByRole("link", { name: "Projects" }).getAttribute("href"),
     ).toBe("#projects");
+    expect(screen.getByRole("link", { name: "Connect" }).getAttribute("href")).toBe(
+      "#connect",
+    );
     expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
   });
 
@@ -156,11 +162,15 @@ describe("AboutSection", () => {
         about={["Paragraph one about research."]}
         stats={[{ value: "$5.88M", label: "Acquisitions" }]}
         skills={["Python", "R"]}
+        skillCategories={[
+          { category: "Languages & tooling", items: ["Python", "R"] },
+        ]}
       />,
     );
     expect(screen.getByText(/Probabilistic systems/i)).toBeTruthy();
     expect(screen.getByText("$5.88M")).toBeTruthy();
-    expect(screen.getByText("Python")).toBeTruthy();
+    expect(screen.getAllByText("Python").length).toBeGreaterThan(0);
+    expect(screen.getByText("Languages & tooling")).toBeTruthy();
   });
 });
 

@@ -10,6 +10,10 @@ describe("buildHomePageModel unit", () => {
     expect(model.signals.length).toBeGreaterThan(0);
     expect(model.stats.length).toBeGreaterThan(0);
     expect(model.skills).toContain("Python");
+    expect(model.skills).toContain("Bayesian inference");
+    expect(model.skillCategories.length).toBeGreaterThan(5);
+    expect(model.linkedin).toContain("linkedin.com");
+    expect(model.github).toContain("github.com");
     expect(model.aboutTitle).toContain("Probabilistic");
     expect(model.tertiaryCta).toEqual({
       label: "Navigara",

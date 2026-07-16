@@ -1,5 +1,7 @@
 import { Reveal } from "@/components/Reveal";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
+import { SkillStorm } from "@/components/SkillStorm";
+import type { SkillCategory } from "@/lib/skills";
 
 interface AboutSectionProps {
   readonly title: string;
@@ -8,6 +10,7 @@ interface AboutSectionProps {
   readonly about: readonly string[];
   readonly stats: readonly { readonly value: string; readonly label: string }[];
   readonly skills: readonly string[];
+  readonly skillCategories: readonly SkillCategory[];
 }
 
 export function AboutSection({
@@ -17,6 +20,7 @@ export function AboutSection({
   about,
   stats,
   skills,
+  skillCategories,
 }: AboutSectionProps) {
   return (
     <Reveal as="section" className="section" id="about" delayMs={40}>
@@ -41,13 +45,32 @@ export function AboutSection({
           </div>
         ))}
       </div>
-      <div className="skills" aria-label="Skills">
+
+      <div className="skills" id="skills">
         <p className="section-label">Skills</p>
-        <ul className="bullet-list skills-bullets">
-          {skills.map((skill) => (
-            <li key={skill}>{skill}</li>
+        <h3 className="skills-heading">Keyword surface & probabilistic toolkit</h3>
+        <p className="skills-lede">
+          Role keywords plus documented languages, stats methods, underwriting, and
+          GTM tooling. Items marked basics/concepts are adjacent skills — not
+          multi-year production ownership claims.
+        </p>
+
+        <div className="skill-storm-wrap">
+          <SkillStorm skills={skills} />
+        </div>
+
+        <div className="skills-catalog" aria-label="Skills by category">
+          {skillCategories.map((group) => (
+            <div className="skills-group" key={group.category}>
+              <h4 className="skills-group-title">{group.category}</h4>
+              <ul className="bullet-list skills-bullets">
+                {group.items.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </Reveal>
   );

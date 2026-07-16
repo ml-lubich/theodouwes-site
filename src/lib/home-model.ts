@@ -1,4 +1,6 @@
 import type { ExperienceItem, ProjectItem, WritingItem } from "./profile";
+import type { SkillCategory } from "./skills";
+import { skillCategories } from "./skills";
 
 export interface HomePageModel {
   readonly brand: string;
@@ -15,6 +17,7 @@ export interface HomePageModel {
   readonly signals: readonly string[];
   readonly stats: readonly { readonly value: string; readonly label: string }[];
   readonly skills: readonly string[];
+  readonly skillCategories: readonly SkillCategory[];
   readonly about: readonly string[];
   readonly experience: readonly ExperienceItem[];
   readonly education: {
@@ -31,6 +34,10 @@ export interface HomePageModel {
   readonly email: string;
   readonly phone: string;
   readonly zeroCopy: string;
+  readonly github: string;
+  readonly linkedin: string;
+  readonly medium: string;
+  readonly navigara: string;
 }
 
 export function buildHomePageModel(profile: {
@@ -55,6 +62,7 @@ export function buildHomePageModel(profile: {
   readonly writing: readonly WritingItem[];
   readonly links: {
     readonly linkedin: string;
+    readonly github: string;
     readonly medium: string;
     readonly navigara: string;
     readonly zeroCopy: string;
@@ -77,6 +85,7 @@ export function buildHomePageModel(profile: {
     signals: profile.signals,
     stats: profile.stats,
     skills: profile.skills,
+    skillCategories,
     about: profile.about,
     experience: profile.experience,
     education: profile.education,
@@ -91,5 +100,9 @@ export function buildHomePageModel(profile: {
     email: profile.links.email,
     phone: profile.links.phone,
     zeroCopy: profile.links.zeroCopy,
+    github: profile.links.github,
+    linkedin: profile.links.linkedin,
+    medium: profile.links.medium,
+    navigara: profile.links.navigara,
   };
 }

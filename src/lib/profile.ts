@@ -1,3 +1,5 @@
+import { flattenSkills } from "./skills";
+
 export interface ExperienceItem {
   readonly id: string;
   readonly role: string;
@@ -88,22 +90,7 @@ export const profile: SiteProfile = {
     { value: "400+", label: "Students taught as STAT 198 Head Instructor" },
     { value: "200K+", label: "TEDx YouTube views as lead organizer" },
   ],
-  skills: [
-    "Python",
-    "R",
-    "SQL",
-    "Excel",
-    "Git",
-    "Bayesian inference",
-    "MLE / regression",
-    "R Shiny",
-    "Streamlit",
-    "pandas / NumPy",
-    "GTM / outreach automation",
-    "Multifamily underwriting",
-    "Position sizing & risk rules",
-    "Prompt engineering (basics)",
-  ],
+  skills: flattenSkills(),
   about: [
     "Theo Douwes is a UC Berkeley Statistics graduate (B.A., 2019–2023) based in San Francisco. He builds outreach automation for GTM teams, quantitative underwriting tools for multifamily real estate, and probabilistic decision systems spanning Bayesian/MLE inference, prediction-market pricing, and risk-aware decision frameworks.",
     "He taught 400+ students as Head Instructor of Berkeley’s largest DeCal (STAT 198), presented research on algorithmic bias in hiring at Oxford’s Map the System competition, and managed operations for 30 rental units while modeling multifamily acquisitions totaling $5.88M.",

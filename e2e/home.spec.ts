@@ -20,15 +20,49 @@ test.describe("Theo Douwes site", () => {
     await page.goto("/");
 
     await expect(page.locator("#about")).toBeVisible();
+    await expect(page.locator("#skills")).toBeVisible();
     await expect(page.locator("#work")).toBeVisible();
     await expect(page.locator("#projects")).toBeVisible();
     await expect(page.locator("#writing")).toBeVisible();
+    await expect(page.locator("#connect")).toBeVisible();
+  });
+
+  test("exposes LinkedIn GitHub and Medium profile links", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: /LinkedIn/i }).first()).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/theo-douwes",
+    );
+    await expect(page.getByRole("link", { name: /GitHub/i }).first()).toHaveAttribute(
+      "href",
+      "https://github.com/TheoDouwes",
+    );
+    await expect(page.getByRole("link", { name: /Medium/i }).first()).toHaveAttribute(
+      "href",
+      "https://medium.com/Douwes.theo",
+    );
+  });
+
+  test("serves robots sitemap and llms.txt for crawlers", async ({ request }) => {
+    const robots = await request.get("/robots.txt");
+    expect(robots.ok()).toBeTruthy();
+    const robotsBody = await robots.text();
+    expect(robotsBody).toContain("Sitemap:");
+    expect(robotsBody).toMatch(/Allow:\s*\//);
+
+    const sitemap = await request.get("/sitemap.xml");
+    expect(sitemap.ok()).toBeTruthy();
+    expect(await sitemap.text()).toContain("theodouwes.com");
+
+    const llms = await request.get("/llms.txt");
+    expect(llms.ok()).toBeTruthy();
+    expect(await llms.text()).toContain("Theo Alexander Douwes");
   });
 
   test("links to Theo's GitHub profile", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.getByRole("link", { name: "GitHub" })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: "GitHub" }).last()).toHaveAttribute(
       "href",
       "https://github.com/TheoDouwes",
     );

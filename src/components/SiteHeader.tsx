@@ -9,9 +9,11 @@ interface SiteHeaderProps {
 
 const NAV_ITEMS = [
   { href: "#about", label: "About" },
+  { href: "#skills", label: "Skills" },
   { href: "#work", label: "Work" },
   { href: "#projects", label: "Projects" },
   { href: "#writing", label: "Writing" },
+  { href: "#connect", label: "Connect" },
 ] as const;
 
 const DESKTOP_MQ = "(min-width: 721px)";

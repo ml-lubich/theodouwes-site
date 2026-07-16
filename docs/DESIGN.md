@@ -46,8 +46,16 @@ Avoid soft decorative faces; precision over shout.
 ## Sections
 
 1. Hero
-2. About (+ documented stats + skills)
-3. Work (+ Education)
-4. Projects
-5. Writing
-6. Footer (email, phone, LinkedIn, GitHub, Medium, ZeroCopy demo, Navigara)
+2. About (+ documented stats)
+3. Skills — desktop Skill Storm (CSS 3D carousel ported from portfolio) + always-on categorized catalog for SEO/a11y
+4. Work (+ Education)
+5. Projects
+6. Writing
+7. Connect (LinkedIn, GitHub, Medium, ZeroCopy, Navigara, email, phone)
+8. Footer (same outbound links)
+
+## Skill Storm
+
+- Desktop (≥900px): orbiting opaque glass pills; drag to spin; hover pauses idle drift; respects `prefers-reduced-motion`
+- Mobile: storm hidden; categorized skill lists remain fully readable
+- Tokens: Theo `--ink` / glass borders (no portfolio purple/primary accents)

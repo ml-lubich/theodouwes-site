@@ -11,9 +11,10 @@
 
 | Layer | Location | Responsibility |
 | --- | --- | --- |
-| Domain | `src/lib/profile.ts` | Typed profile content + pure helpers |
+| Domain | `src/lib/profile.ts`, `src/lib/skills.ts` | Typed profile + honest skills bank |
 | Application | `src/lib/home-model.ts` | Maps profile → home page view model |
-| Presentation | `src/components/*`, `src/app/*` | Layout, sections, styles, motion |
+| Presentation | `src/components/*`, `src/app/*` | Layout, sections, Skill Storm, styles, motion |
+| Crawl | `src/app/robots.ts`, `src/app/sitemap.ts`, `public/llms.txt` | Search + LLM discoverability |
 
 ## Data flow
 

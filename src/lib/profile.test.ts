@@ -39,6 +39,8 @@ describe("profile domain", () => {
     ]);
     expect(profile.skills).toContain("Python");
     expect(profile.skills).toContain("Bayesian inference");
+    expect(profile.skills).toContain("Quantitative Analyst");
+    expect(profile.skills.length).toBeGreaterThan(40);
   });
 
   test("keeps Piedmont and independent practice chapters honest", () => {

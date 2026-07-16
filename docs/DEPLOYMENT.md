@@ -20,7 +20,9 @@ vercel --prod   # production
 
 ## Smoke after deploy
 
-1. Open production URL
+1. Open production URL (`https://theodouwes.com`)
 2. Confirm hero brand “Theo Douwes”
 3. Confirm `#work` shows Navigara
-4. Confirm LinkedIn CTA is present
+4. Confirm LinkedIn / GitHub / Medium links on `#connect`
+5. Confirm `/robots.txt`, `/sitemap.xml`, `/llms.txt` return 200
+6. Confirm `#skills` catalog is present (Skill Storm on desktop)
