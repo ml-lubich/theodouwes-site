@@ -79,7 +79,8 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
 
 Object.defineProperty(window, "matchMedia", {
   value: (query: string) => ({
-    matches: false,
+    // Desktop-first: unit tests have no real viewport; prefer expanded nav.
+    matches: /min-width:\s*\d+/i.test(query),
     media: query,
     onchange: null,
     addListener() {},

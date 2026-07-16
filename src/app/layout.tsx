@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { flattenSkills } from "@/lib/skills";
+import { profile } from "@/lib/profile";
 import "./globals.css";
+
+const SITE_URL = "https://theodouwes.com";
 
 const plexSans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -16,18 +20,106 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+const description =
+  "UC Berkeley Statistics graduate (B.A.) building GTM automation, multifamily underwriting tools, and probabilistic decision software. GTM and Sales Engineer at Navigara in San Francisco.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theodouwes-site.vercel.app"),
-  title: "Theo Douwes — AI Transformation & Quant Research",
-  description:
-    "Quantifying developer productivity into business outcomes. AI Transformation at Navigara. UC Berkeley Statistics. Engineering Throughput Value (ETV).",
-  openGraph: {
-    title: "Theo Douwes",
-    description:
-      "Quantifying developer productivity into business outcomes in the AI era.",
-    type: "website",
-    images: [{ url: "/theo.webp" }],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Theo Douwes — GTM Systems, Underwriting & Probabilistic Decisions",
+    template: "%s · Theo Douwes",
   },
+  description,
+  keywords: [
+    "Theo Douwes",
+    "Theo Alexander Douwes",
+    "UC Berkeley Statistics",
+    "GTM Sales Engineer",
+    "Quantitative Analyst",
+    "Data Analyst",
+    "Data Scientist",
+    "Software Engineer",
+    "Bayesian inference",
+    "multifamily underwriting",
+    "Navigara",
+    "San Francisco",
+    "R Shiny",
+    "Streamlit",
+    "prediction markets",
+  ],
+  authors: [{ name: "Theo Alexander Douwes", url: SITE_URL }],
+  creator: "Theo Alexander Douwes",
+  publisher: "Theo Alexander Douwes",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "Theo Douwes",
+    title: "Theo Douwes — GTM Systems, Underwriting & Probabilistic Decisions",
+    description,
+    images: [
+      {
+        url: "/theo.webp",
+        width: 800,
+        height: 800,
+        alt: "Portrait of Theo Alexander Douwes",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Theo Douwes — GTM Systems & Probabilistic Decisions",
+    description,
+    images: ["/theo.webp"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  category: "technology",
+};
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  url: SITE_URL,
+  image: `${SITE_URL}/theo.webp`,
+  email: profile.links.email,
+  telephone: profile.links.phone,
+  jobTitle: "GTM and Sales Engineer",
+  worksFor: {
+    "@type": "Organization",
+    name: "Navigara",
+    url: profile.links.navigara,
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "University of California, Berkeley",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "San Francisco",
+    addressRegion: "CA",
+    addressCountry: "US",
+  },
+  sameAs: [
+    profile.links.linkedin,
+    profile.links.github,
+    profile.links.medium,
+  ],
+  knowsAbout: flattenSkills().slice(0, 40),
+  description,
 };
 
 export default function RootLayout({
@@ -37,7 +129,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${plexSans.variable} ${plexMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

@@ -2,9 +2,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
 import { AboutSection } from "@/components/AboutSection";
 import { ExperienceSection } from "@/components/ExperienceSection";
-import { FeaturedSection } from "@/components/FeaturedSection";
+import { ProjectsSection } from "@/components/ProjectsSection";
 import { WritingSection } from "@/components/WritingSection";
+import { ConnectLinks } from "@/components/ConnectLinks";
 import { SiteFooter } from "@/components/SiteFooter";
+import { Reveal } from "@/components/Reveal";
 import { buildHomePageModel } from "@/lib/home-model";
 import { profile } from "@/lib/profile";
 
@@ -28,31 +30,54 @@ export default function HomePage() {
           subhead={model.subhead}
           photoSrc={model.photoSrc}
           photoAlt={model.photoAlt}
+          portraitMeta={model.portraitMeta}
           signals={model.signals}
           primaryCta={model.primaryCta}
           secondaryCta={model.secondaryCta}
         />
         <AboutSection
           about={model.about}
+          aboutTitle={model.aboutTitle}
           location={model.location}
           title={model.title}
           stats={model.stats}
           skills={model.skills}
+          skillCategories={model.skillCategories}
         />
         <ExperienceSection
           experience={model.experience}
+          workIntro={model.workIntro}
           education={model.education}
         />
-        <FeaturedSection featured={model.featured} />
+        <ProjectsSection projects={model.projects} />
         <WritingSection writing={model.writing} />
+        <Reveal as="section" className="section" id="connect" delayMs={40}>
+          <p className="section-label">Connect</p>
+          <h2 className="section-title">Profiles, writing, and demos</h2>
+          <p className="meta-line">
+            LinkedIn · GitHub · Medium · ZeroCopy · Navigara · email · phone
+          </p>
+          <ConnectLinks
+            linkedin={model.linkedin}
+            github={model.github}
+            medium={model.medium}
+            navigara={model.navigara}
+            zeroCopy={model.zeroCopy}
+            email={model.email}
+            phone={model.phone}
+          />
+        </Reveal>
       </main>
       <SiteFooter
         name={model.brand}
         monogram={model.monogram}
-        linkedin={profile.links.linkedin}
-        github={profile.links.github}
-        medium={profile.links.medium}
-        navigara={profile.links.navigara}
+        linkedin={model.linkedin}
+        github={model.github}
+        medium={model.medium}
+        navigara={model.navigara}
+        zeroCopy={model.zeroCopy}
+        email={model.email}
+        phone={model.phone}
       />
     </div>
   );

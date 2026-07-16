@@ -34,24 +34,30 @@ describe("home page composition", () => {
           subhead={model.subhead}
           photoSrc={model.photoSrc}
           photoAlt={model.photoAlt}
+          portraitMeta={model.portraitMeta}
           signals={model.signals}
           primaryCta={model.primaryCta}
           secondaryCta={model.secondaryCta}
         />
         <AboutSection
           about={model.about}
+          aboutTitle={model.aboutTitle}
           location={model.location}
           title={model.title}
           stats={model.stats}
           skills={model.skills}
+          skillCategories={model.skillCategories}
         />
         <SiteFooter
           name={model.brand}
           monogram={model.monogram}
-          linkedin={profile.links.linkedin}
-          github={profile.links.github}
-          medium={profile.links.medium}
-          navigara={profile.links.navigara}
+          linkedin={model.linkedin}
+          github={model.github}
+          medium={model.medium}
+          navigara={model.navigara}
+          zeroCopy={model.zeroCopy}
+          email={model.email}
+          phone={model.phone}
         />
       </>,
     );
@@ -61,5 +67,7 @@ describe("home page composition", () => {
     );
     expect(screen.getAllByText(model.stats[0]!.value).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "Navigara" })).toBeTruthy();
+    expect(screen.getByText(profile.links.email)).toBeTruthy();
+    expect(screen.getAllByText("Bayesian inference").length).toBeGreaterThan(0);
   });
 });

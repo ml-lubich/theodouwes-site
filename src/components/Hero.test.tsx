@@ -27,12 +27,13 @@ describe("Hero", () => {
       render(
         <Hero
           brand="Theo Douwes"
-          title="AI Transformation @ Navigara"
-          headline="Quantifying developer productivity into business outcomes."
-          subhead="Leaders need signal."
+          title="GTM and Sales Engineer @ Navigara"
+          headline="Statistics graduate building GTM systems, underwriting tools, and probabilistic decision software."
+          subhead="Documented impact only."
           photoSrc="/theo.webp"
           photoAlt="Portrait of Theo Alexander Douwes"
-          signals={["Navigara", "ETV Research"]}
+          portraitMeta="San Francisco · Stats · GTM systems"
+          signals={["Navigara", "UC Berkeley Stats"]}
           primaryCta={{ label: "View work", href: "#work" }}
           secondaryCta={{
             label: "Connect on LinkedIn",
@@ -46,13 +47,38 @@ describe("Hero", () => {
       /Theo\s*Douwes/,
     );
     expect(
-      screen.getByText(/Quantifying developer productivity/i),
+      screen.getByText(/Statistics graduate building GTM systems/i),
     ).toBeTruthy();
     expect(screen.getByRole("link", { name: "View work" })).toBeTruthy();
     expect(screen.getByRole("img", { name: /Theo Alexander Douwes/i })).toBeTruthy();
     expect(screen.getByText("Navigara")).toBeTruthy();
+    expect(screen.getByText(/San Francisco · Stats/i)).toBeTruthy();
     await waitFor(() => {
       expect(screen.getByTestId("white-brain-mock")).toBeTruthy();
     });
+  });
+
+  test("renders single-token brand without splitting", async () => {
+    const { Hero } = await import("./Hero");
+    await act(async () => {
+      render(
+        <Hero
+          brand="Theo"
+          title="GTM"
+          headline="Headline"
+          subhead="Sub"
+          photoSrc="/theo.webp"
+          photoAlt="Portrait"
+          portraitMeta="SF"
+          signals={["Stats"]}
+          primaryCta={{ label: "View work", href: "#work" }}
+          secondaryCta={{
+            label: "Connect on LinkedIn",
+            href: "https://www.linkedin.com/in/theo-douwes",
+          }}
+        />,
+      );
+    });
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/Theo/);
   });
 });

@@ -11,7 +11,7 @@ describe("home page model integration", () => {
     expect(model.photoSrc).toBe("/theo.webp");
     expect(model.monogram).toBe("TD");
     expect(model.experience).toEqual(profile.experience);
-    expect(model.featured).toHaveLength(profile.featured.length);
+    expect(model.projects).toHaveLength(profile.projects.length);
     expect(model.writing).toHaveLength(profile.writing.length);
   });
 
@@ -31,5 +31,6 @@ describe("home page model integration", () => {
     const model = buildHomePageModel(profile);
     expect(model.education.school).toContain("Berkeley");
     expect(model.education.notes.length).toBeGreaterThan(0);
+    expect(model.education.notes.some((n) => n.includes("400+"))).toBe(true);
   });
 });

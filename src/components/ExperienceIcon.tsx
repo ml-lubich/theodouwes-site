@@ -14,29 +14,16 @@ const paths: Record<string, ReactNode> = {
       <path d="m8 11 8-4M8 13l8 4M18 8.5v7" />
     </>
   ),
-  zerocopy: (
-    <>
-      <rect x="3" y="4" width="18" height="16" rx="3" />
-      <path d="m7 9 3 3-3 3M13 15h4" />
-    </>
-  ),
-  break: (
-    <>
-      <path d="m3 19 6.5-11 3 5 2.5-4 6 10H3Z" />
-      <path d="m8 19 4-6 4 6" />
-      <path d="M16.5 5.5h.01" />
-    </>
-  ),
-  re: (
+  piedmont: (
     <>
       <path d="M4 21V7l8-4 8 4v14M8 21v-4h8v4" />
       <path d="M8 9h2M14 9h2M8 13h2M14 13h2" />
     </>
   ),
-  "berkeley-instructor": (
+  independent: (
     <>
-      <path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22V5.5Z" />
-      <path d="M20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22V5.5Z" />
+      <path d="M4 19h16M6 16l3-8 3 5 2-3 4 6" />
+      <circle cx="18" cy="6" r="2" />
     </>
   ),
   education: (

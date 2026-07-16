@@ -1,10 +1,11 @@
 # Theo Douwes Site
 
-Personal website for **Theo Alexander Douwes** — AI Transformation at Navigara and stats researcher quantifying developer productivity into business outcomes.
+Personal website for **Theo Alexander Douwes** — UC Berkeley Statistics graduate building GTM systems, underwriting tools, and probabilistic decision software. GTM and Sales Engineer at Navigara.
 
 ## Stack
 
 - Next.js 15 (App Router) + React 19
+- Framer Motion
 - Bun
 - Playwright (e2e)
 - Bun test (unit + integration)

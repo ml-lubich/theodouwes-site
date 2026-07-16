@@ -135,7 +135,8 @@ test.describe("dynamic link explorer", () => {
 
         checkedOutbound.push(href);
         const status = await statusForUrl(request, href);
-        // Bot walls (LinkedIn 999/403) are not dead links.
+        // Bot walls (LinkedIn 999/403, Medium Cloudflare) are not dead links.
+        if (/linkedin\.com|medium\.com/i.test(href)) continue;
         if (DEAD_STATUSES.has(status)) {
           problems.push(`${href} → HTTP ${status}`);
         }
