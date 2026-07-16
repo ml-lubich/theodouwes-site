@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useState, type ReactNode } from "react";
 
 interface RevealProps {
   readonly children: ReactNode;
@@ -25,53 +20,37 @@ export function Reveal({
   delayMs = 0,
   enable3D = true,
 }: RevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
-  const [settled, setSettled] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      setSettled(true);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setVisible(true);
-        observer.unobserve(entry.target);
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!visible || settled) return;
-    const t = window.setTimeout(() => setSettled(true), 620 + delayMs);
-    return () => window.clearTimeout(t);
-  }, [visible, settled, delayMs]);
+  const reduceMotion = useReducedMotion();
+  const [visible, setVisible] = useState(reduceMotion === true);
+  const delay = delayMs / 1000;
+  const classes = `reveal ${className}`.trim();
 
   const props = {
     id,
-    className: `reveal ${className}`.trim(),
+    className: classes,
     "data-reveal-visible": visible ? "true" : "false",
-    "data-reveal-settled": settled ? "true" : "false",
-    "data-reveal-3d": enable3D && !visible ? "true" : "false",
-    style: { transitionDelay: `${delayMs}ms` } satisfies CSSProperties,
-    ref: (node: HTMLElement | null) => {
-      ref.current = node;
+    "data-reveal-settled": visible ? "true" : "false",
+    "data-reveal-3d": enable3D && !reduceMotion ? "true" : "false",
+    initial: reduceMotion
+      ? false
+      : enable3D
+        ? { opacity: 0, y: 36, rotateX: 8 }
+        : { opacity: 0, y: 28 },
+    whileInView: { opacity: 1, y: 0, rotateX: 0 },
+    viewport: { once: true, amount: 0.12, margin: "0px 0px -8% 0px" },
+    onViewportEnter: () => setVisible(true),
+    transition: {
+      duration: reduceMotion ? 0 : 0.65,
+      delay: reduceMotion ? 0 : delay,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   };
 
   if (as === "section") {
-    return <section {...props}>{children}</section>;
+    return <motion.section {...props}>{children}</motion.section>;
   }
   if (as === "li") {
-    return <li {...props}>{children}</li>;
+    return <motion.li {...props}>{children}</motion.li>;
   }
-  return <div {...props}>{children}</div>;
+  return <motion.div {...props}>{children}</motion.div>;
 }

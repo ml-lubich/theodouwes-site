@@ -2,7 +2,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
 import { AboutSection } from "@/components/AboutSection";
 import { ExperienceSection } from "@/components/ExperienceSection";
-import { FeaturedSection } from "@/components/FeaturedSection";
+import { ProjectsSection } from "@/components/ProjectsSection";
 import { WritingSection } from "@/components/WritingSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import { buildHomePageModel } from "@/lib/home-model";
@@ -28,12 +28,14 @@ export default function HomePage() {
           subhead={model.subhead}
           photoSrc={model.photoSrc}
           photoAlt={model.photoAlt}
+          portraitMeta={model.portraitMeta}
           signals={model.signals}
           primaryCta={model.primaryCta}
           secondaryCta={model.secondaryCta}
         />
         <AboutSection
           about={model.about}
+          aboutTitle={model.aboutTitle}
           location={model.location}
           title={model.title}
           stats={model.stats}
@@ -41,9 +43,10 @@ export default function HomePage() {
         />
         <ExperienceSection
           experience={model.experience}
+          workIntro={model.workIntro}
           education={model.education}
         />
-        <FeaturedSection featured={model.featured} />
+        <ProjectsSection projects={model.projects} />
         <WritingSection writing={model.writing} />
       </main>
       <SiteFooter
@@ -53,6 +56,9 @@ export default function HomePage() {
         github={profile.links.github}
         medium={profile.links.medium}
         navigara={profile.links.navigara}
+        zeroCopy={profile.links.zeroCopy}
+        email={profile.links.email}
+        phone={profile.links.phone}
       />
     </div>
   );

@@ -9,17 +9,18 @@ describe("buildHomePageModel unit", () => {
     expect(model.photoSrc).toBe("/theo.webp");
     expect(model.signals.length).toBeGreaterThan(0);
     expect(model.stats.length).toBeGreaterThan(0);
-    expect(model.skills).toContain("AI Strategy");
+    expect(model.skills).toContain("Python");
+    expect(model.aboutTitle).toContain("Probabilistic");
     expect(model.tertiaryCta).toEqual({
       label: "Navigara",
       href: profile.links.navigara,
     });
   });
 
-  test("preserves featured and writing collections", () => {
+  test("preserves projects and writing collections", () => {
     const model = buildHomePageModel(profile);
-    expect(model.featured.map((f) => f.id)).toEqual(
-      profile.featured.map((f) => f.id),
+    expect(model.projects.map((p) => p.id)).toEqual(
+      profile.projects.map((p) => p.id),
     );
     expect(model.writing.map((w) => w.id)).toEqual(
       profile.writing.map((w) => w.id),

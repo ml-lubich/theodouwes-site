@@ -3,6 +3,7 @@ import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 
 interface AboutSectionProps {
   readonly title: string;
+  readonly aboutTitle: string;
   readonly location: string;
   readonly about: readonly string[];
   readonly stats: readonly { readonly value: string; readonly label: string }[];
@@ -11,6 +12,7 @@ interface AboutSectionProps {
 
 export function AboutSection({
   title,
+  aboutTitle,
   location,
   about,
   stats,
@@ -20,7 +22,7 @@ export function AboutSection({
     <Reveal as="section" className="section" id="about" delayMs={40}>
       <p className="section-label">About</p>
       <h2 className="section-title" id="about-title">
-        Signal from the codebase, not gut feel
+        {aboutTitle}
       </h2>
       <p className="meta-line">
         {title} · {location}

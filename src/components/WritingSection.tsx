@@ -11,7 +11,7 @@ export function WritingSection({ writing }: WritingSectionProps) {
     <Reveal as="section" className="section" id="writing" delayMs={120}>
       <p className="section-label">Writing</p>
       <h2 className="section-title" id="writing-title">
-        Essays & frameworks
+        Notes & frameworks
       </h2>
       <ul className="link-grid">
         {writing.map((item) => (

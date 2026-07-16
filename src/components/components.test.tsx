@@ -4,7 +4,7 @@ import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { AboutSection } from "./AboutSection";
 import { ExperienceSection } from "./ExperienceSection";
-import { FeaturedSection } from "./FeaturedSection";
+import { ProjectsSection } from "./ProjectsSection";
 import { WritingSection } from "./WritingSection";
 import { ShimmerOverlay } from "./ShimmerOverlay";
 import { Reveal } from "./Reveal";
@@ -26,6 +26,9 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Work" }).getAttribute("href")).toBe(
       "#work",
     );
+    expect(
+      screen.getByRole("link", { name: "Projects" }).getAttribute("href"),
+    ).toBe("#projects");
   });
 });
 
@@ -37,8 +40,11 @@ describe("SiteFooter", () => {
         monogram="TD"
         linkedin="https://linkedin.com/in/theo-douwes"
         github="https://github.com/TheoDouwes"
-        medium="https://medium.com/"
+        medium="https://medium.com/Douwes.theo"
         navigara="https://navigara.com"
+        zeroCopy="https://tinyurl.com/video-live-bot"
+        email="tadouwes@berkeley.edu"
+        phone="+1-858-663-3556"
       />,
     );
     expect(
@@ -53,6 +59,14 @@ describe("SiteFooter", () => {
     expect(
       screen.getByRole("link", { name: "GitHub" }).getAttribute("href"),
     ).toBe("https://github.com/TheoDouwes");
+    expect(
+      screen.getByRole("link", { name: "tadouwes@berkeley.edu" }).getAttribute(
+        "href",
+      ),
+    ).toBe("mailto:tadouwes@berkeley.edu");
+    expect(
+      screen.getByRole("link", { name: "ZeroCopy demo" }).getAttribute("href"),
+    ).toContain("tinyurl");
   });
 });
 
@@ -60,16 +74,17 @@ describe("AboutSection", () => {
   test("renders stats and skills", () => {
     render(
       <AboutSection
-        title="AI Transformation"
+        title="GTM and Sales Engineer"
+        aboutTitle="Probabilistic systems for GTM, underwriting, and risk"
         location="SF"
         about={["Paragraph one about research."]}
-        stats={[{ value: "116%", label: "Lift" }]}
-        skills={["AI Strategy", "R"]}
+        stats={[{ value: "$5.88M", label: "Acquisitions" }]}
+        skills={["Python", "R"]}
       />,
     );
-    expect(screen.getByText(/Signal from the codebase/i)).toBeTruthy();
-    expect(screen.getByText("116%")).toBeTruthy();
-    expect(screen.getByText("AI Strategy")).toBeTruthy();
+    expect(screen.getByText(/Probabilistic systems/i)).toBeTruthy();
+    expect(screen.getByText("$5.88M")).toBeTruthy();
+    expect(screen.getByText("Python")).toBeTruthy();
   });
 });
 
@@ -77,15 +92,16 @@ describe("ExperienceSection", () => {
   test("lists roles and education", () => {
     render(
       <ExperienceSection
+        workIntro="Documented chapters only."
         experience={[
           {
             id: "navigara",
-            role: "Open-source Researcher",
+            role: "GTM and Sales Engineer",
             org: "Navigara",
             location: "SF",
-            start: "Apr 2026",
+            start: "Feb 2026",
             end: "Present",
-            highlights: ["Quant metrics.", "Ship signal."],
+            highlights: ["Outreach automation.", "Playbooks."],
           },
         ]}
         education={{
@@ -96,9 +112,9 @@ describe("ExperienceSection", () => {
         }}
       />,
     );
-    expect(screen.getByText("Open-source Researcher")).toBeTruthy();
+    expect(screen.getByText("GTM and Sales Engineer")).toBeTruthy();
     expect(screen.getAllByText(/Navigara/).length).toBeGreaterThan(0);
-    expect(screen.getByText("Quant metrics.")).toBeTruthy();
+    expect(screen.getByText("Outreach automation.")).toBeTruthy();
     expect(screen.getByText("UC Berkeley")).toBeTruthy();
     expect(screen.getByText("STAT 198")).toBeTruthy();
     expect(containerOrDocHasBullets()).toBe(true);
@@ -111,25 +127,35 @@ function containerOrDocHasBullets(): boolean {
   return document.querySelectorAll(".bullet-list li").length > 0;
 }
 
-describe("FeaturedSection", () => {
-  test("renders press links", () => {
+describe("ProjectsSection", () => {
+  test("renders project links and static cards", () => {
     render(
-      <FeaturedSection
-        featured={[
+      <ProjectsSection
+        projects={[
           {
-            id: "vb",
-            title: "ETV study",
-            outlet: "VentureBeat",
-            href: "https://venturebeat.com/",
-            blurb: "Commit data.",
+            id: "bayesian",
+            title: "Bayesian Inference System",
+            tag: "Sparse-data",
+            href: "https://medium.com/Douwes.theo",
+            blurb: "Bayesian methods.",
+          },
+          {
+            id: "re-tool",
+            title: "Real Estate Analysis Tool",
+            tag: "R Shiny",
+            href: null,
+            blurb: "Interactive model.",
           },
         ]}
       />,
     );
     expect(
-      screen.getByRole("link", { name: /ETV study/i }).getAttribute("href"),
-    ).toContain("venturebeat");
-    expect(screen.getByText("VentureBeat")).toBeTruthy();
+      screen
+        .getByRole("link", { name: /Bayesian Inference System/i })
+        .getAttribute("href"),
+    ).toContain("medium.com");
+    expect(screen.getByText("Real Estate Analysis Tool")).toBeTruthy();
+    expect(document.querySelector(".link-item.is-static")).toBeTruthy();
   });
 });
 
@@ -139,16 +165,18 @@ describe("WritingSection", () => {
       <WritingSection
         writing={[
           {
-            id: "moat",
-            title: "Stop Vibe-Coding",
-            href: "https://medium.com/x",
-            blurb: "Moat framework.",
+            id: "bayes-medium",
+            title: "Bayesian inference for sparse-data decisions",
+            href: "https://medium.com/Douwes.theo",
+            blurb: "Sparse-data notes.",
           },
         ]}
       />,
     );
     expect(
-      screen.getByRole("link", { name: /Stop Vibe-Coding/i }).getAttribute("href"),
+      screen
+        .getByRole("link", { name: /Bayesian inference/i })
+        .getAttribute("href"),
     ).toContain("medium.com");
   });
 });

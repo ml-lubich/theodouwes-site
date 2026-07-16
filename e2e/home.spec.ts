@@ -8,7 +8,7 @@ test.describe("Theo Douwes site", () => {
       /Theo\s+Douwes/i,
     );
     await expect(
-      page.getByText(/Quantifying developer productivity/i),
+      page.getByText(/Statistics graduate building GTM systems/i),
     ).toBeVisible();
     await expect(page.getByRole("link", { name: "View work" })).toBeVisible();
     await expect(
@@ -21,7 +21,7 @@ test.describe("Theo Douwes site", () => {
 
     await expect(page.locator("#about")).toBeVisible();
     await expect(page.locator("#work")).toBeVisible();
-    await expect(page.locator("#featured")).toBeVisible();
+    await expect(page.locator("#projects")).toBeVisible();
     await expect(page.locator("#writing")).toBeVisible();
   });
 
@@ -39,8 +39,14 @@ test.describe("Theo Douwes site", () => {
 
     await expect(page.getByText("Navigara").first()).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /Open-source Researcher/i }),
+      page.getByRole("heading", { name: /GTM and Sales Engineer/i }),
     ).toBeVisible();
+  });
+
+  test("shows documented acquisition stats", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByText("$5.88M").first()).toBeVisible();
+    await expect(page.getByText("400+").first()).toBeVisible();
   });
 
   test("nav anchors scroll to sections", async ({ page }) => {
@@ -52,11 +58,11 @@ test.describe("Theo Douwes site", () => {
     await expect(page.locator("#work")).toBeInViewport();
   });
 
-  test("renders rotatable brain beneath the hero name", async ({ page }) => {
+  test("renders rotatable brain behind the hero name", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(".hero-brain")).toBeVisible();
     await expect(page.locator(".hero-brand-last")).toHaveText(/Douwes/i);
-    await expect(page.getByText(/Drag to rotate/i)).toBeVisible();
+    await expect(page.locator(".hero-brain .brain-stage")).toBeVisible();
 
     const nameBox = await page.locator(".hero-brand").boundingBox();
     const brainBox = await page.locator(".hero-brain").boundingBox();
@@ -64,7 +70,11 @@ test.describe("Theo Douwes site", () => {
     expect(nameBox).not.toBeNull();
     expect(brainBox).not.toBeNull();
     expect(portraitBox).not.toBeNull();
-    expect(brainBox!.y).toBeGreaterThan(nameBox!.y + nameBox!.height - 1);
+    // Brain is a name backdrop in the copy column, left of the portrait.
     expect(brainBox!.x).toBeLessThan(portraitBox!.x);
+    expect(brainBox!.width).toBeGreaterThan(80);
+    expect(brainBox!.height).toBeGreaterThan(80);
   });
 });
+
+

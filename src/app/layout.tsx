@@ -18,13 +18,13 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://theodouwes-site.vercel.app"),
-  title: "Theo Douwes — AI Transformation & Quant Research",
+  title: "Theo Douwes — GTM Systems, Underwriting & Probabilistic Decisions",
   description:
-    "Quantifying developer productivity into business outcomes. AI Transformation at Navigara. UC Berkeley Statistics. Engineering Throughput Value (ETV).",
+    "UC Berkeley Statistics graduate building GTM automation, multifamily underwriting tools, and probabilistic decision software. Navigara GTM and Sales Engineer.",
   openGraph: {
     title: "Theo Douwes",
     description:
-      "Quantifying developer productivity into business outcomes in the AI era.",
+      "Statistics graduate building GTM systems, underwriting tools, and probabilistic decision software.",
     type: "website",
     images: [{ url: "/theo.webp" }],
   },

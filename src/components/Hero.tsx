@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
 
 const WhiteBrain = dynamic(
   () => import("@/components/WhiteBrain").then((m) => m.WhiteBrain),
@@ -25,6 +26,7 @@ interface HeroProps {
   readonly subhead: string;
   readonly photoSrc: string;
   readonly photoAlt: string;
+  readonly portraitMeta: string;
   readonly signals: readonly string[];
   readonly primaryCta: Cta;
   readonly secondaryCta: Cta;
@@ -39,6 +41,8 @@ function splitBrand(brand: string): { first: string; last: string } {
   };
 }
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 export function Hero({
   brand,
   title,
@@ -46,28 +50,49 @@ export function Hero({
   subhead,
   photoSrc,
   photoAlt,
+  portraitMeta,
   signals,
   primaryCta,
   secondaryCta,
 }: HeroProps) {
   const { first, last } = splitBrand(brand);
+  const reduceMotion = useReducedMotion();
+
+  const fadeUp = (delay: number) =>
+    reduceMotion
+      ? { initial: false as const, animate: { opacity: 1, y: 0 } }
+      : {
+          initial: { opacity: 0, y: 28 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, delay, ease },
+        };
 
   return (
     <section className="hero" id="top" aria-labelledby="hero-brand">
       <div className="hero-copy">
-        <p className="eyebrow">{title}</p>
+        <motion.p className="eyebrow" {...fadeUp(0.05)}>
+          {title}
+        </motion.p>
         <div className="hero-namewrap">
           <div className="hero-brain" aria-hidden="true">
             <WhiteBrain backdrop />
           </div>
-          <h1 className="hero-brand" id="hero-brand">
+          <motion.h1
+            className="hero-brand"
+            id="hero-brand"
+            {...fadeUp(0.12)}
+          >
             <span className="hero-brand-line">{first}{" "}</span>
             <span className="hero-brand-last">{last || brand}</span>
-          </h1>
+          </motion.h1>
         </div>
-        <p className="hero-title">{headline}</p>
-        <p className="hero-sub">{subhead}</p>
-        <div className="cta-row">
+        <motion.p className="hero-title" {...fadeUp(0.22)}>
+          {headline}
+        </motion.p>
+        <motion.p className="hero-sub" {...fadeUp(0.3)}>
+          {subhead}
+        </motion.p>
+        <motion.div className="cta-row" {...fadeUp(0.38)}>
           <a className="btn btn-primary interactive" href={primaryCta.href}>
             {primaryCta.label}
           </a>
@@ -79,17 +104,48 @@ export function Hero({
           >
             {secondaryCta.label}
           </a>
-        </div>
-        <div className="signal-row" aria-label="Focus areas">
-          {signals.map((signal) => (
-            <span className="signal-chip interactive" key={signal}>
+        </motion.div>
+        <motion.div
+          className="signal-row"
+          aria-label="Focus areas"
+          {...fadeUp(0.46)}
+        >
+          {signals.map((signal, index) => (
+            <motion.span
+              className="signal-chip interactive"
+              key={signal}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.45,
+                delay: reduceMotion ? 0 : 0.52 + index * 0.06,
+                ease,
+              }}
+            >
               {signal}
-            </span>
+            </motion.span>
           ))}
-        </div>
+        </motion.div>
       </div>
-      <div className="hero-media">
-        <div className="portrait-frame interactive">
+      <motion.div
+        className="hero-media"
+        initial={reduceMotion ? false : { opacity: 0, x: 36, scale: 0.96 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
+        transition={{ duration: 0.85, delay: reduceMotion ? 0 : 0.2, ease }}
+      >
+        <motion.div
+          className="portrait-frame interactive"
+          animate={
+            reduceMotion
+              ? undefined
+              : { y: [0, -8, 0] }
+          }
+          transition={
+            reduceMotion
+              ? undefined
+              : { duration: 6.5, repeat: Infinity, ease: "easeInOut" }
+          }
+        >
           <Image
             src={photoSrc}
             alt={photoAlt}
@@ -98,9 +154,9 @@ export function Hero({
             priority
             sizes="(max-width: 900px) 90vw, 380px"
           />
-          <p className="portrait-meta">SF Bay · Quant · AI Transformation</p>
-        </div>
-      </div>
+          <p className="portrait-meta">{portraitMeta}</p>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

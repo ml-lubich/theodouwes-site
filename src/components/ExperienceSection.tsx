@@ -7,6 +7,7 @@ import type { CSSProperties } from "react";
 
 interface ExperienceSectionProps {
   readonly experience: readonly ExperienceItem[];
+  readonly workIntro: string;
   readonly education: {
     readonly school: string;
     readonly degree: string;
@@ -17,6 +18,7 @@ interface ExperienceSectionProps {
 
 export function ExperienceSection({
   experience,
+  workIntro,
   education,
 }: ExperienceSectionProps) {
   return (
@@ -27,10 +29,7 @@ export function ExperienceSection({
           <span>Experience</span>
           <span className="kinetic-arrow" aria-hidden="true">↘</span>
         </h2>
-        <p className="work-intro">
-          Research, quantitative systems, teaching, and deliberate resets—each
-          chapter compounds into the next.
-        </p>
+        <p className="work-intro">{workIntro}</p>
       </Reveal>
       <ol className="timeline">
         {experience.map((item, index) => (

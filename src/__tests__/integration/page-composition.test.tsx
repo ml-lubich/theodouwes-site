@@ -34,12 +34,14 @@ describe("home page composition", () => {
           subhead={model.subhead}
           photoSrc={model.photoSrc}
           photoAlt={model.photoAlt}
+          portraitMeta={model.portraitMeta}
           signals={model.signals}
           primaryCta={model.primaryCta}
           secondaryCta={model.secondaryCta}
         />
         <AboutSection
           about={model.about}
+          aboutTitle={model.aboutTitle}
           location={model.location}
           title={model.title}
           stats={model.stats}
@@ -52,6 +54,9 @@ describe("home page composition", () => {
           github={profile.links.github}
           medium={profile.links.medium}
           navigara={profile.links.navigara}
+          zeroCopy={profile.links.zeroCopy}
+          email={profile.links.email}
+          phone={profile.links.phone}
         />
       </>,
     );
@@ -61,5 +66,6 @@ describe("home page composition", () => {
     );
     expect(screen.getAllByText(model.stats[0]!.value).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "Navigara" })).toBeTruthy();
+    expect(screen.getByText(profile.links.email)).toBeTruthy();
   });
 });

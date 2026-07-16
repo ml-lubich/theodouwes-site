@@ -8,11 +8,11 @@ export interface ExperienceItem {
   readonly highlights: readonly string[];
 }
 
-export interface FeaturedItem {
+export interface ProjectItem {
   readonly id: string;
   readonly title: string;
-  readonly outlet: string;
-  readonly href: string;
+  readonly tag: string;
+  readonly href: string | null;
   readonly blurb: string;
 }
 
@@ -31,8 +31,11 @@ export interface SiteProfile {
   readonly location: string;
   readonly headline: string;
   readonly subhead: string;
+  readonly aboutTitle: string;
+  readonly workIntro: string;
   readonly photoSrc: string;
   readonly photoAlt: string;
+  readonly portraitMeta: string;
   readonly signals: readonly string[];
   readonly stats: readonly { readonly value: string; readonly label: string }[];
   readonly skills: readonly string[];
@@ -44,13 +47,16 @@ export interface SiteProfile {
     readonly period: string;
     readonly notes: readonly string[];
   };
-  readonly featured: readonly FeaturedItem[];
+  readonly projects: readonly ProjectItem[];
   readonly writing: readonly WritingItem[];
   readonly links: {
     readonly linkedin: string;
     readonly github: string;
     readonly medium: string;
     readonly navigara: string;
+    readonly zeroCopy: string;
+    readonly email: string;
+    readonly phone: string;
   };
 }
 
@@ -58,97 +64,91 @@ export const profile: SiteProfile = {
   name: "Theo Alexander Douwes",
   shortName: "Theo Douwes",
   monogram: "TD",
-  title: "AI Transformation @ Navigara | Stats Researcher",
-  location: "San Francisco Bay Area",
-  headline: "Quantifying developer productivity into business outcomes.",
+  title: "GTM and Sales Engineer @ Navigara | UC Berkeley Statistics",
+  location: "San Francisco, California",
+  headline:
+    "Statistics graduate building GTM systems, underwriting tools, and probabilistic decision software.",
   subhead:
-    "Engineering ships more code every year. Most leaders still cannot prove how much of it mattered — or whether AI tooling moved the business.",
+    "Outreach automation for GTM teams, quantitative multifamily underwriting, and risk-aware decision frameworks — published metrics only.",
+  aboutTitle: "Probabilistic systems for GTM, underwriting, and risk",
+  workIntro:
+    "GTM engineering, multifamily underwriting, and independent quant practice — each chapter built on documented outcomes.",
   photoSrc: "/theo.webp",
   photoAlt: "Portrait of Theo Alexander Douwes",
-  signals: ["Navigara", "UC Berkeley Stats", "ETV Research", "AI ROI"],
+  portraitMeta: "San Francisco · Stats · GTM systems",
+  signals: [
+    "Navigara",
+    "UC Berkeley Stats",
+    "GTM automation",
+    "Probabilistic modeling",
+  ],
   stats: [
-    { value: "116%", label: "Big-tech production lift studied" },
-    { value: "51%", label: "ETV rise vs commit volume" },
-    { value: "300+", label: "Students taught at Berkeley" },
-    { value: "50+", label: "Countries traveled" },
+    { value: "$5.88M", label: "Multifamily acquisitions structured" },
+    { value: "$350K+", label: "Purchase-price savings via CMA + models" },
+    { value: "400+", label: "Students taught as STAT 198 Head Instructor" },
+    { value: "200K+", label: "TEDx YouTube views as lead organizer" },
   ],
   skills: [
-    "AI Strategy",
-    "Engineering Throughput Value",
-    "Bayesian Inference",
+    "Python",
     "R",
     "SQL",
-    "Pandas",
-    "Game Theory",
-    "Statistics",
+    "Excel",
+    "Git",
+    "Bayesian inference",
+    "MLE / regression",
+    "R Shiny",
+    "Streamlit",
+    "pandas / NumPy",
+    "GTM / outreach automation",
+    "Multifamily underwriting",
+    "Position sizing & risk rules",
+    "Prompt engineering (basics)",
   ],
   about: [
-    "I research engineering performance. Sales has a CRM. Marketing has a dashboard. Engineering managers often have a gut feeling and a prayer. At Navigara, we replace intuition with deterministic, rigorously tested formulas that translate codebase change into executive-ready signal.",
-    "US companies spent billions on AI coding tools in 2024. The recurring boardroom question has no clean answer yet: Are we faster? More efficient? Is any of this moving the business forward? Navigara’s Engineering Throughput Value (ETV) framework measures both quantity and complexity of contributions — not vanity commit counts.",
-    "Having traveled to over 50 countries and spent 40 days in Vipassana silence, I am reminded that the human spirit powers our best work. Respect and cooperation are not soft extras; they are how capability compounds.",
+    "Theo Douwes is a UC Berkeley Statistics graduate (B.A., 2019–2023) based in San Francisco. He builds outreach automation for GTM teams, quantitative underwriting tools for multifamily real estate, and probabilistic decision systems spanning Bayesian/MLE inference, prediction-market pricing, and risk-aware decision frameworks.",
+    "He taught 400+ students as Head Instructor of Berkeley’s largest DeCal (STAT 198), presented research on algorithmic bias in hiring at Oxford’s Map the System competition, and managed operations for 30 rental units while modeling multifamily acquisitions totaling $5.88M.",
+    "Interests include meditation, travel, and practical AI/ML applications. Skills marked as basics or concepts are adjacent and marketable — not claims of years of production ownership.",
   ],
   experience: [
     {
       id: "navigara",
-      role: "Open-source Researcher · AI Transformation",
+      role: "GTM and Sales Engineer",
       org: "Navigara",
-      location: "San Francisco Bay Area",
-      start: "Apr 2026",
+      location: "San Francisco, CA",
+      start: "Feb 2026",
       end: "Present",
       highlights: [
-        "Bridge engineering leaders from developer productivity metrics to C-suite communication",
-        "Quantify token-spend from individual developers to org-wide repositories",
-        "Connect GitHub, GitLab, Bitbucket, and Azure DevOps with read-only access",
-        "Align codebase changes to initiatives via issue trackers, CRM, and observability",
+        "Designed and implemented shared outreach automation for SDR, marketing, and sales — sequencing, handoffs, and stage visibility.",
+        "Documented playbooks, stage definitions, and messaging templates so workflows were repeatable.",
+        "Supported Mag 7 lead development using industry connections, research, and outreach tooling (no claimed closed deals).",
+        "Advised GTM strategy from competitor-landscape trade-offs; triaged tooling issues cross-functionally.",
       ],
     },
     {
-      id: "zerocopy",
-      role: "Quantitative Developer",
-      org: "ZeroCopy Systems",
-      location: "Remote",
-      start: "Nov 2025",
-      end: "Feb 2026",
-      highlights: [
-        "Built quantitative systems at the intersection of data, inference, and decision-making",
-        "Applied statistical rigor outside traditional finance",
-      ],
-    },
-    {
-      id: "break",
-      role: "Career break · Field research on attention",
-      org: "Personal",
-      location: "Himalayas & Vipassana centers",
-      start: "Oct 2024",
-      end: "Sep 2025",
-      highlights: [
-        "Hiking in the Himalayas as a deliberate reset",
-        "40 days of silence at Vipassana Meditation centers before re-entering the AI productivity wave",
-      ],
-    },
-    {
-      id: "re",
-      role: "Real Estate Analyst, Manager",
-      org: "Private",
-      location: "United States",
+      id: "piedmont",
+      role: "Quantitative Real Estate Analyst",
+      org: "Piedmont Realty LLC",
+      location: "Oakland, CA",
       start: "Jan 2024",
-      end: "Oct 2024",
+      end: "Sep 2024",
       highlights: [
-        "Full-time analysis and operations management for private real estate",
-        "Capital allocation under uncertainty",
+        "Structured and negotiated 2 multifamily acquisitions totaling $5.88M; $350K+ purchase-price savings via CMA and Excel financial modeling.",
+        "Built Excel + R Shiny holding-period models (rates, amortization, cost segregation, taxes, appreciation) plus owner-ready underwriting packs.",
+        "Owned P&L for 30 rental units — tenants, owners, contractors, municipal compliance — and maintained high occupancy.",
+        "Tracked rent rolls, tickets, and contractor spend in Excel; translated models into plain-language owner updates.",
       ],
     },
     {
-      id: "berkeley-instructor",
-      role: "Course Instructor · Statistics & Game Theory",
-      org: "University of California, Berkeley",
-      location: "Berkeley, CA",
-      start: "Jan 2022",
+      id: "independent",
+      role: "Quantitative Analyst",
+      org: "Independent Practice",
+      location: "Remote / Berkeley, CA",
+      start: "Nov 2021",
       end: "Dec 2023",
       highlights: [
-        "STAT 198: Statistics & Game Theory in NLHE across three semesters",
-        "Taught 300+ undergraduate and graduate students",
-        "Blended Bayesian thinking with competitive strategy",
+        "Built proprietary analytics software using MLE and regression for behavioral patterns from small samples.",
+        "Applied Bayesian updating for sparse data with documented assumptions; used Git/GitHub for reproducible experiments.",
+        "Applied game theory and risk-management rules (position sizing, stop criteria) in probabilistic live settings; funded university expenses systematically.",
       ],
     },
   ],
@@ -157,53 +157,62 @@ export const profile: SiteProfile = {
     degree: "Bachelor of Arts — Statistics",
     period: "Aug 2019 – Dec 2023",
     notes: [
-      "University of Oxford research showcase: Algorithmic Bias in AI Online Hiring Systems",
-      "STAT 198 Course Instructor (Statistics & Game Theory)",
-      "Berkeley Venture Capital Group",
-      "Tau Kappa Epsilon (TKE)",
+      "STAT 198 Head Instructor — Poker Theory and Fundamentals; 400+ students across 3 semesters (Spring 2022 – Fall 2023); largest DeCal at UC Berkeley",
+      "Map the System, Oxford University (Summer 2022) — “Algorithmic Bias in Online Hiring Systems”",
+      "Berkeley Venture Capital Group — startup evaluation and outreach",
     ],
   },
-  featured: [
+  projects: [
     {
-      id: "vb-etv",
-      title:
-        "A Navigara study found engineering production at six big-tech companies rose 116% in a year",
-      outlet: "VentureBeat",
-      href: "https://venturebeat.com/",
+      id: "bayesian",
+      title: "Bayesian Inference System",
+      tag: "Sparse-data decisions",
+      href: "https://medium.com/Douwes.theo",
       blurb:
-        "Commits per engineer rose 35%, but Engineering Throughput Value (ETV) rose 51% — more work, and more complex work. Data suggested capacity shifting from maintenance toward growth.",
+        "Profiling tool for sparse-data decisions using Bayesian methods — assumptions documented, experiments reproducible.",
     },
     {
-      id: "nlr-advisors",
-      title:
-        "Navigara enlists Silicon Valley veterans behind 4 unicorns and $160B+ market cap",
-      outlet: "The National Law Review",
-      href: "https://www.natlawreview.com/",
+      id: "re-tool",
+      title: "Real Estate Analysis Tool",
+      tag: "R Shiny",
+      href: null,
       blurb:
-        "Michael Selvidge and Michal Habdank-Kolaczkowski join the advisory board as Navigara expands US engineering-performance reporting.",
+        "Interactive R Shiny property investment model with tunable financial parameters for holding-period underwriting.",
+    },
+    {
+      id: "zerocopy",
+      title: "ZeroCopy.systems Prediction Market Pricing",
+      tag: "15-minute binary markets",
+      href: "https://tinyurl.com/video-live-bot",
+      blurb:
+        "Pricing for 15-minute binary outcome markets with fat-tailed adjustments, blended volatility, momentum signals, and systematic position sizing.",
+    },
+    {
+      id: "tedx",
+      title: "TEDx Lead Organizer",
+      tag: "May 2018",
+      href: null,
+      blurb:
+        "Led application, speaker selection, and production for an official TEDx event — 200K+ YouTube views.",
     },
   ],
   writing: [
     {
-      id: "moat",
-      title: "Stop Vibe-Coding, Start Moat-Building",
-      href: "https://medium.com/",
+      id: "bayes-medium",
+      title: "Bayesian inference for sparse-data decisions",
+      href: "https://medium.com/Douwes.theo",
       blurb:
-        "Blindspots & Bottlenecks: a framework for founders to build where frontier models are blind — before your Series A feature becomes a native toggle.",
-    },
-    {
-      id: "bayes-poker",
-      title: "Bayesian Inference Beats Traditional Methods by 1.2x–10x",
-      href: "https://medium.com/",
-      blurb:
-        "A Bayesian approach to opponent metrics in NLHE that outperforms industry-standard predictors — creative math applied beyond poker.",
+        "Notes and frameworks on Bayesian updating under sparse data — the public home for the Bayesian Inference System write-ups.",
     },
   ],
   links: {
     linkedin: "https://www.linkedin.com/in/theo-douwes",
     github: "https://github.com/TheoDouwes",
-    medium: "https://medium.com/",
+    medium: "https://medium.com/Douwes.theo",
     navigara: "https://navigara.com",
+    zeroCopy: "https://tinyurl.com/video-live-bot",
+    email: "tadouwes@berkeley.edu",
+    phone: "+1-858-663-3556",
   },
 };
 

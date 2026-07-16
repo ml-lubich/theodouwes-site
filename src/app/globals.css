@@ -229,26 +229,17 @@ a:hover {
 
 /* ── Scroll reveal ──────────────────────────────────────────── */
 .reveal {
-  opacity: 0;
-  transform: perspective(1200px) translateY(28px) rotateX(4deg) scale(0.985);
+  /* Enter motion owned by Framer Motion; data-reveal-* drives child CSS. */
   transform-origin: center bottom;
-  transition-property: opacity, transform;
-  transition-duration: 0.65s;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
-}
-
-.reveal[data-reveal-3d="false"] {
-  transform: perspective(1200px) translateY(28px) rotateX(0deg) scale(0.985);
-}
-
-.reveal[data-reveal-visible="true"] {
-  opacity: 1;
-  transform: perspective(1200px) translateY(0) rotateX(0deg) scale(1);
 }
 
 .reveal[data-reveal-settled="true"] {
   will-change: auto;
+}
+
+.link-item.is-static {
+  cursor: default;
 }
 
 /* ── Skeleton shimmer ───────────────────────────────────────── */

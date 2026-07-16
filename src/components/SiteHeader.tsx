@@ -22,7 +22,7 @@ export function SiteHeader({ brand, monogram }: SiteHeaderProps) {
               <a href="#work">Work</a>
             </li>
             <li>
-              <a href="#featured">Press</a>
+              <a href="#projects">Projects</a>
             </li>
             <li>
               <a href="#writing">Writing</a>
