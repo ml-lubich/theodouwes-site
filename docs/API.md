@@ -16,6 +16,14 @@ Categorized honest keyword bank + `flattenSkills()` / `getSkillCategory()` for S
 
 Pure function. Input: profile-shaped object. Output: `HomePageModel` with CTAs, skill categories, and social URLs for the home page.
 
+### `theme` (`src/lib/theme.ts`)
+
+Pure helpers: `resolveInitialTheme`, `toggleTheme`, `brainColorForTheme`, `THEME_STORAGE_KEY`.
+
+### `ThemeProvider` / `ThemeToggle`
+
+Client theme context sets `data-theme` on `<html>`, persists choice, and drives brain wireframe color (white dark / black light).
+
 ### Crawl / LLM surfaces
 
 - `src/app/robots.ts` → `/robots.txt` (allow all + major AI crawlers; sitemap pointer)

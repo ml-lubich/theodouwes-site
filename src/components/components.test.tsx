@@ -8,11 +8,19 @@ import { ProjectsSection } from "./ProjectsSection";
 import { WritingSection } from "./WritingSection";
 import { ShimmerOverlay } from "./ShimmerOverlay";
 import { Reveal } from "./Reveal";
+import { ThemeProvider } from "./ThemeProvider";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 import { act } from "react";
 
 afterEach(() => {
   cleanup();
+  window.localStorage.removeItem(THEME_STORAGE_KEY);
+  document.documentElement.removeAttribute("data-theme");
 });
+
+function renderWithTheme(ui: React.ReactElement) {
+  return render(<ThemeProvider>{ui}</ThemeProvider>);
+}
 
 function mockMobileMatchMedia() {
   const original = window.matchMedia;
@@ -43,7 +51,7 @@ function mockMobileMatchMedia() {
 
 describe("SiteHeader", () => {
   test("renders brand monogram and nav anchors", () => {
-    render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+    renderWithTheme(<SiteHeader brand="Theo Douwes" monogram="TD" />);
     expect(screen.getByText("TD")).toBeTruthy();
     expect(screen.getByText("Theo Douwes")).toBeTruthy();
     expect(screen.getByRole("navigation", { name: "Primary" })).toBeTruthy();
@@ -63,12 +71,13 @@ describe("SiteHeader", () => {
       "#connect",
     );
     expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Switch to light mode/i })).toBeTruthy();
   });
 
   test("toggles mobile menu open and closed", () => {
     const restore = mockMobileMatchMedia();
     try {
-      render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+      renderWithTheme(<SiteHeader brand="Theo Douwes" monogram="TD" />);
       const toggle = screen.getByRole("button", { name: "Open menu" });
 
       fireEvent.click(toggle);
@@ -89,7 +98,7 @@ describe("SiteHeader", () => {
   test("closes mobile menu when a nav link is clicked", () => {
     const restore = mockMobileMatchMedia();
     try {
-      render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+      renderWithTheme(<SiteHeader brand="Theo Douwes" monogram="TD" />);
       fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
       fireEvent.click(screen.getByRole("link", { name: "Work" }));
       expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
@@ -102,7 +111,7 @@ describe("SiteHeader", () => {
   test("closes mobile menu on Escape", () => {
     const restore = mockMobileMatchMedia();
     try {
-      render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+      renderWithTheme(<SiteHeader brand="Theo Douwes" monogram="TD" />);
       fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
       expect(document.querySelector(".nav-shell.is-open")).toBeTruthy();
       fireEvent.keyDown(document, { key: "Escape" });

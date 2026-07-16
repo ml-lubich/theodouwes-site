@@ -2,6 +2,8 @@ import { afterEach, describe, expect, mock, test } from "bun:test";
 import { cleanup, render, screen } from "@testing-library/react";
 import { buildHomePageModel } from "@/lib/home-model";
 import { profile } from "@/lib/profile";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 mock.module("next/image", () => ({
   default: (props: { readonly src: string; readonly alt: string }) => (
@@ -14,7 +16,11 @@ mock.module("next/dynamic", () => ({
   default: () => () => <div data-testid="brain" />,
 }));
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  window.localStorage.removeItem(THEME_STORAGE_KEY);
+  document.documentElement.removeAttribute("data-theme");
+});
 
 describe("home page composition", () => {
   test("wires model into header hero about and footer", async () => {
@@ -25,7 +31,7 @@ describe("home page composition", () => {
     const { SiteFooter } = await import("@/components/SiteFooter");
 
     render(
-      <>
+      <ThemeProvider>
         <SiteHeader brand={model.brand} monogram={model.monogram} />
         <Hero
           brand={model.brand}
@@ -59,7 +65,7 @@ describe("home page composition", () => {
           email={model.email}
           phone={model.phone}
         />
-      </>,
+      </ThemeProvider>,
     );
 
     expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(

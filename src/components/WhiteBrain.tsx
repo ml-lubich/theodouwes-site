@@ -5,31 +5,41 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { loadBrainGeometry } from "@/lib/brain-geometry";
+import { useTheme } from "@/components/ThemeProvider";
 
 function WhiteBrainMesh({
   geometry,
   backdrop,
+  color,
 }: {
   readonly geometry: THREE.BufferGeometry;
   readonly backdrop: boolean;
+  readonly color: string;
 }) {
   const materials = useMemo(
     () => ({
       core: new THREE.LineBasicMaterial({
-        color: "#ffffff",
+        color,
         transparent: true,
         opacity: backdrop ? 0.55 : 0.72,
         depthWrite: false,
       }),
       glow: new THREE.LineBasicMaterial({
-        color: "#ffffff",
+        color,
         transparent: true,
         opacity: backdrop ? 0.2 : 0.18,
         depthWrite: false,
       }),
     }),
-    [backdrop],
+    [backdrop, color],
   );
+
+  useEffect(() => {
+    return () => {
+      materials.core.dispose();
+      materials.glow.dispose();
+    };
+  }, [materials]);
 
   /* ~25% quieter than prior backdrop so it stays atmospheric. */
   return (
@@ -42,7 +52,13 @@ function WhiteBrainMesh({
   );
 }
 
-function BrainScene({ backdrop }: { readonly backdrop: boolean }) {
+function BrainScene({
+  backdrop,
+  color,
+}: {
+  readonly backdrop: boolean;
+  readonly color: string;
+}) {
   const [geometry, setGeometry] = useState<THREE.BufferGeometry | null>(null);
 
   useEffect(() => {
@@ -54,7 +70,6 @@ function BrainScene({ backdrop }: { readonly backdrop: boolean }) {
           geo.dispose();
           return;
         }
-        /* Recenter so the mesh sits at the canvas origin for predictable placement. */
         geo.center();
         loaded = geo;
         setGeometry(geo);
@@ -69,7 +84,9 @@ function BrainScene({ backdrop }: { readonly backdrop: boolean }) {
   }, []);
 
   if (!geometry) return null;
-  return <WhiteBrainMesh geometry={geometry} backdrop={backdrop} />;
+  return (
+    <WhiteBrainMesh geometry={geometry} backdrop={backdrop} color={color} />
+  );
 }
 
 interface WhiteBrainProps {
@@ -80,6 +97,7 @@ interface WhiteBrainProps {
 
 export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps) {
   const [ready, setReady] = useState(false);
+  const { brainColor, theme } = useTheme();
 
   useEffect(() => {
     const id = window.requestAnimationFrame(() => setReady(true));
@@ -90,6 +108,8 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
     <div
       className={`brain-stage${ready ? " is-ready" : ""}${backdrop ? " is-backdrop" : ""} ${className}`.trim()}
       aria-hidden="true"
+      data-theme={theme}
+      data-brain-color={brainColor}
     >
       {!backdrop ? <div className="brain-skeleton shimmer" /> : null}
       <Canvas
@@ -101,7 +121,7 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
           gl.setClearColor(0x000000, 0);
         }}
       >
-        <BrainScene backdrop={backdrop} />
+        <BrainScene backdrop={backdrop} color={brainColor} />
         <OrbitControls
           makeDefault
           autoRotate
@@ -112,7 +132,6 @@ export function WhiteBrain({ className = "", backdrop = false }: WhiteBrainProps
           enableDamping
           dampingFactor={0.12}
           rotateSpeed={0.9}
-          // Keep whole brain in view while dragging
           minPolarAngle={0.55}
           maxPolarAngle={Math.PI - 0.55}
         />

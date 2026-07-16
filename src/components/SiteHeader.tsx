@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface SiteHeaderProps {
   readonly brand: string;
@@ -22,7 +23,6 @@ export function SiteHeader({ brand, monogram }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
   const [desktop, setDesktop] = useState<boolean | null>(null);
   const navId = useId();
-  // Until matchMedia resolves, keep links interactive (desktop e2e / SSR).
   const menuCollapsed = desktop === false && !open;
 
   useEffect(() => {
@@ -66,20 +66,23 @@ export function SiteHeader({ brand, monogram }: SiteHeaderProps) {
             </span>
             {brand}
           </a>
-          <button
-            type="button"
-            className="nav-toggle"
-            aria-expanded={open}
-            aria-controls={navId}
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((current) => !current)}
-          >
-            <span className="nav-toggle-bars" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </span>
-          </button>
+          <div className="nav-actions">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="nav-toggle"
+              aria-expanded={open}
+              aria-controls={navId}
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((current) => !current)}
+            >
+              <span className="nav-toggle-bars" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
+            </button>
+          </div>
         </div>
         <nav
           id={navId}

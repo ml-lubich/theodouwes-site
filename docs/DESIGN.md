@@ -2,17 +2,19 @@
 
 ## Direction
 
-**Black / white quant** — near-black field, white type, liquid/molten glass panels (portfolio-inspired), Cursor/Vercel-clean chrome. Monochrome ambient orbs + grid overlay.
+**Black / white quant** — near-black field + white type in dark mode; light field + black type in light mode. Liquid/molten glass panels, Cursor/Vercel-clean chrome. Monochrome ambient orbs + grid overlay.
 
 ## Tokens
 
-| Token | Value | Role |
-| --- | --- | --- |
-| `--bg` | `#050505` | Page field |
-| `--ink` | `#f5f5f5` | Primary text |
-| `--ink-muted` | `#a1a1a1` | Supporting text |
-| `--line` | `rgba(255,255,255,0.1)` | Hairline borders |
-| `--glass` | translucent white | Liquid glass surfaces |
+| Token | Dark | Light | Role |
+| --- | --- | --- | --- |
+| `--bg` | `#050505` | `#f4f4f2` | Page field |
+| `--ink` | `#f5f5f5` | `#0a0a0a` | Primary text |
+| `--ink-muted` | `#a1a1a1` | `#4a4a4a` | Supporting text |
+| `--line` | white 10% | black 10% | Hairline borders |
+| `--brain` | `#ffffff` | `#000000` | Wireframe brain |
+
+Theme is set via `data-theme="dark|light"` on `<html>`, persisted in `localStorage` (`theo-theme`), with a FOUC-prevention boot script. Toggle lives in the header.
 
 ## Typography
 
@@ -23,7 +25,7 @@ Avoid soft decorative faces; precision over shout.
 
 ## Motion
 
-- White rotating wireframe brain beneath the hero name (`brain.bin`, monochrome, drag-to-rotate)
+- Rotating wireframe brain beneath the hero name (`brain.bin`, monochrome, drag-to-rotate) — **white in dark mode, black in light mode**
 - Portrait uses high-quality `/theo.webp`
 - Framer Motion: staggered hero fade/rise, floating portrait, scroll `Reveal` with optional 3D tilt
 - Experience-specific line icons, luminous rail, animated highlights, and responsive hover tilt

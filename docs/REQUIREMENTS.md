@@ -8,6 +8,7 @@
 4. As a visitor, I can open projects (Medium, ZeroCopy demo) and writing links.
 5. As a visitor, I can reach LinkedIn, GitHub, Medium, email, and phone from Connect + footer (LinkedIn also from the hero CTA).
 6. As a crawler/LLM, I can read `robots.txt`, `sitemap.xml`, `llms.txt`, and Person JSON-LD with publish-safe facts.
+7. As a visitor, I can toggle dark/light mode; light mode uses black text and a black wireframe brain.
 
 ## Hard constraints
 
@@ -20,6 +21,7 @@
 - No hero cards, no dashboard clutter
 - Framer Motion for hero / scroll reveals; respect `prefers-reduced-motion`
 - Indexable SEO surface: metadata, Open Graph, Twitter cards, sitemap, robots (incl. major LLM bots), `llms.txt`
+- Dark + light themes via `data-theme`; brain color follows theme (white/black)
 
 ## Non-goals (v1)
 

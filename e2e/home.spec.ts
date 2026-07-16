@@ -126,6 +126,24 @@ test.describe("Theo Douwes site", () => {
     expect(brainBox!.width).toBeGreaterThan(80);
     expect(brainBox!.height).toBeGreaterThan(80);
   });
+
+  test("theme toggle switches to light mode with black brain", async ({ page }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("theo-theme", "dark");
+    });
+    await page.goto("/");
+    const toggle = page.getByRole("button", { name: /Switch to light mode/i });
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(
+      page.getByRole("button", { name: /Switch to dark mode/i }),
+    ).toBeVisible();
+    await expect(page.locator(".brain-stage")).toHaveAttribute(
+      "data-brain-color",
+      "#000000",
+    );
+  });
 });
 
 

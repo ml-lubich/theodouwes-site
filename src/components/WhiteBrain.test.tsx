@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, mock, test } from "bun:test";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { act } from "react";
+import { ThemeProvider } from "./ThemeProvider";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 mock.module("@react-three/fiber", () => ({
   Canvas: ({
@@ -21,7 +23,11 @@ mock.module("@react-three/drei", () => ({
   OrbitControls: () => <div data-testid="orbit-controls" />,
 }));
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  window.localStorage.removeItem(THEME_STORAGE_KEY);
+  document.documentElement.removeAttribute("data-theme");
+});
 
 describe("WhiteBrain", () => {
   test("mounts stage shell, canvas, and becomes ready", async () => {
@@ -45,7 +51,11 @@ describe("WhiteBrain", () => {
     const { WhiteBrain } = await import("./WhiteBrain");
     let container!: HTMLElement;
     await act(async () => {
-      container = render(<WhiteBrain />).container;
+      container = render(
+        <ThemeProvider>
+          <WhiteBrain />
+        </ThemeProvider>,
+      ).container;
     });
 
     expect(container.querySelector(".brain-stage")).toBeTruthy();
@@ -57,11 +67,32 @@ describe("WhiteBrain", () => {
       expect(container.querySelector(".brain-stage.is-ready")).toBeTruthy();
     });
 
-    // Allow BrainScene effect to resolve with mocked fetch
-    await waitFor(() => {
-      expect(container.querySelectorAll("group, linesegments, lineSegments").length).toBeGreaterThanOrEqual(0);
-    });
+    expect(container.querySelector(".brain-stage")?.getAttribute("data-brain-color")).toBe(
+      "#ffffff",
+    );
 
     globalThis.fetch = originalFetch;
+  });
+
+  test("uses black wireframe color in light mode", async () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, "light");
+    const { WhiteBrain } = await import("./WhiteBrain");
+    let container!: HTMLElement;
+    await act(async () => {
+      container = render(
+        <ThemeProvider>
+          <WhiteBrain backdrop />
+        </ThemeProvider>,
+      ).container;
+    });
+
+    await waitFor(() => {
+      expect(container.querySelector(".brain-stage")?.getAttribute("data-theme")).toBe(
+        "light",
+      );
+    });
+    expect(container.querySelector(".brain-stage")?.getAttribute("data-brain-color")).toBe(
+      "#000000",
+    );
   });
 });
