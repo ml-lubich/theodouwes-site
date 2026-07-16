@@ -2090,8 +2090,8 @@ a:hover {
     position: static;
     left: auto;
     top: auto;
-    width: clamp(6rem, 24vw, 9rem);
-    height: clamp(6rem, 24vw, 9rem);
+    width: clamp(10rem, 48vw, 15rem);
+    height: clamp(10rem, 48vw, 15rem);
     margin: 0 auto 0.25rem;
     transform: none;
   }
