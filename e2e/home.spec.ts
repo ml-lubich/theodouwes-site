@@ -127,30 +127,35 @@ test.describe("Theo Douwes site", () => {
     expect(brainBox!.height).toBeGreaterThan(80);
   });
 
-  test("centers the hero name and brain on narrow mobile viewports", async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto("/");
+  // The hero grid only splits into two columns at 900px, so the whole
+  // sub-900px range (small phones through resized/portrait tablet
+  // windows) must get the centered single-column treatment.
+  for (const width of [375, 700, 850]) {
+    test(`centers the hero name and brain at ${width}px wide`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
 
-    // Measure actual glyph extent (not the stretched block box) via a Range.
-    const glyphRect = await page.evaluate(() => {
-      const el = document.querySelector(".hero-brand-last");
-      if (!el) return null;
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      const r = range.getBoundingClientRect();
-      return { x: r.x, width: r.width };
+      // Measure actual glyph extent (not the stretched block box) via a Range.
+      const glyphRect = await page.evaluate(() => {
+        const el = document.querySelector(".hero-brand-last");
+        if (!el) return null;
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const r = range.getBoundingClientRect();
+        return { x: r.x, width: r.width };
+      });
+      const brainBox = await page.locator(".hero-brain").boundingBox();
+      expect(glyphRect).not.toBeNull();
+      expect(brainBox).not.toBeNull();
+
+      const viewportCenter = width / 2;
+      const nameCenter = glyphRect!.x + glyphRect!.width / 2;
+      const brainCenter = brainBox!.x + brainBox!.width / 2;
+
+      expect(Math.abs(nameCenter - viewportCenter)).toBeLessThan(20);
+      expect(Math.abs(brainCenter - viewportCenter)).toBeLessThan(20);
     });
-    const brainBox = await page.locator(".hero-brain").boundingBox();
-    expect(glyphRect).not.toBeNull();
-    expect(brainBox).not.toBeNull();
-
-    const viewportCenter = 375 / 2;
-    const nameCenter = glyphRect!.x + glyphRect!.width / 2;
-    const brainCenter = brainBox!.x + brainBox!.width / 2;
-
-    expect(Math.abs(nameCenter - viewportCenter)).toBeLessThan(20);
-    expect(Math.abs(brainCenter - viewportCenter)).toBeLessThan(20);
-  });
+  }
 
   test("theme toggle switches to light mode with black brain", async ({ page }) => {
     await page.addInitScript(() => {

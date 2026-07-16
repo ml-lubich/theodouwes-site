@@ -2065,10 +2065,14 @@ a:hover {
     min-height: auto;
     padding-top: 1.5rem;
   }
+}
 
-  /* Below the ~720px nav breakpoint the copy column is as narrow as the
-     viewport, so the desktop's side-by-side name/brain layout has no room
-     to breathe — center everything in the column instead. */
+/* The hero grid only splits into two columns at 900px (see the
+   min-width: 900px rule above) — below that the copy column already
+   spans the full width, so the desktop's side-by-side name/brain
+   layout has no room to breathe. Center everything in the column
+   for the entire single-column range, not just the smallest phones. */
+@media (max-width: 899px) {
   .hero-copy {
     align-items: center;
     text-align: center;
@@ -2086,8 +2090,8 @@ a:hover {
     position: static;
     left: auto;
     top: auto;
-    width: clamp(6rem, 32vw, 9rem);
-    height: clamp(6rem, 32vw, 9rem);
+    width: clamp(6rem, 24vw, 9rem);
+    height: clamp(6rem, 24vw, 9rem);
     margin: 0 auto 0.25rem;
     transform: none;
   }
