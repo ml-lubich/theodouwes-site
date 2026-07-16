@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { flattenSkills } from "@/lib/skills";
@@ -91,6 +91,11 @@ export const metadata: Metadata = {
     },
   },
   category: "technology",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 const personJsonLd = {

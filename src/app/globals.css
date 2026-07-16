@@ -725,8 +725,8 @@ a:hover {
   z-index: 0;
   left: 32%;
   top: 50%;
-  width: clamp(22rem, 38vw, 38rem);
-  height: clamp(22rem, 38vw, 38rem);
+  width: clamp(15rem, 38vw, 38rem);
+  height: clamp(15rem, 38vw, 38rem);
   transform: translate(-50%, -42%);
   pointer-events: auto;
   filter: drop-shadow(0 0 32px rgba(255, 255, 255, 0.12));
