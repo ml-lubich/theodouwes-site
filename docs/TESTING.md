@@ -7,7 +7,7 @@
 | Unit | `bun:test` | `src/lib/*.test.ts` | Domain helpers, brain.bin parser, profile invariants |
 | Component | `bun:test` + Testing Library | `src/components/*.test.tsx` | UI sections, reveal, hero, brain stage |
 | Integration | `bun:test` | `src/__tests__/integration/` | Home model wiring, page composition, app routes |
-| E2E | Playwright | `e2e/` | Rendered page: hero, brain, sections, Navigara, documented stats, nav |
+| E2E | Playwright | `e2e/` | Rendered page: hero, brain, sections, Navigara, documented stats, desktop nav + mobile hamburger |
 | E2E links | Playwright | `e2e/links.spec.ts` | Dynamic BFS exploration of same-origin pages + outbound/asset/anchor checks; fail on 404/410/5xx |
 
 ## Coverage

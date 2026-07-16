@@ -58,6 +58,23 @@ test.describe("Theo Douwes site", () => {
     await expect(page.locator("#work")).toBeInViewport();
   });
 
+  test("mobile hamburger opens nav and scrolls to Work", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    const openMenu = page.getByRole("button", { name: "Open menu" });
+    await expect(openMenu).toBeVisible();
+    await openMenu.click();
+    await expect(page.getByRole("button", { name: "Close menu" })).toBeVisible();
+
+    await page
+      .getByRole("navigation", { name: "Primary" })
+      .getByRole("link", { name: "Work" })
+      .click();
+    await expect(page.locator("#work")).toBeInViewport();
+    await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
+  });
+
   test("renders rotatable brain behind the hero name", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(".hero-brain")).toBeVisible();

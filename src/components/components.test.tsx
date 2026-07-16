@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { AboutSection } from "./AboutSection";
@@ -13,6 +13,33 @@ import { act } from "react";
 afterEach(() => {
   cleanup();
 });
+
+function mockMobileMatchMedia() {
+  const original = window.matchMedia;
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    writable: true,
+    value: () => ({
+      matches: false,
+      media: "(min-width: 721px)",
+      onchange: null,
+      addListener() {},
+      removeListener() {},
+      addEventListener() {},
+      removeEventListener() {},
+      dispatchEvent() {
+        return false;
+      },
+    }),
+  });
+  return () => {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: original,
+    });
+  };
+}
 
 describe("SiteHeader", () => {
   test("renders brand monogram and nav anchors", () => {
@@ -29,6 +56,55 @@ describe("SiteHeader", () => {
     expect(
       screen.getByRole("link", { name: "Projects" }).getAttribute("href"),
     ).toBe("#projects");
+    expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
+  });
+
+  test("toggles mobile menu open and closed", () => {
+    const restore = mockMobileMatchMedia();
+    try {
+      render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+      const toggle = screen.getByRole("button", { name: "Open menu" });
+
+      fireEvent.click(toggle);
+      expect(screen.getByRole("button", { name: "Close menu" })).toBeTruthy();
+      expect(toggle.getAttribute("aria-expanded")).toBe("true");
+      expect(document.querySelector(".nav-shell.is-open")).toBeTruthy();
+      expect(screen.getByRole("navigation", { name: "Primary" })).toBeTruthy();
+
+      fireEvent.click(screen.getByRole("button", { name: "Close menu" }));
+      expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
+      expect(toggle.getAttribute("aria-expanded")).toBe("false");
+      expect(document.querySelector(".nav-shell.is-open")).toBeNull();
+    } finally {
+      restore();
+    }
+  });
+
+  test("closes mobile menu when a nav link is clicked", () => {
+    const restore = mockMobileMatchMedia();
+    try {
+      render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+      fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+      fireEvent.click(screen.getByRole("link", { name: "Work" }));
+      expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
+      expect(document.querySelector(".nav-shell.is-open")).toBeNull();
+    } finally {
+      restore();
+    }
+  });
+
+  test("closes mobile menu on Escape", () => {
+    const restore = mockMobileMatchMedia();
+    try {
+      render(<SiteHeader brand="Theo Douwes" monogram="TD" />);
+      fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+      expect(document.querySelector(".nav-shell.is-open")).toBeTruthy();
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
+      expect(document.querySelector(".nav-shell.is-open")).toBeNull();
+    } finally {
+      restore();
+    }
   });
 });
 

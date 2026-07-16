@@ -37,6 +37,12 @@ Avoid soft decorative faces; precision over shout.
 2. No cards in the hero. Experience is a timeline list, not card grid.
 3. Stats strip uses only documented ledger metrics ($5.88M, $350K+, 400+, 200K+).
 
+## Navigation
+
+- Desktop (≥721px): glass pill shell with horizontal mono links (About / Work / Projects / Writing).
+- Mobile (≤720px): same glass shell; links collapse behind a circular hamburger that morphs to an X; open state expands into a short vertical link stack inside the shell (no full-screen drawer).
+- Menu closes on link tap, brand tap, Escape, or resize to desktop.
+
 ## Sections
 
 1. Hero

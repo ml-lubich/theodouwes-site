@@ -14,7 +14,7 @@
 - Content must match the resume-family fact ledger (no invented employers, degrees, $, %, or closed deals)
 - Unit tests, integration tests, and Playwright e2e tests
 - Deployable to Vercel
-- Mobile and desktop readable layouts
+- Mobile and desktop readable layouts (collapsible hamburger nav on small viewports)
 - No hero cards, no dashboard clutter
 - Framer Motion for hero / scroll reveals; respect `prefers-reduced-motion`
 
