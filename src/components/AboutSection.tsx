@@ -36,6 +36,23 @@ export function AboutSection({
           <p key={paragraph.slice(0, 40)}>{paragraph}</p>
         ))}
       </div>
+      <ol className="capability-grid" aria-label="How Theo works">
+        <li className="capability-item">
+          <span className="capability-number">01</span>
+          <h3>Quantify uncertainty</h3>
+          <p>State assumptions, model sensitivity, and make downside visible.</p>
+        </li>
+        <li className="capability-item">
+          <span className="capability-number">02</span>
+          <h3>Build the workflow</h3>
+          <p>Turn analysis into usable models, automation, and decision tools.</p>
+        </li>
+        <li className="capability-item">
+          <span className="capability-number">03</span>
+          <h3>Make it operable</h3>
+          <p>Document the system, clarify handoffs, and communicate in plain language.</p>
+        </li>
+      </ol>
       <div className="stats-strip">
         {stats.map((stat) => (
           <div className="stat glass-card" key={stat.label}>
@@ -48,11 +65,11 @@ export function AboutSection({
 
       <div className="skills" id="skills">
         <p className="section-label">Skills</p>
-        <h3 className="skills-heading">Keyword surface & probabilistic toolkit</h3>
+        <h3 className="skills-heading">Quantitative, analytical & engineering toolkit</h3>
         <p className="skills-lede">
-          Role keywords plus documented languages, stats methods, underwriting, and
-          GTM tooling. Items marked basics/concepts are adjacent skills — not
-          multi-year production ownership claims.
+          Statistical methods, testing discipline, underwriting, analytics, and GTM
+          tooling. Basics/concepts labels mark working adjacency, not years of
+          production ownership.
         </p>
 
         <div className="skill-storm-wrap">

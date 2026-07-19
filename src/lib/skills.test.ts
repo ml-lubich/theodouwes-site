@@ -11,6 +11,8 @@ describe("skills bank", () => {
     expect(flattenSkills()).toContain("Python");
     expect(flattenSkills()).toContain("Data Scientist");
     expect(flattenSkills()).toContain("R Shiny");
+    expect(flattenSkills()).toContain("Integration testing");
+    expect(flattenSkills()).toContain("Model diagnostics");
     expect(getSkillCategory("Python")).toBe("Languages & tooling");
   });
 

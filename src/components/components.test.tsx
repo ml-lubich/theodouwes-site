@@ -233,6 +233,8 @@ describe("ProjectsSection", () => {
             tag: "Sparse-data",
             href: "https://medium.com/Douwes.theo",
             blurb: "Bayesian methods.",
+            methods: ["Bayesian updating"],
+            artifact: "Public notes",
           },
           {
             id: "re-tool",
@@ -240,6 +242,8 @@ describe("ProjectsSection", () => {
             tag: "R Shiny",
             href: null,
             blurb: "Interactive model.",
+            methods: ["R Shiny"],
+            artifact: "Private app",
           },
         ]}
       />,

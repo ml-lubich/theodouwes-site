@@ -1181,6 +1181,66 @@ a:hover {
   margin-bottom: 0;
 }
 
+.capability-grid {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--line);
+}
+
+.capability-item {
+  position: relative;
+  min-height: 11rem;
+  padding: 1.4rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+}
+
+.capability-item::after {
+  content: "";
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  right: -3rem;
+  bottom: -4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  box-shadow: inset 18px 0 35px color-mix(in srgb, var(--ink) 7%, transparent);
+  transform: rotateX(68deg) rotateZ(-18deg);
+  opacity: 0.7;
+}
+
+.capability-number,
+.project-number {
+  font-family: var(--font-code);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
+}
+
+.capability-item h3 {
+  margin: 2.25rem 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.capability-item p {
+  max-width: 29ch;
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 720px) {
+  .capability-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 .meta-line {
   margin: 0 0 1.5rem;
   font-family: var(--font-code);
@@ -1622,15 +1682,16 @@ a:hover {
 }
 
 .link-item {
+  position: relative;
   display: block;
-  padding: 1.35rem 1.4rem;
+  padding: 1.4rem;
   text-decoration: none;
   height: 100%;
 }
 
 .link-item h3 {
-  margin: 0;
-  font-size: 1.02rem;
+  margin: 0.35rem 0 0;
+  font-size: 1.15rem;
   font-weight: 500;
   letter-spacing: -0.015em;
   line-height: 1.35;
@@ -1645,6 +1706,89 @@ a:hover {
   text-transform: uppercase;
   color: var(--ink-dim);
 }
+
+.project-section-title { margin-bottom: 0.6rem; }
+
+.projects-lede {
+  max-width: 45rem;
+  margin: 0 0 1.75rem;
+  color: var(--ink-muted);
+}
+
+.project-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.project-icon-shell {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  box-shadow: inset -10px -8px 24px color-mix(in srgb, var(--ink) 8%, transparent);
+  transform: perspective(150px) rotateX(8deg) rotateY(-10deg);
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
+}
+
+.link-item:hover .project-icon-shell {
+  transform: perspective(150px) rotateX(-5deg) rotateY(12deg) translateY(-3px);
+  box-shadow: inset -10px -8px 24px color-mix(in srgb, var(--ink) 12%, transparent), 0 0 26px var(--glow);
+}
+
+.project-icon { width: 1.45rem; height: 1.45rem; }
+
+.project-methods {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.project-methods li {
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.project-artifact {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.35rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-code);
+  font-size: 0.65rem;
+  color: var(--ink-muted);
+}
+
+.project-artifact span { color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.project-open {
+  position: absolute;
+  right: 1.4rem;
+  top: 5.5rem;
+  font-family: var(--font-code);
+  font-size: 0.64rem;
+  color: var(--ink-dim);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.link-item:hover .project-open { opacity: 1; transform: translateY(0); }
 
 .link-blurb {
   margin: 0.65rem 0 0;
@@ -1685,33 +1829,25 @@ a:hover {
 /* Skill Storm — ported CSS 3D carousel, Theo monochrome tokens */
 .skill-storm {
   position: relative;
-  margin: 0 auto;
+  left: 50%;
+  margin: 0;
   height: 38rem;
-  width: 100%;
-  max-width: 72rem;
+  width: min(100vw, 92rem);
+  transform: translateX(-50%);
   cursor: grab;
   user-select: none;
-  -webkit-mask-image: radial-gradient(
-    ellipse 92% 96% at 50% 50%,
-    #000 68%,
-    transparent 99%
-  );
-  mask-image: radial-gradient(
-    ellipse 92% 96% at 50% 50%,
-    #000 68%,
-    transparent 99%
-  );
   touch-action: none;
-}
-
-.skill-storm:active {
-  cursor: grabbing;
+  container-type: inline-size;
 }
 
 @media (min-width: 1280px) {
   .skill-storm {
-    height: 42rem;
+    height: 43rem;
   }
+}
+
+.skill-storm:active {
+  cursor: grabbing;
 }
 
 .skill-storm-glow {
@@ -1746,72 +1882,39 @@ a:hover {
   inset: 0;
   perspective: 1200px;
   transform-style: preserve-3d;
-  --storm-k: 0.72;
+  --storm-k: 0.68;
+}
+
+@media (min-width: 1100px) {
+  .skill-storm-3d {
+    --storm-k: 0.78;
+  }
 }
 
 @media (min-width: 1280px) {
   .skill-storm-3d {
-    --storm-k: 0.86;
+    --storm-k: 0.88;
   }
-}
-
-@media (min-width: 1536px) {
-  .skill-storm-3d {
-    --storm-k: 1;
-  }
-}
-
-.skill-storm-center {
-  pointer-events: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  text-align: center;
-  transform: translate(-50%, -50%) translateZ(0);
-}
-
-.skill-storm-eyebrow {
-  margin: 0;
-  font-family: var(--font-code);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-}
-
-.skill-storm-title {
-  margin: 0.35rem 0 0;
-  font-size: clamp(1.85rem, 3vw, 2.4rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--white);
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.18);
-}
-
-.skill-storm-hint {
-  margin: 0.55rem 0 0;
-  font-family: var(--font-code);
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-  color: var(--ink-dim);
 }
 
 .skill-orbit-item {
   position: absolute;
   left: 50%;
   top: 50%;
+  /* Max horizontal reach of a pill center: half the stage minus room for the
+     widest pill, so chips can never leave the stage at any viewport width. */
+  --storm-span: calc(50cqw - 150px);
   --d: sin(var(--storm-angle, 0deg) + var(--phase, 0deg));
   transform: translate(-50%, -50%)
     translate3d(
       calc(
-        cos(var(--storm-angle, 0deg) + var(--phase, 0deg)) * var(--rx, 0) *
-          var(--storm-k, 1) * 1px
+        cos(var(--storm-angle, 0deg) + var(--phase, 0deg)) * var(--rx-n, 0) *
+          var(--storm-span)
       ),
       calc(
-        var(--d) * var(--rx, 0) * var(--storm-k, 1) * 0.1px + var(--ry, 0px)
+        var(--d) * var(--orbit-ry, 0) * var(--storm-k, 1) * 1px + var(--offset-y, 0px)
       ),
-      calc(var(--d) * var(--rx, 0) * var(--storm-k, 1) * 0.55px)
+      calc(var(--d) * var(--rx-n, 0) * 280px)
     )
     scale(var(--rs, 1));
   opacity: calc(0.72 + 0.14 * (var(--d) + 1));
@@ -1860,6 +1963,14 @@ a:hover {
 .skill-orbit-item:has(.skill-pill:hover) {
   opacity: 1;
   filter: none;
+}
+
+/* Narrow stages compress the orbits horizontally, so shrink the pills too. */
+@container (max-width: 1150px) {
+  .skill-pill {
+    font-size: 0.6rem;
+    padding: 0.3rem 0.62rem;
+  }
 }
 
 .skills-catalog {
@@ -2190,4 +2301,3 @@ a:hover {
   border-color: rgba(0, 0, 0, 0.35);
   color: var(--ink);
 }
-

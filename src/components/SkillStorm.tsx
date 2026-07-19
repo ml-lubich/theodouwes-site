@@ -7,8 +7,7 @@ import { useEffect, useMemo, useRef } from "react";
  * Styled for Theo’s black/white quant tokens — no Tailwind / portfolio edits.
  */
 
-const RING_SQUASH = 0.1;
-const PILL_SPACING = 104;
+const MAX_VISIBLE_SKILLS = 12;
 const IDLE_DRIFT = 0.03;
 const DRAG_SENSITIVITY = 0.32;
 const FLING_FRICTION = 0.95;
@@ -16,28 +15,23 @@ const DRAG_CLICK_THRESHOLD = 6;
 
 interface RingSpec {
   readonly rx: number;
+  readonly ry: number;
   readonly scale: number;
-  readonly y: number;
+  readonly count: number;
+  readonly phase: number;
 }
 
+/* Ring phase offsets are tuned (brute-force over projected pill boxes at
+   1000–1920px stages) so no two pills collide at any rotation angle. */
 const RINGS: readonly RingSpec[] = [
-  { rx: 132, scale: 1.0, y: -48 },
-  { rx: 232, scale: 0.97, y: 62 },
-  { rx: 320, scale: 0.93, y: -96 },
-  { rx: 400, scale: 0.89, y: 126 },
-  { rx: 468, scale: 0.85, y: -150 },
-  { rx: 524, scale: 0.82, y: 184 },
+  { rx: 260, ry: 130, scale: 0.96, count: 3, phase: 0 },
+  { rx: 380, ry: 170, scale: 0.91, count: 3, phase: 70 },
+  { rx: 500, ry: 210, scale: 0.86, count: 3, phase: 30 },
+  { rx: 620, ry: 250, scale: 0.81, count: 3, phase: 95 },
 ];
 
-const SCATTER_Y = 84;
-
-function ringCapacity(rx: number): number {
-  const a = rx;
-  const b = rx * RING_SQUASH;
-  const h = ((a - b) * (a - b)) / ((a + b) * (a + b));
-  const perim = Math.PI * (a + b) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)));
-  return Math.max(3, Math.floor(perim / PILL_SPACING));
-}
+const SCATTER_Y = 10;
+const MAX_RX = Math.max(...RINGS.map((ring) => ring.rx));
 
 function jitter(seed: number): number {
   const x = Math.sin(seed * 12.9898) * 43758.5453;
@@ -51,11 +45,19 @@ interface PlacedPill {
   readonly offsetY: number;
 }
 
+function sampleSkills(skills: readonly string[]): readonly string[] {
+  const unique = Array.from(new Set(skills));
+  if (unique.length <= MAX_VISIBLE_SKILLS) return unique;
+  return Array.from({ length: MAX_VISIBLE_SKILLS }, (_, index) =>
+    unique[Math.round((index * (unique.length - 1)) / (MAX_VISIBLE_SKILLS - 1))]!,
+  );
+}
+
 function buildLayout(skills: readonly string[]): PlacedPill[] {
   const buckets: string[][] = RINGS.map(() => []);
   let cursor = 0;
   for (let r = 0; r < RINGS.length; r++) {
-    const cap = r === RINGS.length - 1 ? Number.POSITIVE_INFINITY : ringCapacity(RINGS[r].rx);
+    const cap = RINGS[r].count;
     while (buckets[r].length < cap && cursor < skills.length) {
       buckets[r].push(skills[cursor++]!);
     }
@@ -65,20 +67,21 @@ function buildLayout(skills: readonly string[]): PlacedPill[] {
   const placed: PlacedPill[] = [];
   buckets.forEach((names, r) => {
     const ring = RINGS[r]!;
-    const n = names.length;
     names.forEach((name, i) => {
       const seed = r * 97 + i * 13 + 1;
-      const angle =
-        (i / n) * Math.PI * 2 + r * 0.618 + jitter(seed) * (Math.PI / n) * 0.9;
       placed.push({
         name,
         ring,
-        phase: (angle * 180) / Math.PI,
-        offsetY: ring.y + jitter(seed * 3 + 7) * SCATTER_Y,
+        phase: (i / names.length) * 360 + ring.phase,
+        offsetY: jitter(seed * 3 + 7) * SCATTER_Y,
       });
     });
   });
   return placed;
+}
+
+export function getSkillStormLayout(skills: readonly string[]): readonly PlacedPill[] {
+  return buildLayout(sampleSkills(skills));
 }
 
 interface SkillStormProps {
@@ -87,7 +90,7 @@ interface SkillStormProps {
 }
 
 export function SkillStorm({ skills, onSelect }: SkillStormProps) {
-  const pills = useMemo(() => buildLayout(Array.from(new Set(skills))), [skills]);
+  const pills = useMemo(() => getSkillStormLayout(skills), [skills]);
 
   const rotatorRef = useRef<HTMLDivElement>(null);
   const angleRef = useRef(0);
@@ -171,21 +174,14 @@ export function SkillStorm({ skills, onSelect }: SkillStormProps) {
             key={ring.rx}
             className="skill-storm-ring"
             style={{
-              width: ring.rx * 2,
-              height: ring.rx * 2 * RING_SQUASH,
-              marginTop: ring.y,
+              width: `calc((50cqw - 150px) * ${(ring.rx / MAX_RX).toFixed(4)} * 2)`,
+              height: ring.ry * 2,
             }}
           />
         ))}
       </div>
 
       <div ref={rotatorRef} className="skill-storm-3d">
-        <div className="skill-storm-center" aria-hidden="true">
-          <p className="skill-storm-eyebrow">A storm of</p>
-          <p className="skill-storm-title">Skills</p>
-          <p className="skill-storm-hint">drag to spin · hover to pause</p>
-        </div>
-
         {pills.map((p) => (
           <div
             key={p.name}
@@ -193,9 +189,10 @@ export function SkillStorm({ skills, onSelect }: SkillStormProps) {
             style={
               {
                 "--phase": `${p.phase}deg`,
-                "--rx": p.ring.rx,
+                "--rx-n": p.ring.rx / MAX_RX,
+                "--orbit-ry": p.ring.ry,
                 "--rs": p.ring.scale,
-                "--ry": `${p.offsetY}px`,
+                "--offset-y": `${p.offsetY}px`,
               } as React.CSSProperties
             }
           >

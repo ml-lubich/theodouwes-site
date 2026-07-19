@@ -16,6 +16,8 @@ export interface ProjectItem {
   readonly tag: string;
   readonly href: string | null;
   readonly blurb: string;
+  readonly methods: readonly string[];
+  readonly artifact: string;
 }
 
 export interface WritingItem {
@@ -151,12 +153,24 @@ export const profile: SiteProfile = {
   },
   projects: [
     {
+      id: "gtm-system",
+      title: "GTM Outreach Operating System",
+      tag: "Workflow engineering",
+      href: "https://navigara.com",
+      blurb:
+        "Shared outreach infrastructure for SDR, marketing, and sales with explicit sequencing, handoffs, stage visibility, and repeatable playbooks.",
+      methods: ["Automation", "Stage design", "Documentation"],
+      artifact: "Operating workflow",
+    },
+    {
       id: "bayesian",
       title: "Bayesian Inference System",
       tag: "Sparse-data decisions",
       href: "https://medium.com/Douwes.theo",
       blurb:
         "Profiling tool for sparse-data decisions using Bayesian methods — assumptions documented, experiments reproducible.",
+      methods: ["Bayesian updating", "Small samples", "Reproducibility"],
+      artifact: "Public research notes",
     },
     {
       id: "re-tool",
@@ -165,6 +179,8 @@ export const profile: SiteProfile = {
       href: null,
       blurb:
         "Interactive R Shiny property investment model with tunable financial parameters for holding-period underwriting.",
+      methods: ["R Shiny", "Scenario analysis", "Cash-flow modeling"],
+      artifact: "Private analytical app",
     },
     {
       id: "zerocopy",
@@ -173,6 +189,8 @@ export const profile: SiteProfile = {
       href: "https://tinyurl.com/video-live-bot",
       blurb:
         "Pricing for 15-minute binary outcome markets with fat-tailed adjustments, blended volatility, momentum signals, and systematic position sizing.",
+      methods: ["Fat tails", "Volatility", "Position sizing"],
+      artifact: "Public demo video",
     },
     {
       id: "tedx",
@@ -181,6 +199,8 @@ export const profile: SiteProfile = {
       href: null,
       blurb:
         "Led application, speaker selection, and production for an official TEDx event — 200K+ YouTube views.",
+      methods: ["Program design", "Speaker selection", "Production"],
+      artifact: "200K+ documented views",
     },
   ],
   writing: [

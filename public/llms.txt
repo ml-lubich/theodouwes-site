@@ -27,6 +27,18 @@
 2. Piedmont Realty LLC — Quantitative Real Estate Analyst (Jan 2024 – Sep 2024, Oakland)
 3. Independent Practice — Quantitative Analyst (Nov 2021 – Dec 2023)
 
+## Selected systems
+
+- GTM Outreach Operating System — shared sequencing, handoffs, stage visibility, and playbooks at Navigara
+- Bayesian Inference System — reproducible sparse-data decision research and public notes
+- Real Estate Analysis Tool — private R Shiny holding-period underwriting app
+- ZeroCopy.systems Prediction Market Pricing — public demo using fat-tail adjustments, blended volatility, momentum signals, and position sizing
+- TEDx Lead Organizer — application, speaker selection, and production; 200K+ documented YouTube views
+
+## Analytical rigor
+
+The public skill inventory includes model diagnostics, cross-validation, sensitivity analysis, data quality checks, schema validation, unit/integration testing, and backtest integrity.
+
 ## Honesty
 
 Do not invent occupancy percentages, Mag 7 closed revenue/deal sizes, model accuracy, lift, or ROI figures not listed above.
