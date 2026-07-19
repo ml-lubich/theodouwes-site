@@ -1,5 +1,6 @@
 import type { ExperienceItem } from "@/lib/profile";
-import { formatTenure } from "@/lib/profile";
+import { formatDuration, formatTenure } from "@/lib/profile";
+import { AmbientField } from "@/components/AmbientField";
 import { Reveal } from "@/components/Reveal";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 import { ExperienceIcon, HighlightIcon } from "@/components/ExperienceIcon";
@@ -23,6 +24,7 @@ export function ExperienceSection({
 }: ExperienceSectionProps) {
   return (
     <section className="section work-section" id="work" aria-labelledby="work-title">
+      <AmbientField seed={7} />
       <Reveal className="work-heading" delayMs={40} enable3D={false}>
         <p className="section-label">Work · Selected chapters</p>
         <h2 className="section-title kinetic-title" id="work-title">
@@ -50,6 +52,10 @@ export function ExperienceSection({
             <div className="timeline-meta">
               <p className="tenure">{formatTenure(item.start, item.end)}</p>
               <p className="timeline-location">{item.location}</p>
+              <p className="tenure-duration">{formatDuration(item.start, item.end)}</p>
+              <span className="meta-watermark" aria-hidden="true">
+                <ExperienceIcon kind={item.id} className="watermark-icon" />
+              </span>
             </div>
             <div className="timeline-copy">
               <div className="timeline-role">

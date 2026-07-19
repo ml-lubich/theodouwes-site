@@ -294,6 +294,45 @@ a:hover {
   animation: shimmer-sweep 3.8s ease-in-out infinite;
 }
 
+/* ── Ambient quant weather ──────────────────────────────────── */
+/* Sparse drifting math glyphs behind section content. z-index -1 keeps them
+   under all in-flow content; every section background is transparent, so they
+   read as part of the page atmosphere. */
+.ambient-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ambient-glyph {
+  position: absolute;
+  font-family: var(--font-code);
+  font-size: calc(0.95rem * var(--a-scale, 1));
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.055);
+  animation: ambient-drift var(--a-dur, 20s) ease-in-out var(--a-delay, 0s)
+    infinite alternate;
+  will-change: transform;
+}
+
+@keyframes ambient-drift {
+  from {
+    transform: translate3d(0, calc(-1 * var(--a-drift, 12px)), 0) rotate(-6deg);
+  }
+  to {
+    transform: translate3d(0, var(--a-drift, 12px), 0) rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-glyph,
+  .meta-watermark {
+    animation: none;
+  }
+}
+
 .glass-card::before {
   content: "";
   position: absolute;
@@ -1081,6 +1120,7 @@ a:hover {
 
 /* ── Sections ───────────────────────────────────────────────── */
 .section {
+  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(3.5rem, 8vh, 5.5rem) var(--space);
@@ -1424,6 +1464,53 @@ a:hover {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-dim);
+}
+
+.tenure-duration {
+  display: inline-flex;
+  margin: 0.7rem 0 0;
+  padding: 0.16rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-code);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* Oversized role glyph filling the meta column's dead space. */
+.meta-watermark {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .meta-watermark {
+    display: block;
+    position: absolute;
+    left: 0.2rem;
+    top: 5.4rem;
+    width: 6.5rem;
+    height: 6.5rem;
+    color: var(--ink);
+    opacity: 0.05;
+    pointer-events: none;
+    animation: watermark-float 9s ease-in-out infinite alternate;
+  }
+}
+
+.watermark-icon {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes watermark-float {
+  from {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+  to {
+    transform: translateY(6px) rotate(3deg);
+  }
 }
 
 .timeline-copy {
@@ -1800,8 +1887,10 @@ a:hover {
   line-height: 1.55;
 }
 
+/* Tight above the storm (the stage already carries top slack), clear air
+   below it before the catalog cards. */
 .skill-storm-wrap {
-  margin: 1.5rem 0 0.5rem;
+  margin: 0.5rem 0 1rem;
 }
 
 /* Skill Storm — ported CSS 3D carousel, Theo monochrome tokens */
@@ -2017,7 +2106,7 @@ a:hover {
 
 /* Masonry columns: cards pack vertically so short cards leave no row gaps. */
 .skills-catalog {
-  margin-top: 1.75rem;
+  margin-top: 2.75rem;
   columns: 1;
   column-gap: 0.9rem;
 }
@@ -2424,6 +2513,10 @@ a:hover {
 
 [data-theme="light"] .skills-group-icon {
   background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .ambient-glyph {
+  color: rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .skill-storm-ring {

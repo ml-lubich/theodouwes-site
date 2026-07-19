@@ -1,8 +1,30 @@
+import { AmbientField } from "@/components/AmbientField";
 import { Reveal } from "@/components/Reveal";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 import { getCategoryIcon, getSkillIcon } from "@/components/SkillIcons";
 import { SkillStorm } from "@/components/SkillStorm";
 import type { SkillCategory } from "@/lib/skills";
+
+/* Display order tuned so the masonry columns of the catalog end at roughly
+   the same height (card heights estimated from item counts) instead of one
+   column running long. Categories missing from this list keep source order. */
+const CATALOG_DISPLAY_ORDER = [
+  "Roles & focus",
+  "Python data / ML",
+  "Languages & tooling",
+  "Cloud, automation & ops",
+  "Quant / stats methods",
+  "LLM / AI engineering",
+  "Domains",
+  "Markets / risk / underwriting",
+  "Data apps / full-stack lite",
+  "Testing & analytical rigor",
+];
+
+function catalogRank(category: string): number {
+  const rank = CATALOG_DISPLAY_ORDER.indexOf(category);
+  return rank === -1 ? CATALOG_DISPLAY_ORDER.length : rank;
+}
 
 interface AboutSectionProps {
   readonly title: string;
@@ -25,6 +47,7 @@ export function AboutSection({
 }: AboutSectionProps) {
   return (
     <Reveal as="section" className="section" id="about" delayMs={40}>
+      <AmbientField seed={3} />
       <p className="section-label">About</p>
       <h2 className="section-title" id="about-title">
         {aboutTitle}
@@ -78,7 +101,9 @@ export function AboutSection({
         </div>
 
         <div className="skills-catalog" aria-label="Skills by category">
-          {skillCategories.map((group) => (
+          {[...skillCategories]
+            .sort((a, b) => catalogRank(a.category) - catalogRank(b.category))
+            .map((group) => (
             <div className="skills-group glass-card" key={group.category}>
               <ShimmerOverlay />
               <h4 className="skills-group-title">

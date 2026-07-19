@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { formatTenure, getExperienceById, profile } from "./profile";
+import { formatDuration, formatTenure, getExperienceById, profile } from "./profile";
 
 describe("profile domain", () => {
   test("includes Navigara as current GTM role", () => {
@@ -48,5 +48,21 @@ describe("profile domain", () => {
     expect(piedmont?.org).toBe("Piedmont Realty LLC");
     expect(piedmont?.role).toBe("Quantitative Real Estate Analyst");
     expect(getExperienceById("independent")?.role).toBe("Quantitative Analyst");
+  });
+});
+
+describe("formatDuration", () => {
+  test("counts inclusive months and formats yr/mo", () => {
+    expect(formatDuration("Jan 2024", "Sep 2024")).toBe("9 mo");
+    expect(formatDuration("Nov 2021", "Dec 2023")).toBe("2 yr 2 mo");
+    expect(formatDuration("Jan 2023", "Dec 2023")).toBe("1 yr");
+  });
+
+  test("resolves Present against the reference date", () => {
+    expect(formatDuration("Feb 2026", "Present", new Date(2026, 6, 19))).toBe("6 mo");
+  });
+
+  test("returns empty string for unparseable input", () => {
+    expect(formatDuration("sometime", "Present")).toBe("");
   });
 });

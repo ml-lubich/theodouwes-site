@@ -233,3 +233,39 @@ export function getExperienceById(
 export function formatTenure(start: string, end: string): string {
   return `${start} — ${end}`;
 }
+
+const MONTH_INDEX: Readonly<Record<string, number>> = {
+  Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+  Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+};
+
+function parseMonth(value: string): { year: number; month: number } | null {
+  const [monthName, yearText] = value.trim().split(/\s+/);
+  const month = MONTH_INDEX[monthName ?? ""];
+  const year = Number(yearText);
+  if (month === undefined || !Number.isInteger(year)) return null;
+  return { year, month };
+}
+
+/** "Feb 2026" + "Present" → "6 mo"; "Nov 2021" + "Dec 2023" → "2 yr 2 mo". */
+export function formatDuration(
+  start: string,
+  end: string,
+  reference: Date = new Date(),
+): string {
+  const from = parseMonth(start);
+  const to =
+    end === "Present"
+      ? { year: reference.getFullYear(), month: reference.getMonth() }
+      : parseMonth(end);
+  if (!from || !to) return "";
+  const months = Math.max(
+    1,
+    (to.year - from.year) * 12 + (to.month - from.month) + 1,
+  );
+  const years = Math.floor(months / 12);
+  const rest = months % 12;
+  if (years === 0) return `${rest} mo`;
+  if (rest === 0) return `${years} yr`;
+  return `${years} yr ${rest} mo`;
+}

@@ -29,13 +29,15 @@ interface RingSpec {
   readonly y: number;
 }
 
+/* Tiers alternate above/below centre and stay symmetric (±150 max) so the
+   cloud fills the stage evenly with no dead band at the top. */
 const RINGS: readonly RingSpec[] = [
   { rx: 132, scale: 1.0, y: -44 },
-  { rx: 232, scale: 0.97, y: 56 },
-  { rx: 320, scale: 0.93, y: -88 },
-  { rx: 400, scale: 0.89, y: 116 },
-  { rx: 468, scale: 0.85, y: -138 },
-  { rx: 524, scale: 0.82, y: 168 },
+  { rx: 232, scale: 0.97, y: 52 },
+  { rx: 320, scale: 0.93, y: -84 },
+  { rx: 400, scale: 0.89, y: 108 },
+  { rx: 468, scale: 0.85, y: -128 },
+  { rx: 524, scale: 0.82, y: 150 },
 ];
 
 const MAX_RX = Math.max(...RINGS.map((ring) => ring.rx));

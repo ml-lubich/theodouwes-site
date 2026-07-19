@@ -1,4 +1,5 @@
 import type { ProjectItem } from "@/lib/profile";
+import { AmbientField } from "@/components/AmbientField";
 import { Reveal } from "@/components/Reveal";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 
@@ -25,6 +26,7 @@ function ProjectIcon({ kind }: { readonly kind: string }) {
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
   return (
     <Reveal as="section" className="section" id="projects" delayMs={100}>
+      <AmbientField seed={11} />
       <p className="section-label">Projects · Working systems</p>
       <h2 className="section-title project-section-title" id="projects-title">
         Evidence over adjectives
