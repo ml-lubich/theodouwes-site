@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
+import { getCategoryIcon, getSkillIcon } from "@/components/SkillIcons";
 import { SkillStorm } from "@/components/SkillStorm";
 import type { SkillCategory } from "@/lib/skills";
 
@@ -78,11 +79,19 @@ export function AboutSection({
 
         <div className="skills-catalog" aria-label="Skills by category">
           {skillCategories.map((group) => (
-            <div className="skills-group" key={group.category}>
-              <h4 className="skills-group-title">{group.category}</h4>
-              <ul className="bullet-list skills-bullets">
+            <div className="skills-group glass-card" key={group.category}>
+              <ShimmerOverlay />
+              <h4 className="skills-group-title">
+                <span className="skills-group-icon">{getCategoryIcon(group.category)}</span>
+                {group.category}
+                <span className="skills-group-count">{group.items.length}</span>
+              </h4>
+              <ul className="skill-tag-wrap">
                 {group.items.map((skill) => (
-                  <li key={skill}>{skill}</li>
+                  <li className="skill-tag" key={skill}>
+                    {getSkillIcon(skill)}
+                    {skill}
+                  </li>
                 ))}
               </ul>
             </div>

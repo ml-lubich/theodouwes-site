@@ -16,12 +16,12 @@ describe("SkillStorm", () => {
     expect(screen.getByText("Bayesian inference")).toBeTruthy();
   });
 
-  test("samples a readable cross-section instead of rendering the full catalog", () => {
+  test("renders every unique skill as a storm pill", () => {
     const skills = Array.from({ length: 120 }, (_, index) => `Skill ${index % 115}`);
     const layout = getSkillStormLayout(skills);
-    expect(layout).toHaveLength(12);
+    expect(layout).toHaveLength(115);
     expect(layout.at(-1)?.name).toBe("Skill 114");
-    expect(Math.max(...layout.map((pill) => pill.ring.rx))).toBeLessThanOrEqual(620);
+    expect(Math.max(...layout.map((pill) => pill.ring.rx))).toBeLessThanOrEqual(524);
   });
 
   test("selects on click, pauses on hover, and supports pointer dragging", async () => {

@@ -1,38 +1,60 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
+import { getSkillIcon } from "@/components/SkillIcons";
 
 /**
  * Ported from ml-lubich/portfolio Skill Storm (CSS 3D carousel).
  * Styled for Theo’s black/white quant tokens — no Tailwind / portfolio edits.
+ *
+ * Every skill rides one of several near-edge-on rings. One shared angle
+ * (`--storm-angle`) drives the field; each pill derives its spot via CSS trig.
+ * Horizontal reach is expressed in container-query units (see globals.css),
+ * so pills scale with the stage and can never leave it at any viewport.
  */
 
-const MAX_VISIBLE_SKILLS = 12;
+const RING_SQUASH = 0.1;
+const PILL_SPACING = 104;
 const IDLE_DRIFT = 0.03;
 const DRAG_SENSITIVITY = 0.32;
 const FLING_FRICTION = 0.95;
 const DRAG_CLICK_THRESHOLD = 6;
 
 interface RingSpec {
+  /** Horizontal radius (normalized against MAX_RX before hitting CSS). */
   readonly rx: number;
-  readonly ry: number;
+  /** Depth cue: outer rings sit slightly smaller. */
   readonly scale: number;
-  readonly count: number;
-  readonly phase: number;
+  /** Vertical tier (px from centre) — spreads the rings into storm bands. */
+  readonly y: number;
 }
 
-/* Ring phase offsets are tuned (brute-force over projected pill boxes at
-   1000–1920px stages) so no two pills collide at any rotation angle. */
 const RINGS: readonly RingSpec[] = [
-  { rx: 260, ry: 130, scale: 0.96, count: 3, phase: 0 },
-  { rx: 380, ry: 170, scale: 0.91, count: 3, phase: 70 },
-  { rx: 500, ry: 210, scale: 0.86, count: 3, phase: 30 },
-  { rx: 620, ry: 250, scale: 0.81, count: 3, phase: 95 },
+  { rx: 132, scale: 1.0, y: -44 },
+  { rx: 232, scale: 0.97, y: 56 },
+  { rx: 320, scale: 0.93, y: -88 },
+  { rx: 400, scale: 0.89, y: 116 },
+  { rx: 468, scale: 0.85, y: -138 },
+  { rx: 524, scale: 0.82, y: 168 },
 ];
 
-const SCATTER_Y = 10;
 const MAX_RX = Math.max(...RINGS.map((ring) => ring.rx));
 
+/* Particle-cloud scatter: each pill drifts off its tier by a stable ±px so
+   the bands dissolve into a cloud. Bounded so tier + scatter + squash motion
+   stays inside the stage height. */
+const SCATTER_Y = 76;
+
+/** Ramanujan ellipse-perimeter approximation → how many pills a ring fits. */
+function ringCapacity(rx: number): number {
+  const a = rx;
+  const b = rx * RING_SQUASH;
+  const h = ((a - b) * (a - b)) / ((a + b) * (a + b));
+  const perim = Math.PI * (a + b) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)));
+  return Math.max(3, Math.floor(perim / PILL_SPACING));
+}
+
+/** Stable per-index jitter in [-0.5, 0.5] — no Math.random, SSR-safe. */
 function jitter(seed: number): number {
   const x = Math.sin(seed * 12.9898) * 43758.5453;
   return x - Math.floor(x) - 0.5;
@@ -45,19 +67,13 @@ interface PlacedPill {
   readonly offsetY: number;
 }
 
-function sampleSkills(skills: readonly string[]): readonly string[] {
-  const unique = Array.from(new Set(skills));
-  if (unique.length <= MAX_VISIBLE_SKILLS) return unique;
-  return Array.from({ length: MAX_VISIBLE_SKILLS }, (_, index) =>
-    unique[Math.round((index * (unique.length - 1)) / (MAX_VISIBLE_SKILLS - 1))]!,
-  );
-}
-
 function buildLayout(skills: readonly string[]): PlacedPill[] {
+  // Fill rings inner→outer up to capacity; overflow lands on the outer ring.
   const buckets: string[][] = RINGS.map(() => []);
   let cursor = 0;
   for (let r = 0; r < RINGS.length; r++) {
-    const cap = RINGS[r].count;
+    const cap =
+      r === RINGS.length - 1 ? Number.POSITIVE_INFINITY : ringCapacity(RINGS[r].rx);
     while (buckets[r].length < cap && cursor < skills.length) {
       buckets[r].push(skills[cursor++]!);
     }
@@ -67,13 +83,17 @@ function buildLayout(skills: readonly string[]): PlacedPill[] {
   const placed: PlacedPill[] = [];
   buckets.forEach((names, r) => {
     const ring = RINGS[r]!;
+    const n = names.length;
     names.forEach((name, i) => {
       const seed = r * 97 + i * 13 + 1;
+      // Even spread + gentle jitter so it churns like weather, not a clock face.
+      const angle =
+        (i / n) * Math.PI * 2 + r * 0.618 + jitter(seed) * (Math.PI / n) * 0.9;
       placed.push({
         name,
         ring,
-        phase: (i / names.length) * 360 + ring.phase,
-        offsetY: jitter(seed * 3 + 7) * SCATTER_Y,
+        phase: (angle * 180) / Math.PI,
+        offsetY: ring.y + jitter(seed * 3 + 7) * SCATTER_Y,
       });
     });
   });
@@ -81,7 +101,7 @@ function buildLayout(skills: readonly string[]): PlacedPill[] {
 }
 
 export function getSkillStormLayout(skills: readonly string[]): readonly PlacedPill[] {
-  return buildLayout(sampleSkills(skills));
+  return buildLayout(Array.from(new Set(skills)));
 }
 
 interface SkillStormProps {
@@ -174,14 +194,21 @@ export function SkillStorm({ skills, onSelect }: SkillStormProps) {
             key={ring.rx}
             className="skill-storm-ring"
             style={{
-              width: `calc((50cqw - 150px) * ${(ring.rx / MAX_RX).toFixed(4)} * 2)`,
-              height: ring.ry * 2,
+              width: `calc(var(--storm-span) * ${(ring.rx / MAX_RX).toFixed(4)} * 2)`,
+              aspectRatio: "10",
+              marginTop: `calc(${ring.y}px * var(--storm-ky, 1))`,
             }}
           />
         ))}
       </div>
 
       <div ref={rotatorRef} className="skill-storm-3d">
+        <div className="skill-storm-center" aria-hidden="true">
+          <p className="skill-storm-eyebrow">A storm of</p>
+          <p className="skill-storm-title">Skills</p>
+          <p className="skill-storm-hint">drag to spin · hover to pause</p>
+        </div>
+
         {pills.map((p) => (
           <div
             key={p.name}
@@ -190,7 +217,6 @@ export function SkillStorm({ skills, onSelect }: SkillStormProps) {
               {
                 "--phase": `${p.phase}deg`,
                 "--rx-n": p.ring.rx / MAX_RX,
-                "--orbit-ry": p.ring.ry,
                 "--rs": p.ring.scale,
                 "--offset-y": `${p.offsetY}px`,
               } as React.CSSProperties
@@ -209,6 +235,7 @@ export function SkillStorm({ skills, onSelect }: SkillStormProps) {
                 pausedRef.current = false;
               }}
             >
+              {getSkillIcon(p.name)}
               {p.name}
             </button>
           </div>

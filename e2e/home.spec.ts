@@ -81,8 +81,10 @@ test.describe("Theo Douwes site", () => {
     await expect(page.getByText("400+").first()).toBeVisible();
   });
 
-  for (const width of [1000, 1280, 1920]) {
-    test(`keeps the Skillstorm compact, readable, and inside its stage at ${width}px`, async ({
+  // Dense storm: pills may pass in front of each other (that's the aesthetic),
+  // but no pill may ever leave the stage at any rotation angle or viewport.
+  for (const width of [390, 1000, 1280, 1920]) {
+    test(`keeps the full Skillstorm inside its stage at ${width}px`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 1200 });
@@ -99,25 +101,24 @@ test.describe("Theo Douwes site", () => {
           .getBoundingClientRect();
         const rotator = document.querySelector<HTMLElement>(".skill-storm-3d")!;
         const overflow: string[] = [];
-        const overlaps: string[] = [];
 
         for (const angle of Array.from(
           { length: 24 },
           (_, index) => index * 15,
         )) {
           rotator.style.setProperty("--storm-angle", `${angle}deg`);
-          const boxes = pills.map((pill) => {
-            const rect = pill.getBoundingClientRect();
-            return {
-              text: pill.textContent ?? "",
-              left: rect.left,
-              right: rect.right,
-              top: rect.top,
-              bottom: rect.bottom,
-            };
-          });
           overflow.push(
-            ...boxes
+            ...pills
+              .map((pill) => {
+                const rect = pill.getBoundingClientRect();
+                return {
+                  text: pill.textContent ?? "",
+                  left: rect.left,
+                  right: rect.right,
+                  top: rect.top,
+                  bottom: rect.bottom,
+                };
+              })
               .filter(
                 (pill) =>
                   pill.left < Math.max(0, stage.left) ||
@@ -128,38 +129,14 @@ test.describe("Theo Douwes site", () => {
               )
               .map((pill) => `${angle}:${pill.text}`),
           );
-          for (let index = 0; index < boxes.length; index++) {
-            for (let other = index + 1; other < boxes.length; other++) {
-              const x = Math.max(
-                0,
-                Math.min(boxes[index].right, boxes[other].right) -
-                  Math.max(boxes[index].left, boxes[other].left),
-              );
-              const y = Math.max(
-                0,
-                Math.min(boxes[index].bottom, boxes[other].bottom) -
-                  Math.max(boxes[index].top, boxes[other].top),
-              );
-              if (x * y > 8) {
-                overlaps.push(
-                  `${angle}:${boxes[index].text}|${boxes[other].text}`,
-                );
-              }
-            }
-          }
         }
-        return {
-          count: pills.length,
-          height: stage.height,
-          overflow,
-          overlaps,
-        };
+        return { count: pills.length, height: stage.height, overflow };
       });
 
-      expect(layout.count).toBeLessThanOrEqual(48);
+      // The storm must show the full catalog, not a thin sample.
+      expect(layout.count).toBeGreaterThanOrEqual(60);
       expect(layout.height).toBeLessThanOrEqual(700);
       expect(layout.overflow).toEqual([]);
-      expect(layout.overlaps).toEqual([]);
     });
   }
 
