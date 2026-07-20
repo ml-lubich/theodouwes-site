@@ -180,6 +180,10 @@ describe("AboutSection", () => {
     expect(screen.getByText("$5.88M")).toBeTruthy();
     expect(screen.getAllByText("Python").length).toBeGreaterThan(0);
     expect(screen.getByText("Languages & tooling")).toBeTruthy();
+    // Icon-inversion badges must render so their theme-flip CSS has targets.
+    expect(document.querySelector(".skills-group-icon")).toBeTruthy();
+    expect(document.querySelectorAll(".skill-tag").length).toBeGreaterThan(0);
+    expect(document.querySelector(".skill-tag .skill-glyph")).toBeTruthy();
   });
 });
 
@@ -214,7 +218,11 @@ describe("ExperienceSection", () => {
     expect(screen.getByText("STAT 198")).toBeTruthy();
     expect(containerOrDocHasBullets()).toBe(true);
     expect(document.querySelector(".experience-icon")).toBeTruthy();
+    expect(document.querySelector(".experience-icon-shell")).toBeTruthy();
+    expect(document.querySelector(".edu-icon-shell")).toBeTruthy();
     expect(document.querySelector(".timeline-number")?.textContent).toBe("01");
+    // Duration chip is derived from start/end.
+    expect(document.querySelector(".tenure-duration")?.textContent).toBeTruthy();
   });
 });
 

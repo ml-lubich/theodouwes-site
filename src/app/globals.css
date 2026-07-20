@@ -1427,11 +1427,14 @@ a:hover {
   place-items: center;
   width: 2.65rem;
   height: 2.65rem;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--ink);
   border-radius: 50%;
-  color: var(--ink-muted);
-  background: rgba(8, 8, 8, 0.92);
-  box-shadow: 0 0 0 5px var(--bg), 0 0 24px rgba(255, 255, 255, 0.08);
+  /* Filled contrast badge: circle takes the ink color (white in dark, near
+     black in light) and the glyph takes the bg color — a clean inversion that
+     flips with the theme and stays high-contrast either way. */
+  color: var(--bg);
+  background: var(--ink);
+  box-shadow: 0 0 0 5px var(--bg), 0 0 24px color-mix(in srgb, var(--ink) 22%, transparent);
   transition:
     color 220ms ease,
     border-color 220ms ease,
@@ -1446,10 +1449,8 @@ a:hover {
 
 .timeline-item:hover .experience-icon-shell,
 .edu-block:hover .edu-icon-shell {
-  color: var(--white);
-  border-color: rgba(255, 255, 255, 0.48);
   transform: rotate(-8deg) scale(1.1);
-  box-shadow: 0 0 0 5px var(--bg), 0 0 30px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 5px var(--bg), 0 0 34px color-mix(in srgb, var(--ink) 40%, transparent);
 }
 
 .timeline-meta {
@@ -1799,11 +1800,11 @@ a:hover {
   place-items: center;
   width: 3.25rem;
   height: 3.25rem;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--ink);
   border-radius: 50%;
-  color: var(--ink);
-  background: color-mix(in srgb, var(--ink) 4%, transparent);
-  box-shadow: inset -10px -8px 24px color-mix(in srgb, var(--ink) 8%, transparent);
+  color: var(--bg);
+  background: var(--ink);
+  box-shadow: inset -10px -8px 24px color-mix(in srgb, var(--bg) 22%, transparent);
   transform: perspective(150px) rotateX(8deg) rotateY(-10deg);
   transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
 }
@@ -2024,8 +2025,9 @@ a:hover {
       calc(var(--d) * var(--rx-n, 0) * 140px)
     )
     scale(var(--rs, 1));
-  opacity: calc(0.72 + 0.14 * (var(--d) + 1));
-  filter: brightness(calc(0.5 + 0.25 * (var(--d) + 1)));
+  /* Depth cue via opacity only — brightness() darkening turned the far white
+     pills muddy grey, especially in light mode. */
+  opacity: calc(0.78 + 0.11 * (var(--d) + 1));
   will-change: transform;
 }
 
@@ -2150,10 +2152,10 @@ a:hover {
   width: 1.7rem;
   height: 1.7rem;
   flex: none;
-  border: 1px solid var(--line);
+  border: 1px solid var(--ink);
   border-radius: 0.55rem;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
 }
 
 .skills-group-icon .skill-glyph {
@@ -2472,10 +2474,23 @@ a:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
+/* The hero text carries dark radial glows so it stays legible over the brain
+   on the near-black theme; on the light theme those glows read as muddy grey
+   halos, so drop every one of them. */
 [data-theme="light"] .hero-brand,
+[data-theme="light"] .hero-brand-last,
 [data-theme="light"] .hero-title,
+[data-theme="light"] .hero-sub,
 [data-theme="light"] .eyebrow {
   text-shadow: none;
+}
+
+/* The dark wireframe brain fights the near-black name on the light theme, so
+   fade it to a faint watermark and drop the (invisible) white glow. */
+[data-theme="light"] .hero-brain {
+  animation: none;
+  opacity: 0.22;
+  filter: none;
 }
 
 [data-theme="light"] .skill-pill {
@@ -2509,10 +2524,6 @@ a:hover {
 [data-theme="light"] .skill-tag:hover {
   border-color: rgba(0, 0, 0, 0.3);
   background: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .skills-group-icon {
-  background: rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="light"] .ambient-glyph {
