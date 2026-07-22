@@ -2400,6 +2400,8 @@ a:hover {
    layout has no room to breathe. Center everything in the column
    for the entire single-column range, not just the smallest phones. */
 @media (max-width: 899px) {
+  /* Single-column hero: copy (eyebrow → name → brain → tagline) leads,
+     portrait photo sits at the bottom (its natural DOM order). */
   .hero-copy {
     align-items: center;
     text-align: center;
@@ -2412,14 +2414,23 @@ a:hover {
 
   /* The dense wireframe core reads fine offset beside the name at desktop
      sizes, but directly behind the (also centered) name it swallows the
-     letters. Stack it above the name as a mark instead of overlapping it. */
+     letters. Lead with the name, then drop the brain below it as a mark
+     instead of overlapping it. column-reverse flips the DOM order
+     (brain-then-name) so the name reads first. */
+  .hero-namewrap {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .hero-brain {
     position: static;
     left: auto;
     top: auto;
     width: clamp(10rem, 48vw, 15rem);
     height: clamp(10rem, 48vw, 15rem);
-    margin: 0 auto 0.25rem;
+    margin: 0.25rem auto 0;
     transform: none;
   }
 }
