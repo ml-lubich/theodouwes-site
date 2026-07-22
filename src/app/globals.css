@@ -690,8 +690,19 @@ a:hover {
 }
 
 @media (min-width: 900px) {
-  .hero {
-    grid-template-columns: 1.15fr 0.85fr;
+  /* Portrait now lives inside the copy column (so it can sit under the name on
+     mobile); on desktop we float it back out to the right as a side column. */
+  .hero-copy {
+    max-width: 50%;
+  }
+
+  .hero-copy .hero-media {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + clamp(1.5rem, 5vw, 4rem));
+    transform: translateY(-50%);
+    width: min(30vw, 360px);
+    margin: 0;
   }
 }
 
@@ -707,7 +718,8 @@ a:hover {
 .hero-copy .btn,
 .hero-copy a,
 .hero-copy .signal-chip,
-.hero-copy .hero-brain {
+.hero-copy .hero-brain,
+.hero-copy .hero-media {
   pointer-events: auto;
 }
 
@@ -2412,26 +2424,33 @@ a:hover {
     justify-content: center;
   }
 
-  /* The dense wireframe core reads fine offset beside the name at desktop
-     sizes, but directly behind the (also centered) name it swallows the
-     letters. Lead with the name, then drop the brain below it as a mark
-     instead of overlapping it. column-reverse flips the DOM order
-     (brain-then-name) so the name reads first. */
+  /* Brain sits BEHIND the name as a centered watermark (michaellubich.com
+     style): name in front, brain bleeding out behind it. The name carries a
+     dark radial text-shadow (see .hero-brand-last) so it stays legible over
+     the wireframe. */
   .hero-namewrap {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
   }
 
   .hero-brain {
-    position: static;
-    left: auto;
-    top: auto;
-    width: clamp(10rem, 48vw, 15rem);
-    height: clamp(10rem, 48vw, 15rem);
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    top: 50%;
+    width: clamp(16rem, 78vw, 24rem);
+    height: clamp(16rem, 78vw, 24rem);
+    margin: 0;
+    transform: translate(-50%, -50%);
+    opacity: 0.55;
+  }
+
+  /* Theo's portrait now renders inside the copy column right under the name
+     (see Hero.tsx), so it sits directly below the name on mobile. */
+  .hero-media {
     margin: 0.25rem auto 0;
-    transform: none;
+    width: min(100%, 15rem);
   }
 }
 

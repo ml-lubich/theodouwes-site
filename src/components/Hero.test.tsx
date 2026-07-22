@@ -58,6 +58,43 @@ describe("Hero", () => {
     });
   });
 
+  test("portrait sits between the name and the headline", async () => {
+    const { Hero } = await import("./Hero");
+    await act(async () => {
+      render(
+        <Hero
+          brand="Theo Douwes"
+          title="GTM"
+          headline="Statistics graduate building GTM systems."
+          subhead="Sub"
+          photoSrc="/theo.webp"
+          photoAlt="Portrait of Theo Alexander Douwes"
+          portraitMeta="SF"
+          signals={["Stats"]}
+          primaryCta={{ label: "View work", href: "#work" }}
+          secondaryCta={{
+            label: "Connect on LinkedIn",
+            href: "https://www.linkedin.com/in/theo-douwes",
+          }}
+        />,
+      );
+    });
+
+    const heading = screen.getByRole("heading", { level: 1 });
+    const img = screen.getByRole("img", { name: /Theo Alexander Douwes/i });
+    const headline = screen.getByText(/Statistics graduate building GTM/i);
+
+    // DOM order: name → portrait → headline
+    expect(
+      heading.compareDocumentPosition(img) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      img.compareDocumentPosition(headline) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
   test("renders single-token brand without splitting", async () => {
     const { Hero } = await import("./Hero");
     await act(async () => {

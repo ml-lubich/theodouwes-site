@@ -86,6 +86,32 @@ export function Hero({
             <span className="hero-brand-last">{last || brand}</span>
           </motion.h1>
         </div>
+        <motion.div
+          className="hero-media"
+          initial={reduceMotion ? false : { opacity: 0, x: 36, scale: 0.96 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{ duration: 0.85, delay: reduceMotion ? 0 : 0.2, ease }}
+        >
+          <motion.div
+            className="portrait-frame interactive"
+            animate={reduceMotion ? undefined : { y: [0, -8, 0] }}
+            transition={
+              reduceMotion
+                ? undefined
+                : { duration: 6.5, repeat: Infinity, ease: "easeInOut" }
+            }
+          >
+            <Image
+              src={photoSrc}
+              alt={photoAlt}
+              width={800}
+              height={800}
+              priority
+              sizes="(max-width: 900px) 90vw, 380px"
+            />
+            <p className="portrait-meta">{portraitMeta}</p>
+          </motion.div>
+        </motion.div>
         <motion.p className="hero-title" {...fadeUp(0.22)}>
           {headline}
         </motion.p>
@@ -127,36 +153,6 @@ export function Hero({
           ))}
         </motion.div>
       </div>
-      <motion.div
-        className="hero-media"
-        initial={reduceMotion ? false : { opacity: 0, x: 36, scale: 0.96 }}
-        animate={{ opacity: 1, x: 0, scale: 1 }}
-        transition={{ duration: 0.85, delay: reduceMotion ? 0 : 0.2, ease }}
-      >
-        <motion.div
-          className="portrait-frame interactive"
-          animate={
-            reduceMotion
-              ? undefined
-              : { y: [0, -8, 0] }
-          }
-          transition={
-            reduceMotion
-              ? undefined
-              : { duration: 6.5, repeat: Infinity, ease: "easeInOut" }
-          }
-        >
-          <Image
-            src={photoSrc}
-            alt={photoAlt}
-            width={800}
-            height={800}
-            priority
-            sizes="(max-width: 900px) 90vw, 380px"
-          />
-          <p className="portrait-meta">{portraitMeta}</p>
-        </motion.div>
-      </motion.div>
     </section>
   );
 }
