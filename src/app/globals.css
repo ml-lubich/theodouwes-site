@@ -698,9 +698,12 @@ a:hover {
 
   .hero-copy .hero-media {
     position: absolute;
-    top: 50%;
+    /* Top-align the portrait with the name/brain band (just under the eyebrow)
+       rather than vertically centering it, so its top edge reads level with
+       "Theo Douwes". */
+    top: 2.75rem;
     left: calc(100% + clamp(1.5rem, 5vw, 4rem));
-    transform: translateY(-50%);
+    transform: none;
     width: min(30vw, 360px);
     margin: 0;
   }
@@ -2446,10 +2449,11 @@ a:hover {
     opacity: 0.55;
   }
 
-  /* Theo's portrait renders inside the copy column (see Hero.tsx), directly
-     under the name. */
+  /* Theo's portrait renders inside the copy column (see Hero.tsx), under the
+     name — pushed down enough that the brain watermark's bottom tip clears the
+     photo instead of intersecting it. */
   .hero-media {
-    margin: 0.75rem auto 0;
+    margin: 3rem auto 0;
     width: min(100%, 15rem);
   }
 }
