@@ -2424,32 +2424,33 @@ a:hover {
     justify-content: center;
   }
 
-  /* Brain sits BEHIND the name as a centered watermark (michaellubich.com
-     style): name in front, brain bleeding out behind it. The name carries a
-     dark radial text-shadow (see .hero-brand-last) so it stays legible over
-     the wireframe. */
+  /* Mobile: three separated marks with real breathing room between each —
+     name on top, brain mark below it, then Theo's portrait. No overlap.
+     column-reverse renders the name (2nd in the DOM) above the brain
+     (1st), and the gap spaces them apart. */
   .hero-namewrap {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
+    gap: 1.75rem;
   }
 
   .hero-brain {
-    position: absolute;
+    position: static;
     z-index: 0;
-    left: 50%;
-    top: 50%;
-    width: clamp(16rem, 78vw, 24rem);
-    height: clamp(16rem, 78vw, 24rem);
+    left: auto;
+    top: auto;
+    width: clamp(10rem, 44vw, 14rem);
+    height: clamp(10rem, 44vw, 14rem);
     margin: 0;
-    transform: translate(-50%, -50%);
-    opacity: 0.55;
+    transform: none;
+    opacity: 1;
   }
 
-  /* Theo's portrait now renders inside the copy column right under the name
-     (see Hero.tsx), so it sits directly below the name on mobile. */
+  /* Theo's portrait renders inside the copy column (see Hero.tsx); give it
+     clear space below the brain mark so nothing feels crammed. */
   .hero-media {
-    margin: 0.25rem auto 0;
+    margin: 1.5rem auto 0;
     width: min(100%, 15rem);
   }
 }
