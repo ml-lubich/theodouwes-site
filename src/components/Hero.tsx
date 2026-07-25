@@ -2,7 +2,15 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import type { PointerEvent } from "react";
+import { RoleRotator } from "@/components/RoleRotator";
 
 const WhiteBrain = dynamic(
   () => import("@/components/WhiteBrain").then((m) => m.WhiteBrain),
@@ -22,6 +30,7 @@ interface Cta {
 interface HeroProps {
   readonly brand: string;
   readonly title: string;
+  readonly roles?: readonly string[];
   readonly headline: string;
   readonly subhead: string;
   readonly photoSrc: string;
@@ -43,9 +52,41 @@ function splitBrand(brand: string): { first: string; last: string } {
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+/** Pointer-reactive 3D tilt for the portrait frame — inert on touch/reduced motion. */
+function usePortraitTilt(reduceMotion: boolean) {
+  const x = useMotionValue(0.5);
+  const y = useMotionValue(0.5);
+  const spring = { stiffness: 220, damping: 24, mass: 0.4 };
+  const rotateX = useSpring(useTransform(y, [0, 1], [6, -6]), spring);
+  const rotateY = useSpring(useTransform(x, [0, 1], [-6, 6]), spring);
+
+  function canTilt() {
+    return (
+      !reduceMotion &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    );
+  }
+
+  function onPointerMove(event: PointerEvent<HTMLDivElement>) {
+    if (!canTilt()) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set((event.clientX - rect.left) / rect.width);
+    y.set((event.clientY - rect.top) / rect.height);
+  }
+
+  function onPointerLeave() {
+    x.set(0.5);
+    y.set(0.5);
+  }
+
+  return { rotateX, rotateY, onPointerMove, onPointerLeave };
+}
+
 export function Hero({
   brand,
   title,
+  roles,
   headline,
   subhead,
   photoSrc,
@@ -57,6 +98,9 @@ export function Hero({
 }: HeroProps) {
   const { first, last } = splitBrand(brand);
   const reduceMotion = useReducedMotion();
+  const rotatorRoles = roles && roles.length > 0 ? roles : [title];
+  const { rotateX, rotateY, onPointerMove, onPointerLeave } =
+    usePortraitTilt(!!reduceMotion);
 
   const fadeUp = (delay: number) =>
     reduceMotion
@@ -71,7 +115,7 @@ export function Hero({
     <section className="hero" id="top" aria-labelledby="hero-brand">
       <div className="hero-copy">
         <motion.p className="eyebrow" {...fadeUp(0.05)}>
-          {title}
+          <RoleRotator roles={rotatorRoles} />
         </motion.p>
         <div className="hero-namewrap">
           <div className="hero-brain" aria-hidden="true">
@@ -94,6 +138,9 @@ export function Hero({
         >
           <motion.div
             className="portrait-frame interactive"
+            style={{ rotateX, rotateY }}
+            onPointerMove={onPointerMove}
+            onPointerLeave={onPointerLeave}
             animate={reduceMotion ? undefined : { y: [0, -8, 0] }}
             transition={
               reduceMotion

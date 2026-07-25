@@ -26,6 +26,7 @@ export default function HomePage() {
         <Hero
           brand={model.brand}
           title={model.title}
+          roles={model.roles}
           headline={model.headline}
           subhead={model.subhead}
           photoSrc={model.photoSrc}

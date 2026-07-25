@@ -6,6 +6,7 @@ export interface HomePageModel {
   readonly brand: string;
   readonly monogram: string;
   readonly title: string;
+  readonly roles: readonly string[];
   readonly headline: string;
   readonly subhead: string;
   readonly location: string;
@@ -44,6 +45,7 @@ export function buildHomePageModel(profile: {
   readonly shortName: string;
   readonly monogram: string;
   readonly title: string;
+  readonly roles: readonly string[];
   readonly headline: string;
   readonly subhead: string;
   readonly location: string;
@@ -74,6 +76,7 @@ export function buildHomePageModel(profile: {
     brand: profile.shortName,
     monogram: profile.monogram,
     title: profile.title,
+    roles: profile.roles,
     headline: profile.headline,
     subhead: profile.subhead,
     location: profile.location,

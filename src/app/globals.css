@@ -739,6 +739,30 @@ a:hover {
   animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Fixed-height slot so role cycling never shifts layout (AnimatePresence
+   mode="wait" has an empty frame between exit and enter). */
+.role-rotator {
+  display: block;
+  min-height: 1.3em;
+  white-space: nowrap;
+}
+
+.role-rotator-item {
+  display: inline-block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Name sits above the rotating brain backdrop. */
 .hero-namewrap {
   position: relative;
@@ -905,11 +929,13 @@ a:hover {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease,
+    box-shadow 200ms ease;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 255, 255, 0.12);
 }
 
 .btn-primary {
@@ -942,6 +968,7 @@ a:hover {
   width: min(100%, 420px);
   display: grid;
   gap: 1rem;
+  perspective: 900px;
   animation: rise 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
 }
 
@@ -1002,7 +1029,10 @@ a:hover {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 30px 80px rgba(0, 0, 0, 0.55);
-  animation: portrait-float 7s ease-in-out infinite;
+  /* Float is driven by framer-motion in Hero.tsx; a CSS transform animation
+     here would override the inline rotateX/rotateY tilt. */
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .portrait-frame::before {
@@ -1025,16 +1055,6 @@ a:hover {
   .portrait-frame:hover::before {
     animation: molten-sheen 1.2s ease-out;
     opacity: 1;
-  }
-}
-
-@keyframes portrait-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
   }
 }
 

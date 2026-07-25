@@ -32,6 +32,7 @@ export interface SiteProfile {
   readonly shortName: string;
   readonly monogram: string;
   readonly title: string;
+  readonly roles: readonly string[];
   readonly location: string;
   readonly headline: string;
   readonly subhead: string;
@@ -69,6 +70,12 @@ export const profile: SiteProfile = {
   shortName: "Theo Douwes",
   monogram: "TD",
   title: "GTM and Sales Engineer @ Navigara | UC Berkeley Statistics",
+  roles: [
+    "GTM & Sales Engineer @ Navigara",
+    "UC Berkeley Statistics",
+    "GTM Systems Builder",
+    "Quantitative Underwriting",
+  ],
   location: "San Francisco, California",
   headline:
     "Statistics graduate building GTM systems, underwriting tools, and probabilistic decision software.",
