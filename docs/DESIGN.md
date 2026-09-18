@@ -56,6 +56,14 @@ Avoid soft decorative faces; precision over shout.
 7. Connect (LinkedIn, GitHub, Medium, ZeroCopy, Navigara, email, phone)
 8. Footer (same outbound links)
 
+## TheoAI
+
+- Launcher: fixed bottom-right pill (`.theoai-launcher`), 1.25rem gutter, monospace label matching the nav's utility face — no icon library, no accent color.
+- Panel: full-screen on mobile (`inset: 0`), a bottom-right card ≥640px (`.theoai-panel`), same border/radius/shadow language as `.glass-card`.
+- Every color reads off the site's own tokens (`--ink`, `--ink-muted`, `--line`, `--bg-elevated`) so the panel repaints across the dark/light toggle with no JS — monochrome, consistent with "no portfolio purple/primary accents."
+- Replies render as GitHub-flavored markdown (`react-markdown` + `remark-gfm`); charts use `recharts` in `--ink`/`--ink-muted`/`--line` only; process/architecture diagrams render as native Mermaid DSL, themed dark/neutral off `data-theme`.
+- Respects `prefers-reduced-motion` (launcher pip pulse, panel-in, thinking-verb fade all disabled).
+
 ## Skill Storm
 
 - Desktop (≥900px): orbiting opaque glass pills; drag to spin; hover pauses idle drift; respects `prefers-reduced-motion`

@@ -1,4 +1,5 @@
 import { SiteHeader } from "@/components/SiteHeader";
+import { TheoAI } from "@/components/TheoAI";
 import { Hero } from "@/components/Hero";
 import { AboutSection } from "@/components/AboutSection";
 import { ExperienceSection } from "@/components/ExperienceSection";
@@ -80,6 +81,7 @@ export default function HomePage() {
         email={model.email}
         phone={model.phone}
       />
+      <TheoAI />
     </div>
   );
 }

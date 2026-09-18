@@ -77,6 +77,20 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
   writable: true,
 });
 
+// recharts' <ResponsiveContainer> (used by TheoAIChart) measures its box
+// with a live ResizeObserver; happy-dom has no layout engine, so this stub
+// just has to exist and never fire.
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+Object.defineProperty(globalThis, "ResizeObserver", {
+  value: MockResizeObserver,
+  writable: true,
+});
+
 Object.defineProperty(window, "matchMedia", {
   value: (query: string) => ({
     // Desktop-first: unit tests have no real viewport; prefer expanded nav.

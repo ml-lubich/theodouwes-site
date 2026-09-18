@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { formatDuration, formatTenure, getExperienceById, profile } from "./profile";
+import { formatDuration, formatTenure, getExperienceById, profile, tenureMonths } from "./profile";
 
 describe("profile domain", () => {
   test("includes Navigara as current GTM role", () => {
@@ -64,5 +64,16 @@ describe("formatDuration", () => {
 
   test("returns empty string for unparseable input", () => {
     expect(formatDuration("sometime", "Present")).toBe("");
+  });
+});
+
+describe("tenureMonths", () => {
+  test("returns the same inclusive month count formatDuration derives its string from", () => {
+    expect(tenureMonths("Jan 2024", "Sep 2024")).toBe(9);
+    expect(tenureMonths("Nov 2021", "Dec 2023")).toBe(26);
+  });
+
+  test("returns null for unparseable input rather than throwing", () => {
+    expect(tenureMonths("sometime", "Present")).toBeNull();
   });
 });

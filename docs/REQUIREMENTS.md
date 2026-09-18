@@ -9,6 +9,7 @@
 5. As a visitor, I can reach LinkedIn, GitHub, Medium, email, and phone from Connect + footer (LinkedIn also from the hero CTA).
 6. As a crawler/LLM, I can read `robots.txt`, `sitemap.xml`, `llms.txt`, and Person JSON-LD with publish-safe facts.
 7. As a visitor, I can toggle dark/light mode; light mode uses black text and a black wireframe brain.
+8. As a visitor, I can open TheoAI (bottom-right) and ask about Theo's experience, education, projects, writing or skills, and get a markdown-formatted answer grounded only in what is already on the page — with charts, Mermaid diagrams, follow-up questions, and a contact hand-off card when I ask how to reach him. There is no booking calendar or resume download — this site has neither.
 
 ## Hard constraints
 
@@ -30,3 +31,4 @@
 - Analytics dashboards
 - Auth
 - Resume PDF generation inside this repo
+- TheoAI booking calendar or resume hand-off — the site has neither, so the chat assistant does not either

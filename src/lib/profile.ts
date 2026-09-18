@@ -254,22 +254,31 @@ function parseMonth(value: string): { year: number; month: number } | null {
   return { year, month };
 }
 
+/** Inclusive month count between two "Mon YYYY" strings ("Present" resolves
+ *  against `reference`). Null when either side does not parse — used by
+ *  `formatDuration` for display and by the chat timeline chart for a number. */
+export function tenureMonths(
+  start: string,
+  end: string,
+  reference: Date = new Date(),
+): number | null {
+  const from = parseMonth(start);
+  const to =
+    end === "Present"
+      ? { year: reference.getFullYear(), month: reference.getMonth() }
+      : parseMonth(end);
+  if (!from || !to) return null;
+  return Math.max(1, (to.year - from.year) * 12 + (to.month - from.month) + 1);
+}
+
 /** "Feb 2026" + "Present" → "6 mo"; "Nov 2021" + "Dec 2023" → "2 yr 2 mo". */
 export function formatDuration(
   start: string,
   end: string,
   reference: Date = new Date(),
 ): string {
-  const from = parseMonth(start);
-  const to =
-    end === "Present"
-      ? { year: reference.getFullYear(), month: reference.getMonth() }
-      : parseMonth(end);
-  if (!from || !to) return "";
-  const months = Math.max(
-    1,
-    (to.year - from.year) * 12 + (to.month - from.month) + 1,
-  );
+  const months = tenureMonths(start, end, reference);
+  if (months === null) return "";
   const years = Math.floor(months / 12);
   const rest = months % 12;
   if (years === 0) return `${rest} mo`;
