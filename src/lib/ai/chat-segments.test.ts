@@ -139,3 +139,12 @@ describe("markdown image with parentheses in its target (live 2026-09-18)", () =
     expect(text).toContain("Ask about any of them.");
   });
 });
+
+describe("many unclosed image targets in a streamed reply", () => {
+  test("stays linear — was ~1.4s at this size before the scan cap", () => {
+    const start = performance.now();
+    const text = splitChatSegments("![x](y".repeat(16000)).map((s) => (s as { value?: string }).value ?? "").join("");
+    expect(performance.now() - start).toBeLessThan(500);
+    expect(text).toContain("![x](y");
+  });
+});
