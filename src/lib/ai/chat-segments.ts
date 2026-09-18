@@ -57,11 +57,13 @@ function stripMdImages(s: string): string {
     }
     let depth = 0;
     let end = mid + 1;
-    for (; end < s.length; end++) {
+    // A real target is short; capping the scan keeps many unclosed "![x](" linear.
+    const limit = Math.min(s.length, mid + 500);
+    for (; end < limit; end++) {
       if (s[end] === "(") depth++;
       else if (s[end] === ")" && --depth === 0) break;
     }
-    if (end >= s.length) {
+    if (end >= limit) {
       out += s.slice(i, start + 2);
       i = start + 2;
       continue;
