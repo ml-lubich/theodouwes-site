@@ -9,9 +9,12 @@
  * unclosed fence is withheld until its closing backticks arrive rather than
  * shown raw.
  *
- * Models also print the chart TOOL's own spec (`{"kind":"bar",…}`) as prose
- * once it already arrived over the `chart` SSE event. That is a duplicate —
- * drop it rather than showing it twice.
+ * Models also print the chart TOOL's own spec as prose once it already
+ * arrived over the `chart` SSE event — either the bare `ChartSpec`
+ * (`{"kind":"bar",…}`) or, more often, the whole tool-result payload it was
+ * handed back in context (`{"chart":{"kind":"bar",…}}`, sometimes wrapped in
+ * an array: `[{"chart":{...}}]`). Both are a duplicate of what already
+ * rendered — drop them rather than showing raw JSON.
  */
 
 import { isMermaidDsl } from "@/lib/ai/mermaid-dsl";
@@ -25,21 +28,34 @@ const FENCE = /```([a-z]*)\s*\n([\s\S]*?)```/gi;
 /** The shapes the `chart` event already rendered — printing them duplicates. */
 const TOOL_CHART_KINDS = new Set(["bar", "line", "radar"]);
 
-/** A JSON object opening at the start of a line, e.g. a spec the model typed
- *  out as prose. */
-const BARE_OBJECT = /(?:^|\n)[ \t]*\{"/g;
+/** A JSON object opening at the start of a line — bare (`{"kind"...`) or
+ *  array-wrapped (`[{"chart"...`) — e.g. a spec the model typed out as prose.
+ *  JSON objects always open with a quoted key, so `{"` anchors this without
+ *  matching ordinary prose brackets (a markdown link, a footnote ref). */
+const BARE_JSON = /(?:^|\n)[ \t]*(\[[ \t]*)?\{"/g;
 
 type Verdict = "mermaid" | "drop" | "text";
 
+/** True for anything shaped like the chart tool's output: the bare
+ *  `ChartSpec` (`{"kind":"bar",…}`), the full tool-result wrapper
+ *  (`{"chart":{...}}`), or either inside an array. */
+function isChartToolPayload(value: unknown): boolean {
+  const obj = Array.isArray(value) ? value[0] : value;
+  if (typeof obj !== "object" || obj === null) return false;
+  const rec = obj as Record<string, unknown>;
+  if ("chart" in rec) return true;
+  if (typeof rec.kind === "string" && TOOL_CHART_KINDS.has(rec.kind)) return true;
+  return Array.isArray(rec.data);
+}
+
 function classifyJson(json: string): Verdict {
-  let kind: unknown;
+  let parsed: unknown;
   try {
-    kind = (JSON.parse(json) as { kind?: unknown }).kind;
+    parsed = JSON.parse(json);
   } catch {
     return isMermaidDsl(json) ? "mermaid" : "text";
   }
-  if (typeof kind === "string" && TOOL_CHART_KINDS.has(kind)) return "drop";
-  return "text";
+  return isChartToolPayload(parsed) ? "drop" : "text";
 }
 
 function classifyFence(_lang: string, body: string): Verdict {
@@ -50,9 +66,12 @@ function classifyFence(_lang: string, body: string): Verdict {
   return "text";
 }
 
-/** Index just past the object opening at `start`, or -1 while it is still
- *  streaming. Brace counting skips braces inside strings. */
-function endOfObject(s: string, start: number): number {
+/** Index just past the JSON value (object or array) opening at `start`, or
+ *  -1 while it is still streaming. `{`/`[` and `}`/`]` share one depth
+ *  counter — valid JSON always nests them in matching pairs, so this closes
+ *  on whichever bracket brings the count back to zero. Skips brackets
+ *  inside strings. */
+function endOfJsonValue(s: string, start: number): number {
   let depth = 0;
   let inString = false;
   let escaped = false;
@@ -66,8 +85,8 @@ function endOfObject(s: string, start: number): number {
       continue;
     }
     if (c === '"') inString = true;
-    else if (c === "{") depth++;
-    else if (c === "}" && --depth === 0) return i + 1;
+    else if (c === "{" || c === "[") depth++;
+    else if ((c === "}" || c === "]") && --depth === 0) return i + 1;
   }
   return -1;
 }
@@ -82,14 +101,15 @@ function pushSegment(out: ChatSegment[], verdict: Verdict, payload: string, fenc
   else if (verdict === "text" && fence) pushText(out, fence);
 }
 
-/** Prose, minus any bare chart-tool object hiding in it. */
+/** Prose, minus any bare chart-tool payload hiding in it. */
 function pushProse(out: ChatSegment[], raw: string) {
   let cursor = 0;
-  BARE_OBJECT.lastIndex = 0;
+  BARE_JSON.lastIndex = 0;
 
-  for (let m = BARE_OBJECT.exec(raw); m; m = BARE_OBJECT.exec(raw)) {
-    const start = m.index + m[0].length - 2; // the `{` itself
-    const end = endOfObject(raw, start);
+  for (let m = BARE_JSON.exec(raw); m; m = BARE_JSON.exec(raw)) {
+    // `start` is the opening `[` when the match captured one, else the `{`.
+    const start = m[1] ? m.index + m[0].indexOf("[") : m.index + m[0].length - 2;
+    const end = endOfJsonValue(raw, start);
 
     // Unterminated: the model is still typing it. Withhold the rest.
     if (end === -1) {
@@ -102,7 +122,7 @@ function pushProse(out: ChatSegment[], raw: string) {
       pushText(out, raw.slice(cursor, start));
       cursor = end;
     }
-    BARE_OBJECT.lastIndex = end;
+    BARE_JSON.lastIndex = end;
   }
 
   pushText(out, raw.slice(cursor));

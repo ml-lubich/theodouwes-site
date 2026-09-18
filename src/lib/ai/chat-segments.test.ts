@@ -33,6 +33,31 @@ describe("splitChatSegments", () => {
     expect(splitChatSegments("Stats:\n\n```json\n" + bar + "\n```")).toEqual([{ kind: "text", value: "Stats:" }]);
   });
 
+  // Regression: the model doesn't only echo the bare ChartSpec — it more
+  // often echoes the whole `tool` role message it was handed back in
+  // context, which is `{"chart": ChartSpec}`, sometimes array-wrapped. Seen
+  // live on theodouwes.com after "Show his skills as a chart": the chart
+  // rendered from the `chart` SSE event, then the reply printed
+  // `[{"chart": {"data": [...]}}]` as trailing text underneath it.
+  test("drops the array-wrapped tool-result payload the model echoed verbatim", () => {
+    const leaked =
+      '[{"chart":{"kind":"bar","title":"Skills by category","unit":"skills",' +
+      '"data":[{"label":"Roles & focus","value":12},{"label":"Python / data / ML","value":13}]}}]';
+    expect(splitChatSegments(`Here's Theo's skills by category.\n\n${leaked}`)).toEqual([
+      { kind: "text", value: "Here's Theo's skills by category." },
+    ]);
+  });
+
+  test("drops the unwrapped {chart: ChartSpec} tool-result payload too", () => {
+    const leaked = '{"chart":{"kind":"bar","title":"Skills","data":[{"label":"Quant","value":5}]}}';
+    expect(splitChatSegments(`His skills:\n\n${leaked}`)).toEqual([{ kind: "text", value: "His skills:" }]);
+  });
+
+  test("drops a fenced array-wrapped tool-result payload too", () => {
+    const leaked = '[{"chart":{"kind":"bar","title":"Skills","data":[{"label":"Quant","value":5}]}}]';
+    expect(splitChatSegments("Stats:\n\n```json\n" + leaked + "\n```")).toEqual([{ kind: "text", value: "Stats:" }]);
+  });
+
   test("leaves JSON that is not a chart-tool spec as text", () => {
     const segments = splitChatSegments('```json\n{"employer":"Navigara"}\n```');
     expect(segments.every((s) => s.kind === "text")).toBe(true);

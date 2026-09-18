@@ -3082,6 +3082,27 @@ a:hover {
   color: var(--ink-muted);
 }
 
+/* recharts writes fill/stroke straight onto the SVG presentation attribute
+ * (`fill="var(--ink)"`), and a custom property inside a bare presentation
+ * attribute isn't reliably resolved cross-browser — it can silently fall
+ * back to the property's initial value (black), invisible against this
+ * panel's dark background. Targeting recharts' own classes with a real CSS
+ * rule resolves --ink correctly everywhere, and always wins over whatever
+ * attribute recharts put on the element. */
+.theoai-chart .recharts-rectangle {
+  fill: var(--ink);
+}
+
+.theoai-chart .recharts-line-curve {
+  fill: none;
+  stroke: var(--ink);
+}
+
+.theoai-chart .recharts-dot {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+
 .theoai-mermaid {
   margin: 0;
   padding: 0.65rem;

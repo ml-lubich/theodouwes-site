@@ -5,6 +5,16 @@
  * Styled off this site's own tokens (`--ink`, `--ink-muted`, `--line`) so it
  * repaints across the dark/light toggle with no JS — black/white quant, no
  * added accent color.
+ *
+ * The fill/stroke color is set in globals.css, targeting recharts' own
+ * `.recharts-rectangle` / `.recharts-line-curve` / `.recharts-dot` classes —
+ * not a `fill="var(--ink)"` attribute on `<Bar>`/`<Line>` here. recharts
+ * writes that straight onto the SVG `fill`/`stroke` presentation attribute,
+ * and `var()` inside a bare presentation attribute is not reliably resolved
+ * cross-browser (it can silently fall back to the property's initial value —
+ * black for `fill` — invisible on this panel's dark background). A real CSS
+ * rule resolves the same custom property everywhere, and always wins over a
+ * presentation attribute in the cascade regardless.
  */
 
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
@@ -35,14 +45,14 @@ export function TheoAIChart({ spec }: { spec: ChartSpec }) {
               <CartesianGrid horizontal={false} stroke="var(--line)" strokeOpacity={0.6} />
               <XAxis type="number" tick={AXIS} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="label" width={112} interval={0} tick={AXIS} axisLine={false} tickLine={false} />
-              <Bar dataKey="value" fill="var(--ink)" radius={[0, 3, 3, 0]} />
+              <Bar dataKey="value" radius={[0, 3, 3, 0]} />
             </BarChart>
           ) : (
             <LineChart data={spec.data} margin={{ left: 4, right: 12, top: 8, bottom: 4 }}>
               <CartesianGrid stroke="var(--line)" strokeOpacity={0.6} />
               <XAxis dataKey="label" tick={AXIS} axisLine={false} tickLine={false} />
               <YAxis allowDecimals={false} tick={AXIS} axisLine={false} tickLine={false} width={24} />
-              <Line type="monotone" dataKey="value" stroke="var(--ink)" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="value" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           )}
         </ResponsiveContainer>
