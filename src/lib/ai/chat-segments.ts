@@ -41,13 +41,42 @@ const DIAGRAM_LANG = /^(mermaid|chart|diagram|xychart)/i;
  *  (`![Skills chart](chart rendered above)`). Charts render only via the
  *  chart tool/event; a model typing one out as an image is always wrong, so
  *  this drops the whole thing rather than keeping the alt text. */
-const MD_IMAGE = /!\[[^\]]*\]\([^)]*\)/g;
+/** Removes `![alt](target)`, matching the target's parentheses so a model
+ *  that writes a whole sentence there — "![Skills](chart above: BI (14),
+ *  Platform (12))" — loses all of it, not just up to the first ")". An
+ *  unclosed target is left alone. */
+function stripMdImages(s: string): string {
+  let out = "";
+  let i = 0;
+  for (let start = s.indexOf("![", i); start !== -1; start = s.indexOf("![", i)) {
+    const mid = s.indexOf("](", start + 2);
+    if (mid === -1 || s.slice(start + 2, mid).includes("]")) {
+      out += s.slice(i, start + 2);
+      i = start + 2;
+      continue;
+    }
+    let depth = 0;
+    let end = mid + 1;
+    for (; end < s.length; end++) {
+      if (s[end] === "(") depth++;
+      else if (s[end] === ")" && --depth === 0) break;
+    }
+    if (end >= s.length) {
+      out += s.slice(i, start + 2);
+      i = start + 2;
+      continue;
+    }
+    out += s.slice(i, start);
+    i = end + 1;
+  }
+  return out + s.slice(i);
+}
 
 /** A raw HTML `<img>` tag typed into the reply as text. */
 const HTML_IMG = /<img\b[^>]*>/gi;
 
 function stripImages(s: string): string {
-  return s.replace(MD_IMAGE, "").replace(HTML_IMG, "");
+  return stripMdImages(s).replace(HTML_IMG, "");
 }
 
 /** A JSON object opening at the start of a line — bare (`{"kind"...`) or

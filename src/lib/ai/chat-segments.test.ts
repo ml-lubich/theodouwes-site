@@ -129,3 +129,13 @@ describe("isPinnedToBottom", () => {
     expect(isPinnedToBottom({ scrollTop: 200, scrollHeight: 1000, clientHeight: 100 })).toBe(false);
   });
 });
+
+describe("markdown image with parentheses in its target (live 2026-09-18)", () => {
+  test("removes the whole image, not just up to the first ')'", () => {
+    const text = splitChatSegments("Here is the chart. ![Skills by category](chart above: Analytics & BI (14), Engineering & Platform (12), and Business Systems (7).) Ask about any of them.").map((s) => (s as { value?: string }).value ?? "").join("");
+    expect(text).not.toContain("![");
+    expect(text).not.toContain("(12)");
+    expect(text).toContain("Here is the chart.");
+    expect(text).toContain("Ask about any of them.");
+  });
+});
