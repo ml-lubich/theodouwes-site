@@ -108,11 +108,22 @@ export type TurnDecision =
 export const SILENT_FINAL_FALLBACK =
   "I looked that up but couldn't put together a clean answer. Try asking more specifically?";
 
-/** After a model round: keep looping, accept the text, or recover from silence. */
-export function finalizeAssistantTurn(reply: AssistantTurn, toolPayloads: string[]): TurnDecision {
+/** After a model round: keep looping, accept the text, or recover from silence.
+ *
+ * `sawVisual` covers the chart/contact cards: the client already rendered
+ * something real for the tool call that just ran, so a silent final reply is
+ * not a failure to recover from — it is a model that (correctly) had nothing
+ * left to say. Live 2026-09-18: "Show his skills as a chart" rendered the
+ * chart, then this fallback line printed underneath it anyway. */
+export function finalizeAssistantTurn(
+  reply: AssistantTurn,
+  toolPayloads: string[],
+  sawVisual = false,
+): TurnDecision {
   if (reply.tool_calls?.length) return { kind: "tools" };
   const text = reply.content.trim();
   if (text) return { kind: "answer", text: reply.content };
+  if (sawVisual) return { kind: "answer", text: "" };
   if (toolPayloads.length) return { kind: "fallback", text: SILENT_FINAL_FALLBACK };
   return { kind: "answer", text: "" };
 }

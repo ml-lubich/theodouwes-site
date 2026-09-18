@@ -93,6 +93,19 @@ describe("empty reply after tools", () => {
     expect(decision.kind).toBe("answer");
     if (decision.kind === "answer") expect(decision.text).toMatch(/Navigara/);
   });
+
+  // Live 2026-09-18: "Show his skills as a chart" rendered the bar chart,
+  // then printed SILENT_FINAL_FALLBACK underneath it anyway — the chart
+  // already answered the question, so a silent final is not a failure.
+  test("a silent final after a chart or contact card is not a failure to recover from", () => {
+    const decision = finalizeAssistantTurn(
+      { content: "", tool_calls: [], followups: [] },
+      ['{"chart":{"kind":"bar","title":"Skills by category"}}'],
+      /* sawVisual */ true,
+    );
+    expect(decision.kind).toBe("answer");
+    if (decision.kind === "answer") expect(decision.text).toBe("");
+  });
 });
 
 describe("route wiring", () => {

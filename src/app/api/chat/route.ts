@@ -39,6 +39,12 @@ const UNAVAILABLE =
 
 const NOT_CONFIGURED = "Chat is not configured.";
 
+/* Asked once, tools withheld, after a round comes back silent post-tools
+ * with no visual shown — a nudge to write the answer from what the tools
+ * already returned, instead of reaching for a fifth lookup or staying mute. */
+const NUDGE_AFTER_SILENT_TOOLS =
+  "Answer the user's last question now using only the tool results already in this conversation. Reply in concise markdown — do not call any tools.";
+
 /** How long one model gets to produce response headers before the cascade
  *  moves on. Without a ceiling a single stalled provider holds the whole
  *  stream open and the panel reads as hung; the point of a cascade is that
@@ -132,6 +138,13 @@ function runAgent(history: ChatMessage[], apiKey: string, release: () => void): 
 
       try {
         const toolPayloads: string[] = [];
+        // Chart/contact cards render client-side off the tool result — once
+        // one lands, an empty final reply is not a failure to recover from.
+        // Live 2026-09-18: the chart rendered, then the fallback line
+        // "I looked that up but..." printed underneath it anyway.
+        let sawVisual = false;
+        // The silent-recovery nudge below fires at most once per turn.
+        let nudged = false;
 
         for (let round = 0; round < LIMITS.maxToolRounds; round++) {
           /* The last round is asked WITHOUT tools. A model that keeps
@@ -144,7 +157,32 @@ function runAgent(history: ChatMessage[], apiKey: string, release: () => void): 
           const decision = finalizeAssistantTurn(
             { content: reply.content, tool_calls: reply.tool_calls, followups: reply.followups },
             toolPayloads,
+            sawVisual,
           );
+
+          // A silent final right after tools, with no visual to explain the
+          // silence, gets ONE more chance with tools withheld and a nudge to
+          // write prose from what the lookups already returned — before any
+          // fallback line goes out.
+          if (decision.kind === "fallback" && !nudged) {
+            nudged = true;
+            messages.push(reply);
+            messages.push({ role: "user", content: NUDGE_AFTER_SILENT_TOOLS });
+            const retry = await callModel(messages, apiKey, send, false);
+            const retryDecision = finalizeAssistantTurn(
+              { content: retry.content, tool_calls: retry.tool_calls, followups: retry.followups },
+              toolPayloads,
+              sawVisual,
+            );
+            // Tools were withheld on the retry, so `retryDecision.kind` is
+            // never "tools" here — only branches with a `.text` remain.
+            if (retryDecision.kind === "fallback") send("text", retryDecision.text);
+            else if (retryDecision.kind === "answer" && retryDecision.text) send("text", retryDecision.text);
+            if (retry.followups?.length) send("followups", retry.followups);
+            send("done", {});
+            controller.close();
+            return;
+          }
 
           // Tools keep the loop going. A silent final after a lookup is not
           // success — write the honest one-sentence fallback instead of
@@ -166,10 +204,16 @@ function runAgent(history: ChatMessage[], apiKey: string, release: () => void): 
             const result = runTool(call.function.name, args);
             // Charts render client-side; the model still sees the spec so it
             // knows what the user is looking at and does not narrate the bars.
-            if ("chart" in result) send("chart", result.chart);
+            if ("chart" in result) {
+              send("chart", result.chart);
+              sawVisual = true;
+            }
             // Same hand-off pattern: the card carries the address, so the
             // model has nothing left to paste.
-            if ("contact" in result) send("contact", result.contact);
+            if ("contact" in result) {
+              send("contact", result.contact);
+              sawVisual = true;
+            }
 
             const serialized = JSON.stringify(result).slice(0, 6000);
             toolPayloads.push(serialized);
@@ -181,8 +225,10 @@ function runAgent(history: ChatMessage[], apiKey: string, release: () => void): 
           }
         }
 
-        // Tool budget exhausted and the tool-free round still said nothing.
-        send("text", UNAVAILABLE);
+        // Tool budget exhausted and the tool-free round still said nothing —
+        // unless a visual already answered the question, in which case
+        // silence is the answer.
+        if (!sawVisual) send("text", UNAVAILABLE);
         send("done", {});
         controller.close();
       } catch (err) {

@@ -112,6 +112,18 @@ describe("tool-round budget", () => {
     expect(out).not.toMatch(/•/);
   });
 
+  // Live 2026-09-18: "Show his skills as a chart" rendered the bar chart
+  // correctly, then a stray fallback line printed underneath it anyway
+  // ("I looked that up but couldn't put together a clean answer...").
+  skipInCI("never prints the silent-final fallback under a chart that already answered", async () => {
+    install([toolCall("chart_skills_by_category", "{}"), text("")]);
+
+    const out = await ask("Show his skills as a chart", "10.1.1.5");
+
+    expect(out).toContain("event: chart");
+    expect(out).not.toMatch(/couldn't put together a clean answer/);
+  });
+
   test("503s with the exact configured-message contract when the key is missing", async () => {
     delete process.env.OPENROUTER_API_KEY;
     const { POST } = await import("@/app/api/chat/route");
