@@ -218,6 +218,40 @@ describe("TheoAI", () => {
     await waitFor(() => expect(screen.getByText("Stopped.")).toBeTruthy());
   });
 
+  // Live defect, 2026-09-18: on the second question of a session (after a
+  // chart already rendered for the first), models emitted a chart "redrawn"
+  // as text — a malformed markdown image, a raw <img> tag, and unsupported
+  // diagram DSL (mermaid xychart / bar-title-x-axis lines) — all printed
+  // raw instead of the chart that already rendered.
+  test("never renders an <img> for a malformed markdown image, a raw <img> tag, or unsupported diagram DSL — prose around them still renders", async () => {
+    globalThis.fetch = (async () =>
+      sseResponse([
+        {
+          event: "text",
+          data:
+            "His chart is above. ![Skills chart](chart rendered above) " +
+            '<img src="x" alt="Skills by category"> ' +
+            "```mermaid\nxychart-beta\n  title \"Skills\"\n  x-axis [Quant, ML]\n  bar [5, 8]\n```\n\n" +
+            "Ask about a specific one.",
+        },
+        { event: "done", data: {} },
+      ])) as typeof fetch;
+
+    render(<TheoAI />);
+    openPanel();
+    fireEvent.click(screen.getByText("What does Theo build at Navigara?"));
+
+    await waitFor(() => expect(screen.getByText(/Ask about a specific one/)).toBeTruthy());
+
+    const log = document.querySelector(".theoai-log")!;
+    expect(log.querySelector("img")).toBeNull();
+    expect(log.textContent).not.toContain("chart rendered above");
+    expect(log.textContent).not.toContain("xychart-beta");
+    expect(log.textContent).not.toContain("x-axis");
+    expect(log.textContent).toContain("His chart is above.");
+    expect(log.textContent).toContain("Ask about a specific one.");
+  });
+
   test("new chat clears the transcript", async () => {
     globalThis.fetch = (async () => sseResponse([{ event: "text", data: "Answer." }, { event: "done", data: {} }])) as typeof fetch;
 

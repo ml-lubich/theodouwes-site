@@ -331,7 +331,9 @@ export function TheoAI() {
                       <TheoAIMermaid key={j} source={seg.source} />
                     ) : (
                       <div key={j} className="theoai-md">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{seg.value}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} disallowedElements={["img"]} unwrapDisallowed>
+                          {seg.value}
+                        </ReactMarkdown>
                       </div>
                     ),
                   )}

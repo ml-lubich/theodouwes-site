@@ -28,6 +28,28 @@ const FENCE = /```([a-z]*)\s*\n([\s\S]*?)```/gi;
 /** The shapes the `chart` event already rendered — printing them duplicates. */
 const TOOL_CHART_KINDS = new Set(["bar", "line", "radar"]);
 
+/** Fence languages that promise a diagram. If the body inside isn't a
+ *  chart-tool payload (already handled above) or a Mermaid DSL this app
+ *  supports, the model drew something we cannot render — a Mermaid type
+ *  outside the supported list (e.g. `xychart-beta`) or an invented DSL
+ *  (`bar` / `title` / `x-axis` lines). That must be dropped, never shown as
+ *  a raw code block. */
+const DIAGRAM_LANG = /^(mermaid|chart|diagram|xychart)/i;
+
+/** Markdown image syntax, alt text and all — including the malformed shape
+ *  seen live where the "url" is actually prose with spaces in it
+ *  (`![Skills chart](chart rendered above)`). Charts render only via the
+ *  chart tool/event; a model typing one out as an image is always wrong, so
+ *  this drops the whole thing rather than keeping the alt text. */
+const MD_IMAGE = /!\[[^\]]*\]\([^)]*\)/g;
+
+/** A raw HTML `<img>` tag typed into the reply as text. */
+const HTML_IMG = /<img\b[^>]*>/gi;
+
+function stripImages(s: string): string {
+  return s.replace(MD_IMAGE, "").replace(HTML_IMG, "");
+}
+
 /** A JSON object opening at the start of a line — bare (`{"kind"...`) or
  *  array-wrapped (`[{"chart"...`) — e.g. a spec the model typed out as prose.
  *  JSON objects always open with a quoted key, so `{"` anchors this without
@@ -58,11 +80,14 @@ function classifyJson(json: string): Verdict {
   return isChartToolPayload(parsed) ? "drop" : "text";
 }
 
-function classifyFence(_lang: string, body: string): Verdict {
+function classifyFence(lang: string, body: string): Verdict {
   const trimmed = body.trim();
   const jsonVerdict = classifyJson(trimmed);
   if (jsonVerdict === "drop") return jsonVerdict;
   if (isMermaidDsl(trimmed)) return "mermaid";
+  // Labeled as a diagram/chart but not one we can render — drop rather
+  // than leak the DSL as a raw code block.
+  if (DIAGRAM_LANG.test(lang)) return "drop";
   return "text";
 }
 
@@ -101,8 +126,9 @@ function pushSegment(out: ChatSegment[], verdict: Verdict, payload: string, fenc
   else if (verdict === "text" && fence) pushText(out, fence);
 }
 
-/** Prose, minus any bare chart-tool payload hiding in it. */
-function pushProse(out: ChatSegment[], raw: string) {
+/** Prose, minus any bare chart-tool payload or raw image markup hiding in it. */
+function pushProse(out: ChatSegment[], rawInput: string) {
+  const raw = stripImages(rawInput);
   let cursor = 0;
   BARE_JSON.lastIndex = 0;
 

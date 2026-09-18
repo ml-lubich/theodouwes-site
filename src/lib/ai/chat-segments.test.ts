@@ -68,6 +68,33 @@ describe("splitChatSegments", () => {
     expect(segments.every((s) => s.kind === "text")).toBe(true);
   });
 
+  // Live defect, 2026-09-18: on the second question of a session, models
+  // "redrew" the already-rendered chart as text instead of referring to it
+  // in words — a markdown image, a raw <img> tag, and unsupported diagram
+  // DSL. None of that is a chart; drop it, keep the prose around it.
+  test("strips a malformed markdown image (spaces in the url) without dropping the surrounding prose", () => {
+    const text = "His chart is above. ![Skills chart](chart rendered above) Ask about a category.";
+    expect(splitChatSegments(text)).toEqual([{ kind: "text", value: "His chart is above.  Ask about a category." }]);
+  });
+
+  test("strips a raw <img> tag typed into the reply", () => {
+    const text = 'Skills breakdown: <img src="x" alt="Skills by category"> see above.';
+    expect(splitChatSegments(text)).toEqual([{ kind: "text", value: "Skills breakdown:  see above." }]);
+  });
+
+  test("drops an unsupported diagram fence (xychart/bar DSL) instead of printing it raw", () => {
+    const dsl = '```mermaid\nxychart-beta\n  title "Skills"\n  x-axis [Quant, ML]\n  bar [5, 8]\n```';
+    expect(splitChatSegments(`His skills:\n\n${dsl}\n\nAsk away.`)).toEqual([
+      { kind: "text", value: "His skills:" },
+      { kind: "text", value: "Ask away." },
+    ]);
+  });
+
+  test("drops an unsupported diagram fence even when labeled with an invented chart language", () => {
+    const dsl = "```chart\nbar\ntitle Skills\nx-axis Quant, ML\n```";
+    expect(splitChatSegments(dsl)).toEqual([]);
+  });
+
   test("drops segments that are empty after trimming", () => {
     expect(splitChatSegments("   \n  ")).toEqual([]);
   });
