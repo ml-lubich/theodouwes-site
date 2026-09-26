@@ -17,6 +17,7 @@
 | Unit | `src/lib/ai/chat-stream.test.ts` | OpenRouter delta/message-content ingestion, tool-call stitching, the empty-final fallback never lists raw search-hit titles |
 | Unit | `src/lib/ai/chat-segments.test.ts` | Mermaid-fence extraction, chart-tool-spec de-duplication, streaming-safe unclosed-fence handling |
 | Unit | `src/lib/ai/followups.test.ts` | `label :: question` follow-up pair parsing/clamping/dedup |
+| Unit | `src/lib/ai/coding-guard.test.ts` | Coding asks are refused before the model. "Error code" and "write me an email" stay in bounds |
 | Unit | `src/lib/ai/profile-tools.test.ts` | Tools are grounded in real profile/skills data, `get_contact` matches the published address, `stripCardLinks`, tool-label coverage, system-prompt guards |
 | Unit | `src/lib/ai/status-check.test.ts` | Model status checks (mocked `fetch`) and `publicError()` stripping key-management URLs from a public page |
 | Integration | `src/__tests__/integration/chat-route.test.ts` | `/api/chat`'s tool-round budget (last round gets no tools), the 503-when-unconfigured contract, and that a cascade failure never leaks per-model detail to the client |

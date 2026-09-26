@@ -9,7 +9,9 @@ with tools resolved by `src/lib/ai/profile-tools.ts` against `profile`/
 `skills` only — never invented facts.
 
 **Request:** `{ messages: { role: "user" | "assistant"; content: string }[] }`
-(server clamps to the last 12 turns, 1000 chars each).
+(server clamps to the last 12 turns, 1000 chars each). A request to write,
+debug, or explain code is answered with a fixed refusal before OpenRouter
+runs (`src/lib/ai/coding-guard.ts`).
 
 **Response:** `text/event-stream`. Frames:
 
