@@ -11,6 +11,14 @@
 | E2E | Playwright | `e2e/` | Rendered page: hero, brain, sections, Navigara, documented stats, desktop nav + mobile hamburger, Connect links, robots/sitemap/llms, dark/light theme toggle |
 | E2E links | Playwright | `e2e/links.spec.ts` | Dynamic BFS exploration of same-origin pages + outbound/asset/anchor checks; fail on 404/410/5xx |
 
+### Scroll-craft
+
+| Layer | Location | What it proves |
+| --- | --- | --- |
+| Unit | `src/lib/scroll-stack-layout.test.ts` | Routing table: width, reduced motion, coarse pointer, touch, low cores |
+| Component | `src/components/scroll-craft.test.tsx` | Narrow, reduced-motion and coarse-pointer viewports keep plain markup (no sticky cards, no `data-scrub`); wide fine-pointer enables stack and scrub; Writing links unchanged |
+| Integration | `src/__tests__/integration/scroll-craft-fallback.test.tsx` | SSR markup of About, Experience, Projects, Writing is byte-identical to the `f4e632d` fixtures in `src/__tests__/fixtures/` (frozen) |
+
 ### TheoAI (chat)
 
 | Layer | Location | What it proves |

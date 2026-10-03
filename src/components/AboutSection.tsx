@@ -1,5 +1,6 @@
 import { AmbientField } from "@/components/AmbientField";
 import { Reveal } from "@/components/Reveal";
+import { ScrollScrub } from "@/components/ScrollScrub";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 import { getCategoryIcon, getSkillIcon } from "@/components/SkillIcons";
 import { SkillStorm } from "@/components/SkillStorm";
@@ -77,7 +78,7 @@ export function AboutSection({
           <p>Document the system, clarify handoffs, and communicate in plain language.</p>
         </li>
       </ol>
-      <div className="stats-strip">
+      <ScrollScrub className="stats-strip">
         {stats.map((stat) => (
           <div className="stat glass-card" key={stat.label}>
             <ShimmerOverlay />
@@ -85,7 +86,7 @@ export function AboutSection({
             <p className="stat-label">{stat.label}</p>
           </div>
         ))}
-      </div>
+      </ScrollScrub>
 
       <div className="skills" id="skills">
         <p className="section-label">Skills</p>

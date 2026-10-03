@@ -32,6 +32,8 @@ Avoid soft decorative faces; precision over shout.
 - Continuous skeleton shimmer on glass cards
 - Interactive hover lifts on CTAs, chips, and portrait
 - Respects `prefers-reduced-motion`
+- **Scroll-craft (non-hero sections only; one device each):** About = stats drift at different depths (`translate`, `--p`); Experience = a progress rail fills down the timeline (`--rail`); Projects = pinned stacking cards (scroll-stack: sticky under the header, covered cards scale 0.94 and dim via `brightness(0.6)`, opaque faces); Writing = each card scrubbed in by its own scroll position. The hero, header, and Skills storm are untouched.
+- **Gating:** all scroll-craft runs only when `useScrollCraft()` is true: width > 1366, fine pointer, no reduced motion, not touch-primary, more than 4 cores (`lib/scroll-stack-layout.ts`). SSR and compact/touch/reduced-motion render byte-identical markup to before; effects switch on after mount. Effects use `translate`/`opacity`/`transform` only, so no layout shift. A focused stack card surfaces undimmed above its siblings for keyboard users.
 
 ## Composition rules
 

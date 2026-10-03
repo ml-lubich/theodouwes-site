@@ -1,6 +1,7 @@
 import type { ProjectItem } from "@/lib/profile";
 import { AmbientField } from "@/components/AmbientField";
 import { Reveal } from "@/components/Reveal";
+import { ScrollStack } from "@/components/ScrollStack";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 
 interface ProjectsSectionProps {
@@ -32,10 +33,11 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         Evidence over adjectives
       </h2>
       <p className="projects-lede">Models, workflows, and public artifacts grounded in Theo’s documented work.</p>
-      <ul className="link-grid">
-        {projects.map((item, index) => (
-          <li key={item.id}>
-            {item.href ? (
+      <ScrollStack
+        compactClassName="link-grid"
+        items={projects.map((item, index) => ({
+          key: item.id,
+          node: item.href ? (
               <a
                 className="link-item glass-card"
                 href={item.href}
@@ -71,10 +73,9 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                 </ul>
                 <p className="project-artifact"><span>Deliverable</span>{item.artifact}</p>
               </div>
-            )}
-          </li>
-        ))}
-      </ul>
+            ),
+        }))}
+      />
     </Reveal>
   );
 }

@@ -3378,3 +3378,76 @@ a:hover {
   font-size: 0.7rem;
   color: var(--ink-dim);
 }
+
+/* ── Scroll-craft (non-hero sections) ────────────────────────────
+   Every rule below hangs off [data-scrub="on"] / .scroll-stack, which only exist
+   when useScrollCraft() is true (wide, fine pointer, motion OK). Phones, touch and
+   reduced motion never match, so they keep the plain layout. Transform-like
+   properties only (translate, opacity, transform on pseudos): no layout shifts. */
+
+/* Projects: pinned stack */
+.scroll-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.scroll-stack-card {
+  position: sticky;
+}
+
+.scroll-stack-face {
+  max-width: 46rem;
+  margin: 0 auto;
+  will-change: transform, filter;
+}
+
+/* Opaque faces so a covered card never shows through the one on top. */
+.scroll-stack-face .glass-card {
+  background: var(--bg-elevated);
+}
+
+/* Keyboard: a focused card surfaces above its siblings, undimmed. */
+.scroll-stack-card:focus-within {
+  z-index: 5;
+}
+
+.scroll-stack-card:focus-within > .scroll-stack-face {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Experience: progress rail fills as the timeline is read */
+.timeline[data-scrub="on"]::after {
+  content: "";
+  position: absolute;
+  left: calc(1.5rem - 0.5px);
+  top: 1.75rem;
+  bottom: 1.75rem;
+  width: 2px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--ink) 35%, transparent), var(--ink));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--ink) 45%, transparent);
+  transform-origin: top;
+  transform: scaleY(var(--rail, 0));
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* About: stats drift at different depths */
+.stats-strip[data-scrub="on"] > .stat {
+  translate: 0 calc((0.5 - var(--p, 0.5)) * 36px * var(--depth, 1));
+  will-change: translate;
+}
+
+.stats-strip[data-scrub="on"] > .stat:nth-child(1) { --depth: 0.5; }
+.stats-strip[data-scrub="on"] > .stat:nth-child(2) { --depth: 1; }
+.stats-strip[data-scrub="on"] > .stat:nth-child(3) { --depth: 1.5; }
+.stats-strip[data-scrub="on"] > .stat:nth-child(4) { --depth: 2; }
+
+/* Writing: each card is scrubbed in by its own position, not a one-shot fade */
+#writing .link-grid[data-scrub="on"] > li {
+  --e: clamp(0, calc(var(--p, 1) * 3.5), 1);
+  opacity: var(--e);
+  translate: 0 calc((1 - var(--e)) * 56px);
+  will-change: translate, opacity;
+}

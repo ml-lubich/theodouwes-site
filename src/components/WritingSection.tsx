@@ -1,5 +1,6 @@
 import type { WritingItem } from "@/lib/profile";
 import { Reveal } from "@/components/Reveal";
+import { ScrollScrub } from "@/components/ScrollScrub";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 
 interface WritingSectionProps {
@@ -13,7 +14,7 @@ export function WritingSection({ writing }: WritingSectionProps) {
       <h2 className="section-title" id="writing-title">
         Notes & frameworks
       </h2>
-      <ul className="link-grid">
+      <ScrollScrub as="ul" className="link-grid">
         {writing.map((item) => (
           <li key={item.id}>
             <a
@@ -28,7 +29,7 @@ export function WritingSection({ writing }: WritingSectionProps) {
             </a>
           </li>
         ))}
-      </ul>
+      </ScrollScrub>
     </Reveal>
   );
 }

@@ -2,6 +2,7 @@ import type { ExperienceItem } from "@/lib/profile";
 import { formatDuration, formatTenure } from "@/lib/profile";
 import { AmbientField } from "@/components/AmbientField";
 import { Reveal } from "@/components/Reveal";
+import { ScrollScrub } from "@/components/ScrollScrub";
 import { ShimmerOverlay } from "@/components/ShimmerOverlay";
 import { ExperienceIcon, HighlightIcon } from "@/components/ExperienceIcon";
 import type { CSSProperties } from "react";
@@ -33,7 +34,7 @@ export function ExperienceSection({
         </h2>
         <p className="work-intro">{workIntro}</p>
       </Reveal>
-      <ol className="timeline">
+      <ScrollScrub as="ol" className="timeline">
         {experience.map((item, index) => (
           <Reveal
             as="li"
@@ -78,7 +79,7 @@ export function ExperienceSection({
             </div>
           </Reveal>
         ))}
-      </ol>
+      </ScrollScrub>
 
       <Reveal className="edu-block glass-card" delayMs={120} enable3D={false}>
         <ShimmerOverlay />

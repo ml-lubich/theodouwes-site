@@ -48,6 +48,13 @@ calendar or resume file on this site, so TheoAI has no booking/resume tools
 the footer. `/status` (unlisted, noindexed, disallowed in `robots.ts`)
 live-checks every model in the cascade.
 
+### Scroll-craft modules
+
+- `lib/scroll-stack-layout.ts`: pure routing (`shouldUseCompactScrollStackViewport`, `resolveScrollStackVariant`).
+- `components/useScrollCraft.ts`: client hook, `false` on the server and first render; true on wide, fine-pointer, motion-ok desktops.
+- `components/ScrollScrub.tsx`: wrapper that sets `data-scrub="on"`, `--rail` on itself and `--p` on each child (rAF scroll listener); sections style these in `globals.css`.
+- `components/ScrollStack.tsx`: framer-motion sticky stack for Projects; compact path renders the original `<ul class="link-grid">`.
+
 ## Decisions
 
 1. **Static content module** over MDX/CMS — fastest path for a single-page portfolio.
