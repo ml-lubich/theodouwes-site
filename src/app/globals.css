@@ -1,40 +1,43 @@
 :root,
 [data-theme="dark"] {
-  --bg: #050505;
-  --bg-elevated: #0a0a0a;
-  --ink: #f5f5f5;
-  --ink-muted: #a1a1a1;
-  --ink-dim: #6b6b6b;
+  --bg: #0b0d10;
+  --bg-elevated: #12151a;
+  --ink: #eceef1;
+  --ink-muted: #a7aeb8;
+  --ink-dim: #8d95a1;
   --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --glass: rgba(255, 255, 255, 0.04);
-  --glass-strong: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --glass: rgba(255, 255, 255, 0.035);
+  --glass-strong: rgba(255, 255, 255, 0.07);
+  --accent: #6cc9bb;
   --white: #ffffff;
-  --black: #000000;
+  --black: #0b0d10;
   --brain: #ffffff;
-  --glow: rgba(255, 255, 255, 0.16);
-  --radius: 1rem;
-  --radius-sm: 0.65rem;
+  --glow: rgba(255, 255, 255, 0.08);
+  --radius: 0.5rem;
+  --radius-sm: 0.35rem;
   --space: clamp(1.25rem, 3vw, 2.5rem);
   --max: 72rem;
   --font-ui: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-serif), Georgia, "Times New Roman", serif;
   --font-code: var(--font-mono), ui-monospace, monospace;
 }
 
 [data-theme="light"] {
-  --bg: #f4f4f2;
+  --bg: #f6f6f3;
   --bg-elevated: #ffffff;
-  --ink: #0a0a0a;
-  --ink-muted: #4a4a4a;
-  --ink-dim: #6b6b6b;
-  --line: rgba(0, 0, 0, 0.1);
-  --line-strong: rgba(0, 0, 0, 0.18);
-  --glass: rgba(0, 0, 0, 0.035);
-  --glass-strong: rgba(0, 0, 0, 0.06);
-  --white: #0a0a0a;
+  --ink: #0d1117;
+  --ink-muted: #424a56;
+  --ink-dim: #596270;
+  --line: rgba(13, 17, 23, 0.12);
+  --line-strong: rgba(13, 17, 23, 0.22);
+  --glass: rgba(13, 17, 23, 0.03);
+  --glass-strong: rgba(13, 17, 23, 0.06);
+  --accent: #0b6b61;
+  --white: #0d1117;
   --black: #ffffff;
   --brain: #000000;
-  --glow: rgba(0, 0, 0, 0.12);
+  --glow: rgba(13, 17, 23, 0.06);
 }
 
 *,
@@ -3385,7 +3388,9 @@ a:hover {
    reduced motion never match, so they keep the plain layout. Transform-like
    properties only (translate, opacity, transform on pseudos): no layout shifts. */
 
-/* Projects: pinned stack */
+/* Projects: pinned stack. Cards sit in normal flow with a 24px gap (never more
+   than 48px at any scroll position); each pins under the header as the next one
+   rises over it. No runway padding, so nothing is left after the last card. */
 .scroll-stack {
   list-style: none;
   margin: 0;
@@ -3394,17 +3399,35 @@ a:hover {
 
 .scroll-stack-card {
   position: sticky;
+  margin: 0 0 24px;
+}
+
+.scroll-stack-card:last-child {
+  margin-bottom: 0;
 }
 
 .scroll-stack-face {
+  position: relative;
   max-width: 46rem;
   margin: 0 auto;
-  will-change: transform, filter;
+  border-radius: var(--radius);
+  will-change: transform;
 }
 
 /* Opaque faces so a covered card never shows through the one on top. */
 .scroll-stack-face .glass-card {
   background: var(--bg-elevated);
+}
+
+/* Covered cards recede under a themed shade, not a brightness filter. */
+.stack-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: var(--radius);
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Keyboard: a focused card surfaces above its siblings, undimmed. */
@@ -3414,7 +3437,10 @@ a:hover {
 
 .scroll-stack-card:focus-within > .scroll-stack-face {
   transform: none !important;
-  filter: none !important;
+}
+
+.scroll-stack-card:focus-within .stack-shade {
+  opacity: 0 !important;
 }
 
 /* Experience: progress rail fills as the timeline is read */
@@ -3450,4 +3476,242 @@ a:hover {
   opacity: var(--e);
   translate: 0 calc((1 - var(--e)) * 56px);
   will-change: translate, opacity;
+}
+
+
+/* ═══ editorial-v1 ═══════════════════════════════════════════════
+   Restraint layer: serif display + Plex body/mono, one teal accent, hairline
+   borders, no glows or heavy shadows. Decorative layers (atmosphere, grid,
+   scanline, shimmer, ambient glyphs, brain) are kept but quieted. */
+body {
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.hero-brand,
+.hero-brand-line,
+.hero-brand-last,
+.section-title,
+.kinetic-title,
+.stat-value,
+.skills-heading,
+.link-item h3,
+.timeline-role,
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.hero-title {
+  font-weight: 400;
+}
+
+.atmosphere {
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
+}
+
+.atmosphere::before,
+.atmosphere::after {
+  animation: none;
+  filter: blur(120px);
+  opacity: 0.1;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+}
+
+[data-theme="light"] .atmosphere::before,
+[data-theme="light"] .atmosphere::after {
+  opacity: 0.08;
+  filter: blur(120px);
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+}
+
+.grid-overlay,
+[data-theme="light"] .grid-overlay {
+  opacity: 0.12;
+  animation: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+}
+
+.scanline {
+  opacity: 0.015;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--ink) 3px);
+}
+
+.shimmer::before {
+  background: linear-gradient(105deg, transparent 28%, color-mix(in srgb, var(--ink) 5%, transparent) 48%, transparent 68%);
+}
+
+.glass,
+[data-theme="light"] .glass {
+  background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.glass:hover {
+  animation: none;
+}
+
+.glass-card,
+[data-theme="light"] .glass-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.glass-card:hover {
+  transform: none;
+  border-color: var(--accent);
+}
+
+.glass-card::before {
+  display: none;
+}
+
+.portrait-frame,
+.skill-storm-glow {
+  box-shadow: none;
+}
+
+.theoai-launcher,
+.theoai-panel {
+  box-shadow: none;
+}
+
+.theoai-launcher {
+  background: var(--bg-elevated);
+}
+
+/* Theme toggle: System / Light / Dark segmented control */
+.theme-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass);
+}
+
+.theme-toggle button {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.theme-toggle button:hover {
+  color: var(--ink);
+}
+
+.theme-toggle button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.btn-primary,
+[data-theme="light"] .btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.section-label,
+.eyebrow {
+  color: var(--accent);
+}
+
+.section {
+  padding-block: clamp(3.5rem, 8vh, 5.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Icon badges: hairline squares, quiet accent glyph (was inverted solid discs with glow). */
+.project-icon-shell,
+.experience-icon-shell,
+.edu-icon-shell {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  background: var(--glass);
+  box-shadow: none;
+  transform: none;
+}
+
+.link-item:hover .project-icon-shell {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--accent);
+}
+
+/* Wireframe brain stays a backdrop: text over it must hold AA contrast. */
+.hero-brain {
+  filter: none;
+  animation-name: brain-fade-soft;
+}
+
+@keyframes brain-fade-soft {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.32;
+  }
+}
+
+/* No orphan last row in the two-column card grid. */
+@media (min-width: 720px) {
+  .link-grid > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Photo caption sits on a solid strip so it holds AA contrast over any part of the photo. */
+.portrait-meta {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.6rem 1rem;
+  color: #eceef1;
+  background: rgba(11, 13, 16, 0.88);
+}
+
+/* Phones: the fixed launcher must not cover hero copy or CTAs. */
+@media (max-width: 720px) {
+  .theoai-launcher[data-over-hero="true"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 }

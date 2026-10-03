@@ -71,7 +71,7 @@ describe("SiteHeader", () => {
       "#connect",
     );
     expect(screen.getByRole("button", { name: "Open menu" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /Switch to light mode/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Light theme" })).toBeTruthy();
   });
 
   test("toggles mobile menu open and closed", () => {

@@ -3,7 +3,10 @@ import {
   brainColorForTheme,
   isTheme,
   resolveInitialTheme,
+  parsePref,
+  resolveTheme,
   THEME_STORAGE_KEY,
+  themeBootScript,
   toggleTheme,
 } from "./theme";
 
@@ -45,5 +48,39 @@ describe("theme domain", () => {
 
   test("uses a stable localStorage key", () => {
     expect(THEME_STORAGE_KEY).toBe("theo-theme");
+  });
+
+  test("parsePref treats anything unrecognised as system", () => {
+    expect(parsePref("light")).toBe("light");
+    expect(parsePref("dark")).toBe("dark");
+    expect(parsePref("system")).toBe("system");
+    expect(parsePref(null)).toBe("system");
+    expect(parsePref("<script>")).toBe("system");
+  });
+
+  test("resolveTheme follows the system only for the system pref", () => {
+    expect(resolveTheme("system", true)).toBe("light");
+    expect(resolveTheme("system", false)).toBe("dark");
+    expect(resolveTheme("dark", true)).toBe("dark");
+    expect(resolveTheme("light", false)).toBe("light");
+  });
+
+  test("boot script resolves like resolveTheme (stored, system, throwing storage)", () => {
+    const run = (stored: string | null, prefersLight: boolean, throws = false) => {
+      const html = { style: {} as Record<string, string>, attrs: {} as Record<string, string>, setAttribute(k: string, v: string) { this.attrs[k] = v; } };
+      const fn = new Function("document", "localStorage", "matchMedia", themeBootScript);
+      fn(
+        { documentElement: html },
+        { getItem: () => { if (throws) throw new Error("blocked"); return stored; } },
+        () => ({ matches: prefersLight }),
+      );
+      return [html.attrs["data-theme"], html.style.colorScheme];
+    };
+    expect(run("dark", true)).toEqual(["dark", "dark"]);
+    expect(run("light", false)).toEqual(["light", "light"]);
+    expect(run(null, true)).toEqual(["light", "light"]);
+    expect(run(null, false)).toEqual(["dark", "dark"]);
+    expect(run("junk", true)).toEqual(["light", "light"]);
+    expect(run(null, true, true)).toEqual(["light", "light"]);
   });
 });

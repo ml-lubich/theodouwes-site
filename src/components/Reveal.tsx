@@ -37,7 +37,7 @@ export function Reveal({
         ? { opacity: 0, y: 36, rotateX: 8 }
         : { opacity: 0, y: 28 },
     whileInView: { opacity: 1, y: 0, rotateX: 0 },
-    viewport: { once: true, amount: 0.12, margin: "0px 0px -8% 0px" },
+    viewport: { once: true, amount: "some" as const, margin: "0px 0px -8% 0px" },
     onViewportEnter: () => setVisible(true),
     transition: {
       duration: reduceMotion ? 0 : 0.65,

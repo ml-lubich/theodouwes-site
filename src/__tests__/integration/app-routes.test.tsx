@@ -17,6 +17,7 @@ mock.module("next/dynamic", () => ({
 mock.module("next/font/google", () => ({
   IBM_Plex_Sans: () => ({ variable: "--font-sans" }),
   IBM_Plex_Mono: () => ({ variable: "--font-mono" }),
+  Source_Serif_4: () => ({ variable: "--font-serif" }),
 }));
 
 mock.module("next/og", () => ({
@@ -48,7 +49,7 @@ describe("app routes", () => {
     expect(screen.getByRole("navigation", { name: "Primary" })).toBeTruthy();
     expect(document.getElementById("about")).toBeTruthy();
     expect(document.getElementById("work")).toBeTruthy();
-    expect(screen.getByRole("button", { name: /Switch to light mode/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Light theme" })).toBeTruthy();
   });
 
   test("RootLayout wraps children", async () => {

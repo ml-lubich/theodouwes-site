@@ -11,25 +11,35 @@ afterEach(() => {
 });
 
 describe("ThemeToggle", () => {
-  test("renders accessible toggle and flips data-theme on html", () => {
+  test("is a labelled group whose pressed button states the current choice", () => {
+    render(
+      <ThemeProvider>
+        <ThemeToggle />
+      </ThemeProvider>,
+    );
+    expect(screen.getByRole("group", { name: /color theme/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "System theme" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: "Dark theme" }).getAttribute("aria-pressed")).toBe("false");
+  });
+
+  test("light and dark persist and apply; system clears the stored choice", () => {
     render(
       <ThemeProvider>
         <ThemeToggle />
       </ThemeProvider>,
     );
 
-    const button = screen.getByRole("button", { name: /Switch to light mode/i });
-    expect(button).toBeTruthy();
-
-    fireEvent.click(button);
+    fireEvent.click(screen.getByRole("button", { name: "Light theme" }));
     expect(document.documentElement.getAttribute("data-theme")).toBe("light");
     expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
-    expect(
-      screen.getByRole("button", { name: /Switch to dark mode/i }),
-    ).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Light theme" }).getAttribute("aria-pressed")).toBe("true");
 
-    fireEvent.click(screen.getByRole("button", { name: /Switch to dark mode/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Dark theme" }));
     expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
     expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
+
+    fireEvent.click(screen.getByRole("button", { name: "System theme" }));
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+    expect(["light", "dark"]).toContain(document.documentElement.getAttribute("data-theme"));
   });
 });

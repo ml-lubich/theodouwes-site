@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { execSync } from "node:child_process";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import {
   SITE_DESCRIPTION,
@@ -9,16 +10,33 @@ import {
   buildJsonLd,
   googleVerification,
 } from "@/lib/seo";
-import { THEME_STORAGE_KEY } from "@/lib/theme";
+import { themeBootScript } from "@/lib/theme";
 import "./globals.css";
 
-const themeBootScript = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var t=localStorage.getItem(k);if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}document.documentElement.setAttribute("data-theme",t);document.documentElement.style.colorScheme=t}catch(e){document.documentElement.setAttribute("data-theme","dark");document.documentElement.style.colorScheme="dark"}})();`;
+/** Short build sha for the deploy marker: Vercel env, else local git, else "dev". */
+function buildSha(): string {
+  const fromEnv = process.env.VERCEL_GIT_COMMIT_SHA;
+  if (fromEnv) return fromEnv.slice(0, 7);
+  try {
+    return execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim() || "dev";
+  } catch {
+    return "dev";
+  }
+}
 
 const plexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -88,11 +106,13 @@ export const metadata: Metadata = {
   },
   category: "technology",
   verification: googleVerification(),
+  other: { "generator-build": buildSha(), "site-design": "editorial-v1" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -103,7 +123,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plexSans.variable} ${plexMono.variable}`}
+      className={`${plexSans.variable} ${plexMono.variable} ${sourceSerif.variable}`}
       data-theme="dark"
       suppressHydrationWarning
     >

@@ -4,6 +4,7 @@ import { profile } from "@/lib/profile";
 mock.module("next/font/google", () => ({
   IBM_Plex_Sans: () => ({ variable: "--font-sans" }),
   IBM_Plex_Mono: () => ({ variable: "--font-mono" }),
+  Source_Serif_4: () => ({ variable: "--font-serif" }),
 }));
 
 mock.module("next/og", () => ({
@@ -119,6 +120,14 @@ describe("JSON-LD", () => {
 });
 
 describe("layout metadata", () => {
+  test("emits deploy markers and a color-scheme viewport", async () => {
+    const { metadata, viewport } = await layout();
+    const other = metadata.other as Record<string, string>;
+    expect(other["site-design"]).toBe("editorial-v1");
+    expect(other["generator-build"]).toMatch(/^[0-9a-f]{7}$|^dev$/);
+    expect(viewport.colorScheme).toBe("light dark");
+  });
+
   test("metadataBase, canonical apex, title, robots, openGraph, twitter", async () => {
     const { SITE_URL, SITE_TITLE } = await seo();
     const { metadata } = await layout();

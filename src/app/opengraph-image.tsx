@@ -5,7 +5,7 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** 1200x630 share card in the site's monochrome dark palette (globals.css). */
+/** 1200x630 share card in the site's editorial-v1 dark palette (globals.css). */
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -17,8 +17,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background: "#050505",
-          color: "#f5f5f5",
+          background: "#0b0d10",
+          color: "#eceef1",
           fontFamily: "ui-sans-serif, system-ui, sans-serif",
         }}
       >
@@ -49,10 +49,10 @@ export default function OpengraphImage() {
           >
             Theo Douwes
           </div>
-          <div style={{ marginTop: 28, fontSize: 36, color: "#a1a1a1" }}>
+          <div style={{ marginTop: 28, fontSize: 36, color: "#a7aeb8" }}>
             GTM & Sales Engineer · UC Berkeley Statistics
           </div>
-          <div style={{ marginTop: 12, fontSize: 30, color: "#6b6b6b" }}>
+          <div style={{ marginTop: 12, fontSize: 30, color: "#8d95a1" }}>
             GTM systems · Multifamily underwriting · Probabilistic decisions
           </div>
         </div>
@@ -60,7 +60,7 @@ export default function OpengraphImage() {
           style={{
             display: "flex",
             fontSize: 28,
-            color: "#a1a1a1",
+            color: "#a7aeb8",
             fontFamily: "ui-monospace, monospace",
           }}
         >

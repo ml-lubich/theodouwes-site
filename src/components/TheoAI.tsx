@@ -150,6 +150,23 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 
 export function TheoAI() {
   const [open, setOpen] = useState(false);
+  const [overHero, setOverHero] = useState(false);
+
+  // On phones the fixed launcher would sit on the hero copy/CTAs; hide it
+  // (CSS, <=720px only) while the hero reaches the launcher's corner.
+  useEffect(() => {
+    const sync = () => {
+      const hero = document.querySelector(".hero");
+      setOverHero(!!hero && hero.getBoundingClientRect().bottom > window.innerHeight - 88);
+    };
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -310,6 +327,7 @@ export function TheoAI() {
       <button
         type="button"
         className="theoai-launcher"
+        data-over-hero={overHero && !open ? "true" : undefined}
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close TheoAI" : "Chat with TheoAI"}
         aria-expanded={open}

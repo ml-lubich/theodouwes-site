@@ -1,13 +1,13 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { createRef, useMemo, type ReactNode, type RefObject } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useScrollCraft } from "@/components/useScrollCraft";
 
 /**
  * Cards pin under the header and stack as the visitor scrolls; each covered card
- * settles back (scale + brightness, not opacity, so the card beneath never shows
- * through on the dark page). Compact viewports render exactly `<ul className={compactClassName}>`
+ * settles back (scale + themed shade overlay, not opacity, so the card beneath never shows
+ * through). Compact viewports render exactly `<ul className={compactClassName}>`
  * with one `<li>` per item, i.e. today's markup.
  *
  * ponytail: the variant is decided after mount, so SSR and first paint are always
@@ -21,7 +21,6 @@ interface ScrollStackProps {
   readonly compactClassName: string;
   readonly stickyTop?: number;
   readonly stackOffset?: number;
-  readonly scrollPerCard?: number;
 }
 
 export function ScrollStack({
@@ -29,7 +28,6 @@ export function ScrollStack({
   compactClassName,
   stickyTop = 112,
   stackOffset = 18,
-  scrollPerCard = 62,
 }: ScrollStackProps) {
   const stack = useScrollCraft();
 
@@ -43,26 +41,29 @@ export function ScrollStack({
     );
   }
   return (
-    <StackRoot items={items} stickyTop={stickyTop} stackOffset={stackOffset} scrollPerCard={scrollPerCard} />
+    <StackRoot items={items} stickyTop={stickyTop} stackOffset={stackOffset} />
   );
 }
 
-type StackRootProps = Required<Pick<ScrollStackProps, "items" | "stickyTop" | "stackOffset" | "scrollPerCard">>;
+type StackRootProps = Required<Pick<ScrollStackProps, "items" | "stickyTop" | "stackOffset">>;
 
-/** Owns the ref so `useScroll` only runs with a mounted target. */
-function StackRoot({ items, stickyTop, stackOffset, scrollPerCard }: StackRootProps) {
-  const ref = useRef<HTMLUListElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+/**
+ * Cards stay in normal flow (24px apart via CSS), so the gap between consecutive
+ * cards can never exceed that margin. Each card's recede is driven by the scroll
+ * position of the NEXT card, from entering the viewport to reaching its pin.
+ */
+function StackRoot({ items, stickyTop, stackOffset }: StackRootProps) {
+  const refs = useMemo(() => Array.from({ length: items.length }, () => createRef<HTMLLIElement>()), [items.length]);
   return (
-    <ul ref={ref} data-variant="stack" className="scroll-stack">
+    <ul data-variant="stack" className="scroll-stack">
       {items.map((item, i) => (
         <StackCard
           key={item.key}
-          index={i}
-          count={items.length}
-          progress={scrollYProgress}
+          self={refs[i]}
+          next={refs[i + 1]}
           top={stickyTop + i * stackOffset}
-          runwayVh={scrollPerCard}
+          pinOffset={stickyTop + (i + 1) * stackOffset}
+          zIndex={i + 1}
         >
           {item.node}
         </StackCard>
@@ -72,25 +73,24 @@ function StackRoot({ items, stickyTop, stackOffset, scrollPerCard }: StackRootPr
 }
 
 interface StackCardProps {
-  readonly index: number;
-  readonly count: number;
-  readonly progress: MotionValue<number>;
+  readonly self: RefObject<HTMLLIElement | null>;
+  readonly next: RefObject<HTMLLIElement | null> | undefined;
   readonly top: number;
-  readonly runwayVh: number;
+  readonly pinOffset: number;
+  readonly zIndex: number;
   readonly children: ReactNode;
 }
 
-function StackCard({ index, count, progress, top, runwayVh, children }: StackCardProps) {
-  const isLast = index === count - 1;
-  const from = (index + 1) / count;
-  const to = Math.min(1, (index + 2) / count);
-  const scale = useTransform(progress, [from, to], isLast ? [1, 1] : [1, 0.94]);
-  const dim = useTransform(progress, [from, to], isLast ? [1, 1] : [1, 0.6]);
-  const filter = useTransform(dim, (d) => `brightness(${d})`);
+function StackCard({ self, next, top, pinOffset, zIndex, children }: StackCardProps) {
+  // The last card has no next sibling; it tracks itself and its outputs stay flat.
+  const { scrollYProgress } = useScroll({ target: next ?? self, offset: ["start end", `start ${pinOffset}px`] });
+  const scale = useTransform(scrollYProgress, [0, 1], next ? [1, 0.95] : [1, 1]);
+  const shade = useTransform(scrollYProgress, [0, 1], next ? [0, 0.5] : [0, 0]);
   return (
-    <li data-scroll-stack-card className="scroll-stack-card" style={{ top, minHeight: `${runwayVh}vh` }}>
-      <motion.div className="scroll-stack-face" style={{ scale, filter, transformOrigin: "50% 0%" }}>
+    <li ref={self} data-scroll-stack-card className="scroll-stack-card" style={{ top, zIndex }}>
+      <motion.div className="scroll-stack-face" style={{ scale, transformOrigin: "50% 0%" }}>
         {children}
+        <motion.span className="stack-shade" style={{ opacity: shade }} aria-hidden="true" />
       </motion.div>
     </li>
   );
