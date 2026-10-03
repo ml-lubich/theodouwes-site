@@ -2063,9 +2063,9 @@ a:hover {
       calc(var(--d) * var(--rx-n, 0) * 140px)
     )
     scale(var(--rs, 1));
-  /* Depth cue via opacity only — brightness() darkening turned the far white
+  /* Depth cue via a light opacity ramp (kept >= 0.94 so resting pill text stays AA) — brightness() darkening turned the far white
      pills muddy grey, especially in light mode. */
-  opacity: calc(0.78 + 0.11 * (var(--d) + 1));
+  opacity: calc(0.94 + 0.03 * (var(--d) + 1));
   will-change: transform;
 }
 
@@ -2134,8 +2134,8 @@ a:hover {
 @container (max-width: 640px) {
   .skill-pill {
     gap: 0.25rem;
-    font-size: 0.52rem;
-    padding: 0.24rem 0.5rem;
+    font-size: 0.625rem;
+    padding: 0.22rem 0.45rem;
   }
 
   .skill-pill .skill-glyph {
