@@ -14,7 +14,7 @@
 | Domain | `src/lib/profile.ts`, `src/lib/skills.ts`, `src/lib/theme.ts` | Typed profile, skills bank, theme helpers |
 | Application | `src/lib/home-model.ts` | Maps profile → home page view model |
 | Presentation | `src/components/*`, `src/app/*` | Layout, sections, Skill Storm, theme toggle, styles, motion |
-| Crawl | `src/app/robots.ts`, `src/app/sitemap.ts`, `public/llms.txt` | Search + LLM discoverability |
+| Crawl | `src/lib/seo.ts`, `src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`, `src/app/opengraph-image.tsx`, `public/llms.txt` | Search + LLM discoverability |
 | AI chat | `src/lib/ai/*`, `src/app/api/chat/route.ts`, `src/components/TheoAI*.tsx` | TheoAI: SSE chat endpoint, tool layer over `profile`/`skills`, streaming panel |
 
 ## Data flow

@@ -1,12 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { flattenSkills } from "@/lib/skills";
-import { profile } from "@/lib/profile";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  buildJsonLd,
+  googleVerification,
+} from "@/lib/seo";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 import "./globals.css";
-
-const SITE_URL = "https://theodouwes.com";
 
 const themeBootScript = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var t=localStorage.getItem(k);if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}document.documentElement.setAttribute("data-theme",t);document.documentElement.style.colorScheme=t}catch(e){document.documentElement.setAttribute("data-theme","dark");document.documentElement.style.colorScheme="dark"}})();`;
 
@@ -24,16 +28,13 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-const description =
-  "UC Berkeley Statistics graduate (B.A.) building GTM automation, multifamily underwriting tools, and probabilistic decision software. GTM and Sales Engineer at Navigara in San Francisco.";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Theo Douwes — GTM Systems, Underwriting & Probabilistic Decisions",
+    default: SITE_TITLE,
     template: "%s · Theo Douwes",
   },
-  description,
+  description: SITE_DESCRIPTION,
   keywords: [
     "Theo Douwes",
     "Theo Alexander Douwes",
@@ -65,23 +66,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "Theo Douwes",
-    title: "Theo Douwes — GTM Systems, Underwriting & Probabilistic Decisions",
-    description,
-    images: [
-      {
-        url: "/theo.webp",
-        width: 800,
-        height: 800,
-        alt: "Portrait of Theo Alexander Douwes",
-      },
-    ],
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Theo Douwes — GTM Systems & Probabilistic Decisions",
-    description,
-    images: ["/theo.webp"],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   robots: {
     index: true,
@@ -95,44 +87,12 @@ export const metadata: Metadata = {
     },
   },
   category: "technology",
+  verification: googleVerification(),
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-};
-
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: profile.name,
-  url: SITE_URL,
-  image: `${SITE_URL}/theo.webp`,
-  email: profile.links.email,
-  telephone: profile.links.phone,
-  jobTitle: "GTM and Sales Engineer",
-  worksFor: {
-    "@type": "Organization",
-    name: "Navigara",
-    url: profile.links.navigara,
-  },
-  alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "University of California, Berkeley",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "San Francisco",
-    addressRegion: "CA",
-    addressCountry: "US",
-  },
-  sameAs: [
-    profile.links.linkedin,
-    profile.links.github,
-    profile.links.medium,
-  ],
-  knowsAbout: flattenSkills().slice(0, 40),
-  description,
 };
 
 export default function RootLayout({
@@ -153,7 +113,7 @@ export default function RootLayout({
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd()) }}
         />
         <ThemeProvider>{children}</ThemeProvider>
       </body>

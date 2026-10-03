@@ -74,7 +74,11 @@ Client theme context sets `data-theme` on `<html>`, persists choice, and drives 
 - `src/app/robots.ts` → `/robots.txt` (allow all + major AI crawlers; sitemap pointer)
 - `src/app/sitemap.ts` → `/sitemap.xml`
 - `public/llms.txt` → plain-text fact sheet for LLM scrapers
-- Person JSON-LD in `src/app/layout.tsx`
+- `src/app/manifest.ts` → `/manifest.webmanifest`
+- `src/app/opengraph-image.tsx` / `twitter-image.tsx` → 1200x630 share card (monochrome dark palette)
+- JSON-LD `@graph` (Person `#person`, WebSite `#website`, ProfilePage `#profilepage`) built by `buildJsonLd()` in `src/lib/seo.ts`, rendered in `src/app/layout.tsx`
+- `src/lib/seo.ts` is the single source for `SITE_URL`, title (<=60 chars) and description (140–160 chars)
+- `next.config.ts` redirects `www.theodouwes.com` → `https://theodouwes.com` (308)
 
 ### `formatTenure(start, end)` / `getExperienceById(id)`
 

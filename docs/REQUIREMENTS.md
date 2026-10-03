@@ -7,7 +7,7 @@
 3. As a visitor, I can scan experience (Navigara → Piedmont → Independent) and education (UC Berkeley + STAT 198 / Oxford / Berkeley VC Group).
 4. As a visitor, I can open projects (Medium, ZeroCopy demo) and writing links.
 5. As a visitor, I can reach LinkedIn, GitHub, Medium, email, and phone from Connect + footer (LinkedIn also from the hero CTA).
-6. As a crawler/LLM, I can read `robots.txt`, `sitemap.xml`, `llms.txt`, and Person JSON-LD with publish-safe facts.
+6. As a crawler/LLM, I can read `robots.txt`, `sitemap.xml`, `llms.txt`, `manifest.webmanifest`, a 1200x630 OG card, and a JSON-LD `@graph` (Person, WebSite, ProfilePage) with publish-safe facts.
 7. As a visitor, I can toggle dark/light mode; light mode uses black text and a black wireframe brain.
 8. As a visitor, I can open TheoAI (bottom-right) and ask about Theo's experience, education, projects, writing or skills, and get a markdown-formatted answer grounded only in what is already on the page — with charts, Mermaid diagrams, follow-up questions, and a contact hand-off card when I ask how to reach him. There is no booking calendar or resume download — this site has neither.
 

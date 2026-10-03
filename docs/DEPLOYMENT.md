@@ -21,6 +21,7 @@ vercel --prod   # production
 | Var | Required for | Notes |
 | --- | --- | --- |
 | `OPENROUTER_API_KEY` | `/api/chat`, `/status` | Must start `sk-or-`. Missing/malformed → `/api/chat` returns `503 { "error": "Chat is not configured." }`; `/status` shows "no — OPENROUTER_API_KEY missing" and skips the live checks. |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | Search Console (optional) | When set, emitted as `<meta name="google-site-verification">`; unset → nothing emitted. |
 | `CHAT_RATE_SECRET` | `/api/chat` rate limiting | Signs the `theoai_q` cookie. Falls back to `OPENROUTER_API_KEY` if unset — set it explicitly so quota state survives a key rotation. |
 
 Both are already set on the `theodouwes-site` Vercel project.
@@ -31,7 +32,7 @@ Both are already set on the `theodouwes-site` Vercel project.
 2. Confirm hero brand “Theo Douwes”
 3. Confirm `#work` shows Navigara
 4. Confirm LinkedIn / GitHub / Medium links on `#connect`
-5. Confirm `/robots.txt`, `/sitemap.xml`, `/llms.txt` return 200
+5. Confirm `/robots.txt`, `/sitemap.xml`, `/llms.txt`, `/manifest.webmanifest`, `/opengraph-image` return 200 and `https://www.theodouwes.com/` 308-redirects to the apex
 6. Confirm `#skills` catalog is present (Skill Storm on desktop)
 7. Open TheoAI (bottom-right launcher), ask a question, confirm a streamed markdown reply with a follow-up pill
 8. Confirm `/status` (unlisted) shows `OPENROUTER_API_KEY present` and at least one model `OK`

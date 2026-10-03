@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const SITE_URL = "https://theodouwes.com";
+import { SITE_URL } from "@/lib/seo";
 
 /** `/status` is TheoAI's unlisted diagnostics page and `/api/` is the chat
  *  endpoint — neither is content to index. */
