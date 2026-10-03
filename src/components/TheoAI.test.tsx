@@ -265,4 +265,25 @@ describe("TheoAI", () => {
     expect(screen.queryByText("Answer.")).toBeNull();
     expect(screen.getByText(/I can look through Theo/)).toBeTruthy();
   });
+
+  test("copy buttons: user turn 'Copy message', finished answer 'Copy answer', clipboard gets the text", async () => {
+    const written: string[] = [];
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: async (t: string) => void written.push(t) },
+    });
+    globalThis.fetch = (async () => sseResponse([{ event: "text", data: "Plain answer." }, { event: "done", data: {} }])) as typeof fetch;
+
+    render(<TheoAI />);
+    openPanel();
+    fireEvent.click(screen.getByText("What does Theo build at Navigara?"));
+
+    const copyAnswer = await screen.findByRole("button", { name: "Copy answer" });
+    fireEvent.click(copyAnswer);
+    await waitFor(() => expect(written).toContain("Plain answer."));
+    await waitFor(() => expect(screen.getByText("Copied")).toBeTruthy());
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy message" }));
+    await waitFor(() => expect(written).toContain("What does Theo build at Navigara?"));
+  });
 });

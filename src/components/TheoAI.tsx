@@ -106,6 +106,48 @@ function StopIcon() {
   );
 }
 
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const id = setTimeout(() => setCopied(false), 1600);
+    return () => clearTimeout(id);
+  }, [copied]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Clipboard API blocked (insecure context / permissions): legacy path.
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (!ok) return;
+    }
+    setCopied(true);
+  };
+
+  return (
+    <button type="button" className="theoai-copy" onClick={copy} aria-label={label} title={label}>
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {copied ? <path d="M20 6 9 17l-5-5" /> : (
+          <>
+            <rect x="9" y="9" width="12" height="12" rx="2" />
+            <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+          </>
+        )}
+      </svg>
+      {copied ? <span>Copied</span> : null}
+    </button>
+  );
+}
+
 export function TheoAI() {
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -313,9 +355,10 @@ export function TheoAI() {
 
             {turns.map((turn, i) =>
               turn.role === "user" ? (
-                <p key={i} className="theoai-turn-user">
-                  {turn.content}
-                </p>
+                <div key={i} className="theoai-turn-user-wrap">
+                  <p className="theoai-turn-user">{turn.content}</p>
+                  {!busy && <CopyButton text={turn.content} label="Copy message" />}
+                </div>
               ) : (
                 <div key={i} className="theoai-turn-bot">
                   {collapseToolSteps(turn.tools ?? []).map(({ name, done }, j) =>
@@ -339,6 +382,8 @@ export function TheoAI() {
                   )}
 
                   {busy && i === turns.length - 1 && !turn.content && !turn.tools?.length && <ThinkingVerb />}
+
+                  {!busy && turn.content ? <CopyButton text={stripCardLinks(turn.content)} label="Copy answer" /> : null}
 
                   {!busy && turn.followups?.length ? (
                     <div className="theoai-chips theoai-followups">

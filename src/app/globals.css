@@ -2787,9 +2787,41 @@ a:hover {
   opacity: 0.45;
 }
 
-.theoai-turn-user {
+.theoai-turn-user-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   align-self: flex-end;
   max-width: 85%;
+}
+
+.theoai-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 0.5rem;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 0.7rem;
+}
+
+.theoai-turn-user-wrap .theoai-copy {
+  align-self: flex-end;
+  min-height: 32px;
+}
+
+.theoai-copy:hover,
+.theoai-copy:focus-visible {
+  color: var(--ink);
+}
+
+.theoai-turn-user {
+  align-self: flex-end;
+  max-width: 100%;
   margin: 0;
   padding: 0.6rem 0.85rem;
   overflow-wrap: anywhere;
